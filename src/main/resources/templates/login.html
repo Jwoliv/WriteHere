@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" th:href="@{/style/css/style.css}">
+</head>
+<body>
+<div class="wrapper wrapper-background">
+    <main class="main">
+        <div class="main__container container auth-container">
+            <div class="main__content content auth-content">
+                <div class="auth">
+                    <h1 class="auth-title">Login</h1>
+                    <form class="auth-form" th:action="@{/login}" method="post">
+                        <input class="auth-field user-field" type="text" name="username" placeholder="Email">
+                        <input class="auth-field user-field" type="password" name="password" placeholder="Password">
+                        <button class="auth-button user-button" type="submit">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>
