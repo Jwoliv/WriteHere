@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${nameOfPage}"></title>
+</head>
+    <body>
+        <ul>
+            <li th:each="post: ${posts}">
+                <h2 th:text="${post.title}"></h2>
+                <p th:text="${post.text}"></p>
+                <h5 th:text="${post.dateOfCreated}"></h5>
+                <a th:href="@{/posts/{id}(id=${post.id})}">Read more</a>
+                <h5 th:text="${post.getNumberOfLikes()} + ' likes'"></h5>
+                <h5 th:text="${post.getNumberOfDislikes()} + ' dislikes'"></h5>
+            </li>
+        </ul>
+    </body>
+</html>

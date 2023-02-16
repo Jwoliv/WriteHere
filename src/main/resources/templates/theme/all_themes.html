@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Themes</title>
+</head>
+  <body>
+    <ul>
+      <li th:each="theme: ${T(com.example.WriteHere.model.post.Theme).values()}">
+        <a th:href="@{/theme/{url}(url=${theme})}" th:text="${theme.displayName}"></a>
+      </li>
+    </ul>
+  </body>
+</html>

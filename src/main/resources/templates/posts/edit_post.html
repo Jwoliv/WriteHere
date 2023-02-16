@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit post</title>
+</head>
+  <body>
+    <form th:method="PATCH" th:action="@{/posts/{id}(id=${post.id})}" th:object="${post}">
+      <label>
+        <input type="text" th:field="${post.title}">
+      </label>
+      <label>
+        <textarea th:field="${post.text}"></textarea>
+      </label>
+      <label>
+        <select th:field="${post.theme}">
+          <option th:value="${post.theme}" th:text="${post.theme.displayName}"></option>
+          <option th:if="${theme != post.theme}"
+                  th:each="theme: ${T(com.example.WriteHere.model.post.Theme).values()}"
+                  th:value="${theme}"
+                  th:text="${theme.displayName}">
+          </option>
+        </select>
+        <button type="submit">Edit post</button>
+      </label>
+    </form>
+  </body>
+</html>

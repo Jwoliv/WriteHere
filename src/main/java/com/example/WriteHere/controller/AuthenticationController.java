@@ -28,13 +28,13 @@ public class AuthenticationController {
         return "/login";
     }
 
-    @GetMapping("/registration")
+    @GetMapping("/sing-in")
     public String registration(@NonNull Model model) {
         model.addAttribute("user", new User());
-        return "/registration";
+        return "/sing-in";
     }
 
-    @PostMapping("/registration")
+    @PostMapping("/sing-in")
     public String registerProcessing(
             @ModelAttribute @Valid User user,
             BindingResult bindingResult,
@@ -42,13 +42,13 @@ public class AuthenticationController {
     ) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("user", new User());
-            return "/registration";
+            return "/sing-in";
         }
         else if (!Objects.equals(user.getPassword(), user.getRepeatPassword()) || userService.findByEmail(user.getEmail()) != null) {
             model.addAttribute("user", new User());
             model.addAttribute("error-email", "User with so email has already exist");
             model.addAttribute("error-password", "Passwords aren't equals");
-            return "/registration";
+            return "/sing-in";
         }
         userService.save(user);
         return "redirect:/login";

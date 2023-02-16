@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${nameOfPage}"></title>
+</head>
+  <body>
+    <form method="POST" th:action="@{/posts}" th:object="${post}">
+      <label>
+        <input type="text" th:field="${post.title}">
+      </label>
+      <label>
+        <textarea th:field="${post.text}"></textarea>
+      </label>
+      <label>
+        <select th:field="${post.theme}">
+          <option th:each="theme: ${T(com.example.WriteHere.model.post.Theme).values()}" th:value="${theme}" th:text="${theme.displayName}"></option>
+        </select>
+        <button type="submit">New post</button>
+      </label>
+    </form>
+  </body>
+</html>

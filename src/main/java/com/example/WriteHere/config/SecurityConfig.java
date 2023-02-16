@@ -31,8 +31,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(
                                 "/",
-                                "/registration",
-                                "/post"
+                                "/sing-in",
+                                "/posts",
+                                "/posts/**",
+                                "/theme",
+                                "/theme/*/**"
                         ).permitAll()
                         .requestMatchers("/admin/*/**").hasRole(Role.ADMIN.name())
                         .requestMatchers("/profile").hasAnyRole(Role.USER.name(), Role.ADMIN.name())
