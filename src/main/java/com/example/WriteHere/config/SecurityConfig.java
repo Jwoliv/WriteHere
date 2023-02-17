@@ -35,13 +35,16 @@ public class SecurityConfig {
                                 "/posts",
                                 "/posts/**",
                                 "/theme",
-                                "/theme/*/**"
+                                "/theme/*/**",
+                                "/posts/*/add_comment"
                         ).permitAll()
                         .requestMatchers("/admin/*/**").hasRole(Role.ADMIN.name())
                         .requestMatchers(
                                 "/profile",
                                 "/posts/*/like",
-                                "/posts/*/dislike"
+                                "/posts/*/dislike",
+                                "/posts/*/comments/*/like",
+                                "/posts/*/comments/*/dislike"
                         ).hasAnyRole(Role.USER.name(), Role.ADMIN.name())
                         .anyRequest().authenticated()
                 )

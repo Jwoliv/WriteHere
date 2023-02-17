@@ -1,5 +1,6 @@
 package com.example.WriteHere.model.user;
 
+import com.example.WriteHere.model.Comment;
 import com.example.WriteHere.model.post.Post;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -46,6 +47,13 @@ public class User {
     )
     @ToString.Exclude
     private List<Post> posts = new ArrayList<>();
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    @ToString.Exclude
+    private List<Comment> comments = new ArrayList<>();
     @ManyToMany
     @JoinTable(
             name = "user_liked_posts",
@@ -62,6 +70,22 @@ public class User {
     )
     @ToString.Exclude
     private List<Post> dislikedPosts = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(
+            name = "user_liked_comments",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "liked_comment_id")
+    )
+    @ToString.Exclude
+    private List<Comment> likedComments = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(
+            name = "user_disliked_comments",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "disliked_comment_id")
+    )
+    @ToString.Exclude
+    private List<Comment> dislikedComments = new ArrayList<>();
     public String getFullName() {
         return firstname + " " + lastname;
     }

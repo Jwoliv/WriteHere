@@ -38,7 +38,9 @@ public class ThemesController {
     ) {
         model.addAttribute("nameOfPage", theme.getDisplayName());
         model.addAttribute("principal", principal);
-        model.addAttribute("posts", postService.findByTheme(theme));
+        model.addAttribute("posts", postService.findByTheme(theme).stream().sorted(
+                (x1, x2) -> x2.getDateOfCreated().compareTo(x1.getDateOfCreated())
+        ));
         return "/posts/all_posts";
     }
 }

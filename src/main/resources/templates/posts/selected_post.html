@@ -13,6 +13,36 @@
             <h5 th:text="${post.dateOfCreated}"></h5>
             <h5 th:text="${post.getNumberOfLikes()} + ' likes'"></h5>
             <h5 th:text="${post.getNumberOfDislikes()} + ' dislikes'"></h5>
+            <form th:method="PATCH" th:action="@{/posts/{id}/like(id=${post.id})}">
+                <button type="submit">Like</button>
+            </form>
+            <form th:method="PATCH" th:action="@{/posts/{id}/dislike(id=${post.id})}">
+                <button type="submit">Dislike</button>
+            </form>
+            <br><br><br><br>
+            <hr>
+            <form method="POST" th:action="@{/posts/{id}/add_comment(id=${post.id})}" th:object="${comment}">
+                <label>
+                    <textarea th:field="${comment.text}"></textarea>
+                </label>
+                <button type="submit">New comment</button>
+            </form>
+            <ul>
+                <li th:each="comment: ${post.comments}">
+                    <a th:if="${comment.user != null}" th:href="@{/user/{id}(id=${comment.user.id})}" th:text="${comment.user.getFullName()}"></a>
+                    <h5 th:if="${comment.user == null}">Anonymous</h5>
+                    <p th:text="${comment.text}"></p>
+                    <h5 th:text="${comment.dateOfCreated}"></h5>
+                    <h5 th:text="${comment.getNumberOfLikes()} + ' likes'"></h5>
+                    <h5 th:text="${comment.getNumberOfDislikes()} + ' dislikes'"></h5>
+                    <form th:method="PATCH" th:action="@{/posts/{id_post}/comments/{id_comment}/like(id_post=${post.id}, id_comment=${comment.id})}">
+                        <button type="submit">Like</button>
+                    </form>
+                    <form th:method="PATCH" th:action="@{/posts/{id_post}/comments/{id_comment}/dislike(id_post=${post.id}, id_comment=${comment.id})}">
+                        <button type="submit">Dislike</button>
+                    </form>
+                </li>
+            </ul>
         </div>
     </body>
 </html>
