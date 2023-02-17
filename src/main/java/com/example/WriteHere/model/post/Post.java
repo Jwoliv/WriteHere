@@ -1,12 +1,15 @@
 package com.example.WriteHere.model.post;
 
+import com.example.WriteHere.model.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Component
@@ -29,4 +32,14 @@ public class Post {
     private Theme theme;
     private Integer numberOfLikes;
     private Integer numberOfDislikes;
+    private Boolean isByAnonymous;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+    @ManyToMany(mappedBy = "likedPosts")
+    @ToString.Exclude
+    private List<User> usersWhoLike = new ArrayList<>();
+    @ManyToMany(mappedBy = "dislikedPosts")
+    @ToString.Exclude
+    private List<User> usersWhoDislike = new ArrayList<>();
 }

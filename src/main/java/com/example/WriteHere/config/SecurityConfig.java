@@ -38,7 +38,11 @@ public class SecurityConfig {
                                 "/theme/*/**"
                         ).permitAll()
                         .requestMatchers("/admin/*/**").hasRole(Role.ADMIN.name())
-                        .requestMatchers("/profile").hasAnyRole(Role.USER.name(), Role.ADMIN.name())
+                        .requestMatchers(
+                                "/profile",
+                                "/posts/*/like",
+                                "/posts/*/dislike"
+                        ).hasAnyRole(Role.USER.name(), Role.ADMIN.name())
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form

@@ -5,7 +5,7 @@
     <title>Edit post</title>
 </head>
   <body>
-    <form th:method="PATCH" th:action="@{/posts/{id}(id=${post.id})}" th:object="${post}">
+    <form th:method="PATCH" th:action="@{/posts/{id}(id=${post.id})}" th:fields="${post}">
       <label>
         <input type="text" th:field="${post.title}">
       </label>
