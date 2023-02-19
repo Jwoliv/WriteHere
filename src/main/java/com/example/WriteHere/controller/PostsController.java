@@ -36,11 +36,23 @@ public class PostsController {
             @NonNull Model model,
             Principal principal
     ) {
-        model.addAttribute("posts", postService.findAll().stream().sorted(
+        model.addAttribute("all_posts", postService.findAll().stream().sorted(
                 (x1, x2) -> x2.getDateOfCreated().compareTo(x1.getDateOfCreated())
         ));
         model.addAttribute("principal", principal);
         model.addAttribute("nameOfPage", "Posts");
+        return "/posts/all_posts";
+    }
+    @GetMapping("/search")
+    public String pageOfSearchPosts(
+            @RequestParam("name") String name,
+            Model model,
+            Principal principal
+    ) {
+        model.addAttribute("principal", principal);
+        model.addAttribute("all_posts", postService.findByTitleOrText(name));
+        model.addAttribute("nameOfPage", name);
+        model.addAttribute("name", name);
         return "/posts/all_posts";
     }
     @GetMapping("/{id}")
@@ -125,6 +137,10 @@ public class PostsController {
             user.setLikedPosts(
                     togglePostToTheSecondCollectionOfUser(user.getLikedPosts(), post, user)
             );
+            if (user.getDislikedPosts().contains(post)) {
+                user.getDislikedPosts().remove(post);
+                post.setNumberOfDislikes(post.getNumberOfDislikes() - 1);
+            }
             userService.saveAfterChange(user);
             postService.save(post);
             return "redirect:/posts/{id}";
@@ -142,6 +158,10 @@ public class PostsController {
             user.setDislikedPosts(
                     togglePostToTheSecondCollectionOfUser(user.getDislikedPosts(), post, user)
             );
+            if (user.getLikedPosts().contains(post)) {
+                user.getLikedPosts().remove(post);
+                post.setNumberOfLikes(post.getNumberOfLikes() - 1);
+            }
             userService.saveAfterChange(user);
             postService.save(post);
             return "redirect:/posts/{id}";
@@ -194,6 +214,10 @@ public class PostsController {
         user.setLikedComments(
                 toggleCommentToTheSecondCollectionOfUser(user.getLikedComments(), comment, user)
         );
+        if (user.getDislikedComments().contains(comment)) {
+            user.getDislikedComments().remove(comment);
+            comment.setNumberOfDislikes(comment.getNumberOfDislikes() - 1);
+        }
         userService.saveAfterChange(user);
         commentsService.save(comment);
         return "redirect:/posts/{id_post}";
@@ -215,6 +239,10 @@ public class PostsController {
         user.setDislikedComments(
                 toggleCommentToTheSecondCollectionOfUser(user.getDislikedComments(), comment, user)
         );
+        if (user.getLikedComments().contains(comment)) {
+            user.getLikedComments().remove(comment);
+            comment.setNumberOfLikes(comment.getNumberOfLikes() - 1);
+        }
         userService.saveAfterChange(user);
         commentsService.save(comment);
         return "redirect:/posts/{id_post}";

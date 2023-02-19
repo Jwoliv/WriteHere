@@ -13,6 +13,6 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findUserByEmail(String email);
     void deleteUserByEmail(String email);
-    @Query("SELECT U FROM User AS U WHERE U.firstname LIKE %:name% OR U.lastname LIKE %:name%")
+    @Query("SELECT U FROM User AS U WHERE UPPER(U.firstname) LIKE %:name% OR UPPER(U.lastname) LIKE %:name%")
     List<User> findUsersByName(@Param("name") String name);
 }

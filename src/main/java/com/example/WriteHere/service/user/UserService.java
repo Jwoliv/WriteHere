@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Locale;
 
 
 @Service
@@ -31,6 +32,9 @@ public class UserService {
     public User findByEmail(String email) {
         return userRepository.findUserByEmail(email).orElse(null);
     }
+    public List<User> findByName(String name) {
+        return userRepository.findUsersByName(name.toUpperCase(Locale.ROOT));
+    }
     @Transactional
     public void save(User user) {
         user.setActive(true);
@@ -49,9 +53,5 @@ public class UserService {
     @Transactional
     public void deleteByEmail(String email) {
         userRepository.deleteUserByEmail(email);
-    }
-
-    public List<User> findByName(String name) {
-        return userRepository.findUsersByName(name);
     }
 }

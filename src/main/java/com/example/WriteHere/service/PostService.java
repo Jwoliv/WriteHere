@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @Transactional(readOnly = true)
@@ -37,5 +38,9 @@ public class PostService {
     @Transactional
     public void deleteById(Long id) {
         postRepository.deleteById(id);
+    }
+
+    public List<Post> findByTitleOrText(String name) {
+        return postRepository.findByTitleOrText(name.toUpperCase(Locale.ROOT));
     }
 }
