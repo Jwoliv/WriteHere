@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${nameOfPage}"></title>
+</head>
+    <body>
+        <form method="get" th:action="@{/users/search}">
+            <label>
+                <input th:value="${name}" name="name" type="text">
+            </label>
+            <button type="submit">Search</button>
+        </form>
+
+    <ul>
+        <li th:each="user: ${all_users}">
+            <a th:href="@{/users/{id}(id=${user.id})}" th:text="${user.fullName}"></a>
+        </li>
+    </ul>
+    </body>
+</html>

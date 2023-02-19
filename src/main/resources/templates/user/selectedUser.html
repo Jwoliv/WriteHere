@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Selected user</title>
+</head>
+<body>
+    <h4>Posts</h4>
+    <ul>
+        <li th:each="post: ${user.posts}">
+            <h2 th:text="${post.title}"></h2>
+            <a th:if="${post.isByAnonymous == false}" th:href="@{/user/{id}(id=${post.user.id})}" th:text="${post.user.getFullName()}"></a>
+            <h5 th:if="${post.isByAnonymous == true}">Anonymous</h5>
+            <p th:text="${post.text}"></p>
+            <h5 th:text="${post.dateOfCreated}"></h5>
+            <a th:href="@{/posts/{id}(id=${post.id})}">Read more</a>
+            <h5 th:text="${post.getNumberOfLikes()} + ' likes'"></h5>
+            <h5 th:text="${post.getNumberOfDislikes()} + ' dislikes'"></h5>
+            <div th:if="${principal != null}">
+                <form  th:method="PATCH" th:action="@{/posts/{id}/like(id=${post.id})}">
+                    <button type="submit">Like</button>
+                </form>
+                <form th:method="PATCH" th:action="@{/posts/{id}/dislike(id=${post.id})}">
+                    <button type="submit">Dislike</button>
+                </form>
+            </div>
+        </li>
+    </ul>
+</body>
+</html>
