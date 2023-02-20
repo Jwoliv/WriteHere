@@ -1,5 +1,6 @@
 package com.example.WriteHere.controller;
 
+import com.example.WriteHere.model.post.Post;
 import com.example.WriteHere.model.post.Theme;
 import com.example.WriteHere.service.PostService;
 import lombok.NonNull;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
+import java.util.Comparator;
 
 @Controller
 @RequestMapping("/theme")
@@ -39,7 +41,7 @@ public class ThemesController {
         model.addAttribute("nameOfPage", theme.getDisplayName());
         model.addAttribute("principal", principal);
         model.addAttribute("posts", postService.findByTheme(theme).stream().sorted(
-                (x1, x2) -> x2.getDateOfCreated().compareTo(x1.getDateOfCreated())
+                Comparator.comparing(Post::getDateOfCreated).reversed()
         ));
         return "/posts/all_posts";
     }

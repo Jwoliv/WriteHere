@@ -5,11 +5,12 @@ import com.example.WriteHere.model.image.AbstractImage;
 import com.example.WriteHere.model.image.ImageComment;
 import com.example.WriteHere.model.image.ImagePost;
 import com.example.WriteHere.model.post.Post;
+import com.example.WriteHere.model.report.ReportByComment;
 import com.example.WriteHere.model.report.ReportByPost;
 import com.example.WriteHere.model.user.User;
-import com.example.WriteHere.repository.report.ReportPostRepository;
 import com.example.WriteHere.service.CommentsService;
 import com.example.WriteHere.service.PostService;
+import com.example.WriteHere.service.report.ReportCommentService;
 import com.example.WriteHere.service.report.ReportPostService;
 import com.example.WriteHere.service.user.UserService;
 import jakarta.validation.Valid;
@@ -24,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -34,13 +36,21 @@ public class PostsController {
     private final UserService userService;
     private final CommentsService commentsService;
     private final ReportPostService reportPostService;
+    private final ReportCommentService reportCommentService;
 
     @Autowired
-    public PostsController(PostService postService, UserService userService, CommentsService commentsService, ReportPostService reportPostService) {
+    public PostsController(
+            PostService postService,
+            UserService userService,
+            CommentsService commentsService,
+            ReportPostService reportPostService,
+            ReportCommentService reportCommentService
+    ) {
         this.postService = postService;
         this.userService = userService;
         this.commentsService = commentsService;
         this.reportPostService = reportPostService;
+        this.reportCommentService = reportCommentService;
     }
 
     @GetMapping()
@@ -49,7 +59,7 @@ public class PostsController {
             Principal principal
     ) {
         model.addAttribute("all_posts", postService.findAll().stream().sorted(
-                (x1, x2) -> x2.getDateOfCreated().compareTo(x1.getDateOfCreated())
+                Comparator.comparing(Post::getDateOfCreated).reversed()
         ));
         model.addAttribute("principal", principal);
         model.addAttribute("nameOfPage", "Posts");
@@ -78,7 +88,7 @@ public class PostsController {
         model.addAttribute("images", post.getImages());
         model.addAttribute("nameOfPage", post.getTitle());
         model.addAttribute("comments", post.getComments().stream().sorted(
-                (x1, x2) -> x2.getDateOfCreated().compareTo(x1.getDateOfCreated())
+                Comparator.comparing(Comment::getDateOfCreated).reversed()
         ));
         model.addAttribute("principal", principal);
         model.addAttribute("comment", new Comment());
@@ -286,6 +296,24 @@ public class PostsController {
         commentsService.save(comment);
         return "redirect:/posts/{id_post}";
     }
+    @PostMapping("/{id_post}/comments/{id_comment}/report")
+    public String createNewReportForComment(
+            Principal principal,
+            @PathVariable("id_post") Long id_post,
+            @PathVariable("id_comment") Long id_comment,
+            @ModelAttribute("report") @Valid ReportByComment report,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasErrors()) {
+            return "redirect:/posts/{id_post}";
+        }
+        if (principal == null) {
+            return "redirect:/posts/{id}";
+        }
+        report.setComment(commentsService.findById(id_comment));
+        reportCommentService.save(report);
+        return "/success_report";
+    }
     @PostMapping("/{id}/report")
     public String createNewReportForPost(
             @PathVariable Long id,
@@ -296,11 +324,12 @@ public class PostsController {
         if (bindingResult.hasErrors()) {
             return "redirect:/posts/{id}";
         }
-        if (principal != null) {
-            report.setPost(postService.findById(id));
-            reportPostService.save(report);
+        if (principal == null) {
+            return "redirect:/posts/{id}";
         }
-        return "redirect:/posts/{id}";
+        report.setPost(postService.findById(id));
+        reportPostService.save(report);
+        return "/success_report";
     }
     public <T> Integer changeRating(T element, Integer value, List<T> elementsByUser) {
         if (elementsByUser.contains(element)) return --value;

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -22,7 +23,7 @@ public class PostService {
 
     public List<Post> findAll() {
         return postRepository.findAll().stream().sorted(
-                (x1, x2) -> x2.getDateOfCreated().compareTo(x1.getDateOfCreated())
+                Comparator.comparing(Post::getDateOfCreated).reversed()
         ).toList();
     }
     public List<Post> findByTheme(Theme theme) {

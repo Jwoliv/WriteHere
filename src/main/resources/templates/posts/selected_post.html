@@ -9,14 +9,12 @@
             <h2 th:text="${post.title}"></h2>
             <a th:if="${post.user != null}" th:href="@{/user/{id}(id=${post.user.id})}" th:text="${post.user.getFullName()}"></a>
             <h5 th:if="${post.user == null}">Anonymous</h5>
-            <hr>
+            <p th:text="${post.text}"></p>
             <ul>
                 <li th:each="image: ${images}">
                     <img th:src="@{/posts/images/{id}(id=${image.id})}" alt="">
                 </li>
             </ul>
-            <hr>
-            <p th:text="${post.text}"></p>
             <h5 th:text="${post.dateOfCreated}"></h5>
             <h5 th:text="${post.getNumberOfLikes()} + ' likes'"></h5>
             <h5 th:text="${post.getNumberOfDislikes()} + ' dislikes'"></h5>
@@ -42,7 +40,7 @@
                 <input type="file" name="images" multiple="multiple">
                 <button type="submit">New comment</button>
             </form>
-            <form method="post" th:action="@{/posts/{id}/report(id=${post.id})}" th:object="${report}">
+            <form th:if="${principal != null}" method="post" th:action="@{/posts/{id}/report(id=${post.id})}" th:object="${report}">
                 <label>
                     <textarea th:field="${report.message}"></textarea>
                 </label>
@@ -77,6 +75,19 @@
                             <button type="submit">Dislike</button>
                         </form>
                     </div>
+                    <form th:if="${principal != null}" method="post" th:action="@{/posts/{id_post}/comments/{id_comment}/report(id_post=${post.id}, id_comment=${comment.id})}" th:object="${report}">
+                        <label>
+                            <textarea th:field="${report.message}"></textarea>
+                        </label>
+                        <label>
+                            <select th:field="${report.complaintType}">
+                                <option th:each="value: ${T(com.example.WriteHere.model.report.ComplaintType).values()}"
+                                        th:value="${value}"
+                                        th:text="${value.displayName}"></option>
+                            </select>
+                        </label>
+                        <button type="submit">New report</button>
+                    </form>
                 </li>
             </ul>
         </div>
