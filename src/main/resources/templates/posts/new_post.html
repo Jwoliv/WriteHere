@@ -5,7 +5,7 @@
     <title th:text="${nameOfPage}"></title>
 </head>
   <body>
-    <form method="POST" th:action="@{/posts}" th:object="${post}">
+    <form method="POST" th:action="@{/posts}" th:object="${post}" enctype="multipart/form-data">
       <label>
         <input type="text" th:field="${post.title}">
       </label>
@@ -14,10 +14,16 @@
       </label>
       <label>
         <select th:field="${post.theme}">
-          <option th:each="theme: ${T(com.example.WriteHere.model.post.Theme).values()}" th:value="${theme}" th:text="${theme.displayName}"></option>
+            <option th:each="theme: ${T(com.example.WriteHere.model.post.Theme).values()}" th:value="${theme}" th:text="${theme.displayName}"></option>
         </select>
-        <button type="submit">New post</button>
       </label>
+      <input type="file" name="images" multiple="multiple">
+      <input type="file" name="images" multiple="multiple">
+      <input type="file" name="images" multiple="multiple">
+      <input type="file" name="images" multiple="multiple">
+      <input type="file" name="images" multiple="multiple">
+      <input type="file" name="images" multiple="multiple">
+      <button type="submit">New post</button>
     </form>
   </body>
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title th:text="${nameOfPage}"></title>
@@ -9,6 +9,13 @@
             <h2 th:text="${post.title}"></h2>
             <a th:if="${post.user != null}" th:href="@{/user/{id}(id=${post.user.id})}" th:text="${post.user.getFullName()}"></a>
             <h5 th:if="${post.user == null}">Anonymous</h5>
+            <hr>
+            <ul>
+                <li th:each="image: ${images}">
+                    <img th:src="@{/posts/images/{id}(id=${image.id})}" alt="">
+                </li>
+            </ul>
+            <hr>
             <p th:text="${post.text}"></p>
             <h5 th:text="${post.dateOfCreated}"></h5>
             <h5 th:text="${post.getNumberOfLikes()} + ' likes'"></h5>
@@ -23,17 +30,28 @@
             </div>
             <br><br><br><br>
             <hr>
-            <form method="POST" th:action="@{/posts/{id}/add_comment(id=${post.id})}" th:object="${comment}">
+            <form method="POST" th:action="@{/posts/{id}/add_comment(id=${post.id})}" th:object="${comment}" enctype="multipart/form-data">
                 <label>
                     <textarea th:field="${comment.text}"></textarea>
                 </label>
+                <input type="file" name="images" multiple="multiple">
+                <input type="file" name="images" multiple="multiple">
+                <input type="file" name="images" multiple="multiple">
+                <input type="file" name="images" multiple="multiple">
+                <input type="file" name="images" multiple="multiple">
+                <input type="file" name="images" multiple="multiple">
                 <button type="submit">New comment</button>
             </form>
             <ul>
-                <li th:each="comment: ${post.comments}">
+                <li th:each="comment: ${comments}">
                     <a th:if="${comment.user != null}" th:href="@{/user/{id}(id=${comment.user.id})}" th:text="${comment.user.getFullName()}"></a>
                     <h5 th:if="${comment.user == null}">Anonymous</h5>
                     <p th:text="${comment.text}"></p>
+                    <ul>
+                        <li th:each="image: ${comment.images}">
+                            <img th:src="@{/comments/images/{id}(id=${image.id})}" alt="">
+                        </li>
+                    </ul>
                     <h5 th:text="${comment.dateOfCreated}"></h5>
                     <h5 th:text="${comment.getNumberOfLikes()} + ' likes'"></h5>
                     <h5 th:text="${comment.getNumberOfDislikes()} + ' dislikes'"></h5>

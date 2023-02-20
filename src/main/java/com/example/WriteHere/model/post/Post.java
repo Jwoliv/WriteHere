@@ -1,6 +1,7 @@
 package com.example.WriteHere.model.post;
 
 import com.example.WriteHere.model.Comment;
+import com.example.WriteHere.model.image.ImagePost;
 import com.example.WriteHere.model.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -34,6 +35,10 @@ public class Post {
     private Integer numberOfLikes;
     private Integer numberOfDislikes;
     private Boolean isByAnonymous;
+    private Long previousId;
+    @OneToMany(mappedBy = "element", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private List<ImagePost> images = new ArrayList<>();
     @OneToMany(mappedBy = "post", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<Comment> comments = new ArrayList<>();

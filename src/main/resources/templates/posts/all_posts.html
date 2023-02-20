@@ -13,6 +13,7 @@
         </form>
         <ul>
             <li th:each="post: ${all_posts}">
+                <img th:src="@{/posts/images/{id}(id=${post.previousId})}" alt="">
                 <h2 th:text="${post.title}"></h2>
                 <a th:if="${post.isByAnonymous == false}" th:href="@{/user/{id}(id=${post.user.id})}" th:text="${post.user.getFullName()}"></a>
                 <h5 th:if="${post.isByAnonymous == true}">Anonymous</h5>

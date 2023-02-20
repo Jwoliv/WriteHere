@@ -1,20 +1,25 @@
 package com.example.WriteHere.controller;
 
 import com.example.WriteHere.model.Comment;
+import com.example.WriteHere.model.image.AbstractImage;
+import com.example.WriteHere.model.image.ImageComment;
+import com.example.WriteHere.model.image.ImagePost;
 import com.example.WriteHere.model.post.Post;
 import com.example.WriteHere.model.user.User;
 import com.example.WriteHere.service.CommentsService;
 import com.example.WriteHere.service.PostService;
 import com.example.WriteHere.service.user.UserService;
-import jakarta.validation.Valid;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -63,7 +68,11 @@ public class PostsController {
     ) {
         Post post = postService.findById(id);
         model.addAttribute("post", post);
+        model.addAttribute("images", post.getImages());
         model.addAttribute("nameOfPage", post.getTitle());
+        model.addAttribute("comments", post.getComments().stream().sorted(
+                (x1, x2) -> x2.getDateOfCreated().compareTo(x1.getDateOfCreated())
+        ));
         model.addAttribute("principal", principal);
         model.addAttribute("comment", new Comment());
         return "/posts/selected_post";
@@ -91,15 +100,27 @@ public class PostsController {
     @PostMapping()
     public String saveNewPost(
             Principal principal,
-            @ModelAttribute @Valid Post post,
+            @RequestParam(value = "images", required = false) MultipartFile[] images,
+            @ModelAttribute Post post,
             BindingResult bindingResult
     ) {
-        if (bindingResult.hasErrors()) {
-            return "redirect:/posts/new";
-        }
         post.setDateOfCreated(new Date());
         post.setNumberOfLikes(0);
         post.setNumberOfDislikes(0);
+
+        if (Arrays.stream(images).anyMatch(x -> !x.isEmpty())) {
+            boolean flag = true;
+            for (MultipartFile multipartFile : images) {
+                if (!multipartFile.isEmpty()) {
+                    setImagesToList(multipartFile, post.getImages(), new ImagePost(), flag);
+                }
+                flag = false;
+            }
+            post.getImages().forEach(x -> x.setElement(post));
+            postService.save(post);
+            post.setPreviousId(post.getImages().get(0).getId());
+        }
+
         if (principal == null) post.setIsByAnonymous(true);
         else {
             User user = userService.findByEmail(principal.getName());
@@ -171,13 +192,11 @@ public class PostsController {
     @PostMapping("/{id}/add_comment")
     public String saveNewComment(
             @PathVariable Long id,
+            @RequestParam(value = "images", required = false) MultipartFile[] images,
             Principal principal,
-            @ModelAttribute @Valid Comment comment,
+            @ModelAttribute Comment comment,
             BindingResult bindingResult
     ) {
-        if (bindingResult.hasErrors()) {
-            return "redirect:/posts/{id}";
-        }
         if (principal == null) {
             comment.setIsByAnonymous(true);
         }
@@ -193,6 +212,18 @@ public class PostsController {
         comment.setNumberOfDislikes(0);
         comment.setNumberOfLikes(0);
         comment.setDateOfCreated(new Date());
+
+        if (Arrays.stream(images).anyMatch(x -> !x.isEmpty())) {
+            boolean flag = true;
+            for (MultipartFile multipartFile : images) {
+                if (!multipartFile.isEmpty()) {
+                    setImagesToList(multipartFile, comment.getImages(), new ImageComment(), flag);
+                }
+                flag = false;
+            }
+            comment.getImages().forEach(x -> x.setElement(comment));
+        }
+
         commentsService.save(comment);
         postService.save(post);
         return "redirect:/posts/{id}";
@@ -273,5 +304,32 @@ public class PostsController {
             comment.getUsersWhoDislike().add(user);
         }
         return collection;
+    }
+    public <T extends AbstractImage> void setImagesToList(
+            MultipartFile multipartFile,
+            List<T> images,
+            T imageEmpty,
+            Boolean isPrevious
+    ) {
+        T image = convertToImage(multipartFile, isPrevious, imageEmpty);
+        images.add(image);
+    }
+
+    public <T extends AbstractImage> T convertToImage(
+            MultipartFile file,
+            Boolean isPreviews,
+            T image
+    ) {
+        image.setName(file.getOriginalFilename());
+        image.setOriginalName(file.getOriginalFilename());
+        image.setSize(file.getSize());
+        image.setContentType(file.getContentType());
+        image.setIsPreviews(isPreviews);
+        try {
+            image.setBytes(file.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return image;
     }
 }

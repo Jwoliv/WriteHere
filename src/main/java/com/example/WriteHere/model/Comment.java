@@ -1,5 +1,6 @@
 package com.example.WriteHere.model;
 
+import com.example.WriteHere.model.image.ImageComment;
 import com.example.WriteHere.model.post.Post;
 import com.example.WriteHere.model.user.User;
 import jakarta.persistence.*;
@@ -37,6 +38,9 @@ public class Comment {
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id")
     private User user;
+    @OneToMany(mappedBy = "element", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private List<ImageComment> images = new ArrayList<>();
     @ManyToMany(mappedBy = "likedComments", cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
     @ToString.Exclude
     private List<User> usersWhoLike = new ArrayList<>();

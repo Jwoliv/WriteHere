@@ -36,7 +36,9 @@ public class SecurityConfig {
                                 "/posts/**",
                                 "/theme",
                                 "/theme/*/**",
-                                "/posts/*/add_comment"
+                                "/posts/*/add_comment",
+                                "/posts/images/*",
+                                "/comments/images/*"
                         ).permitAll()
                         .requestMatchers("/admin/*/**").hasRole(Role.ADMIN.name())
                         .requestMatchers(
