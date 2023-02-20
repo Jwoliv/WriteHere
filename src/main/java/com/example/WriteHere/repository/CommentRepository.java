@@ -1,6 +1,6 @@
 package com.example.WriteHere.repository;
 
-import com.example.WriteHere.model.Comment;
+import com.example.WriteHere.model.post.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

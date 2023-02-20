@@ -1,7 +1,7 @@
 package com.example.WriteHere.model.post;
 
-import com.example.WriteHere.model.Comment;
 import com.example.WriteHere.model.image.ImagePost;
+import com.example.WriteHere.model.report.ReportByPost;
 import com.example.WriteHere.model.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -42,6 +42,9 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<Comment> comments = new ArrayList<>();
+    @OneToMany(mappedBy = "post", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private List<ReportByPost> reports = new ArrayList<>();
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

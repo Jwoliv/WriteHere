@@ -48,7 +48,8 @@ public class SecurityConfig {
                                 "/posts/*/comments/*/like",
                                 "/posts/*/comments/*/dislike",
                                 "/profile",
-                                "/users/**"
+                                "/users/**",
+                                "/posts/*/report"
                         ).hasAnyRole(Role.USER.name(), Role.ADMIN.name())
                         .anyRequest().authenticated()
                 )

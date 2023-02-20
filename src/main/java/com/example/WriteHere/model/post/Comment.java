@@ -1,7 +1,8 @@
-package com.example.WriteHere.model;
+package com.example.WriteHere.model.post;
 
 import com.example.WriteHere.model.image.ImageComment;
 import com.example.WriteHere.model.post.Post;
+import com.example.WriteHere.model.report.ReportByComment;
 import com.example.WriteHere.model.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -41,6 +42,9 @@ public class Comment {
     @OneToMany(mappedBy = "element", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<ImageComment> images = new ArrayList<>();
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private List<ReportByComment> reports = new ArrayList<>();
     @ManyToMany(mappedBy = "likedComments", cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
     @ToString.Exclude
     private List<User> usersWhoLike = new ArrayList<>();

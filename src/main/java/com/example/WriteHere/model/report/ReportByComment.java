@@ -1,21 +1,21 @@
-package com.example.WriteHere.model.image;
+package com.example.WriteHere.model.report;
 
 import com.example.WriteHere.model.post.Comment;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 @Entity
+@Component
 @Getter
 @Setter
-@ToString
-@Component
 @NoArgsConstructor
 @AllArgsConstructor
-public class ImageComment extends AbstractImage {
+public class ReportByComment extends AbstractReport {
     @ManyToOne
-    @JoinColumn
-    private Comment element;
+    private Comment comment;
 }

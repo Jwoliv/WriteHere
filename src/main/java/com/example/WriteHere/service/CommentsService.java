@@ -1,6 +1,6 @@
 package com.example.WriteHere.service;
 
-import com.example.WriteHere.model.Comment;
+import com.example.WriteHere.model.post.Comment;
 import com.example.WriteHere.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

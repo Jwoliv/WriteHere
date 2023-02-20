@@ -1,6 +1,6 @@
 package com.example.WriteHere.model.user;
 
-import com.example.WriteHere.model.Comment;
+import com.example.WriteHere.model.post.Comment;
 import com.example.WriteHere.model.post.Post;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;

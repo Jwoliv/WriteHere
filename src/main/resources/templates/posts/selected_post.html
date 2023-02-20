@@ -42,6 +42,20 @@
                 <input type="file" name="images" multiple="multiple">
                 <button type="submit">New comment</button>
             </form>
+            <form method="post" th:action="@{/posts/{id}/report(id=${post.id})}" th:object="${report}">
+                <label>
+                    <textarea th:field="${report.message}"></textarea>
+                </label>
+                <label>
+                    <select th:field="${report.complaintType}">
+                        <option th:each="value: ${T(com.example.WriteHere.model.report.ComplaintType).values()}"
+                                th:value="${value}"
+                                th:text="${value.displayName}"></option>
+                    </select>
+                </label>
+                <button type="submit">New report</button>
+            </form>
+
             <ul>
                 <li th:each="comment: ${comments}">
                     <a th:if="${comment.user != null}" th:href="@{/user/{id}(id=${comment.user.id})}" th:text="${comment.user.getFullName()}"></a>

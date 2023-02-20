@@ -1,14 +1,18 @@
 package com.example.WriteHere.controller;
 
-import com.example.WriteHere.model.Comment;
+import com.example.WriteHere.model.post.Comment;
 import com.example.WriteHere.model.image.AbstractImage;
 import com.example.WriteHere.model.image.ImageComment;
 import com.example.WriteHere.model.image.ImagePost;
 import com.example.WriteHere.model.post.Post;
+import com.example.WriteHere.model.report.ReportByPost;
 import com.example.WriteHere.model.user.User;
+import com.example.WriteHere.repository.report.ReportPostRepository;
 import com.example.WriteHere.service.CommentsService;
 import com.example.WriteHere.service.PostService;
+import com.example.WriteHere.service.report.ReportPostService;
 import com.example.WriteHere.service.user.UserService;
+import jakarta.validation.Valid;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,11 +33,14 @@ public class PostsController {
     private final PostService postService;
     private final UserService userService;
     private final CommentsService commentsService;
+    private final ReportPostService reportPostService;
+
     @Autowired
-    public PostsController(PostService postService, UserService userService, CommentsService commentsService) {
+    public PostsController(PostService postService, UserService userService, CommentsService commentsService, ReportPostService reportPostService) {
         this.postService = postService;
         this.userService = userService;
         this.commentsService = commentsService;
+        this.reportPostService = reportPostService;
     }
 
     @GetMapping()
@@ -75,6 +82,7 @@ public class PostsController {
         ));
         model.addAttribute("principal", principal);
         model.addAttribute("comment", new Comment());
+        model.addAttribute("report", new ReportByPost());
         return "/posts/selected_post";
     }
     @GetMapping("/new")
@@ -278,7 +286,22 @@ public class PostsController {
         commentsService.save(comment);
         return "redirect:/posts/{id_post}";
     }
-
+    @PostMapping("/{id}/report")
+    public String createNewReportForPost(
+            @PathVariable Long id,
+            Principal principal,
+            @ModelAttribute("report") @Valid ReportByPost report,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasErrors()) {
+            return "redirect:/posts/{id}";
+        }
+        if (principal != null) {
+            report.setPost(postService.findById(id));
+            reportPostService.save(report);
+        }
+        return "redirect:/posts/{id}";
+    }
     public <T> Integer changeRating(T element, Integer value, List<T> elementsByUser) {
         if (elementsByUser.contains(element)) return --value;
         return ++value;
