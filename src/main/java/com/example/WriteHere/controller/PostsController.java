@@ -13,6 +13,8 @@ import com.example.WriteHere.service.PostService;
 import com.example.WriteHere.service.report.ReportCommentService;
 import com.example.WriteHere.service.report.ReportPostService;
 import com.example.WriteHere.service.user.UserService;
+import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.parser.Parser;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,6 +127,7 @@ public class PostsController {
         post.setDateOfCreated(new Date());
         post.setNumberOfLikes(0);
         post.setNumberOfDislikes(0);
+        post.setText(convertTextToMarkDown(post.getText()));
 
         if (Arrays.stream(images).anyMatch(x -> !x.isEmpty())) {
             boolean flag = true;
@@ -230,7 +233,7 @@ public class PostsController {
         comment.setNumberOfDislikes(0);
         comment.setNumberOfLikes(0);
         comment.setDateOfCreated(new Date());
-
+        comment.setText(convertTextToMarkDown(comment.getText()));
         if (Arrays.stream(images).anyMatch(x -> !x.isEmpty())) {
             boolean flag = true;
             for (MultipartFile multipartFile : images) {
@@ -383,5 +386,10 @@ public class PostsController {
             throw new RuntimeException(e);
         }
         return image;
+    }
+    public String convertTextToMarkDown(String text) {
+        HtmlRenderer renderer = HtmlRenderer.builder().build();
+        Parser parser = Parser.builder().build();
+        return renderer.render(parser.parse(text));
     }
 }
