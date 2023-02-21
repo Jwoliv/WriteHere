@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Selected post for admin</title>
+</head>
+    <body>
+    <div>
+        <h2 th:text="${post.title}"></h2>
+        <a th:if="${post.user != null}" th:href="@{/user/{id}(id=${post.user.id})}" th:text="${post.user.getFullName()}"></a>
+        <h5 th:if="${post.user == null}">Anonymous</h5>
+        <p th:utext="${post.text}"></p>
+        <ul>
+            <li th:each="image: ${post.images}">
+                <img th:src="@{/posts/images/{id}(id=${image.id})}" alt="">
+            </li>
+        </ul>
+        <h5 th:text="${post.dateOfCreated}"></h5>
+        <h5 th:text="${post.getNumberOfLikes()} + ' likes'"></h5>
+        <h5 th:text="${post.getNumberOfDislikes()} + ' dislikes'"></h5>
+        <hr>
+        <form th:method="delete" th:action="@{/posts/{id}(id=${post.id})}">
+            <button type="submit">Delete post</button>
+        </form>
+    </div>
+    </body>
+</html>

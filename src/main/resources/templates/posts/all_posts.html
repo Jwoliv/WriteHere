@@ -13,25 +13,26 @@
         </form>
         <ul>
             <li th:each="post: ${all_posts}">
-                <hr>
-                <h2 th:text="${post.title}"></h2>
-                <img th:if="${post.images.size() != 0}" th:src="@{/posts/images/{id}(id=${post.previousId})}" alt="">
-                <a th:if="${post.isByAnonymous == false}" th:href="@{/users/{id}(id=${post.user.id})}" th:text="${post.user.getFullName()}"></a>
-                <h5 th:if="${post.isByAnonymous == true}">Anonymous</h5>
-                <p th:utext="${#strings.substring(post.text, 0, 150)}"></p>
-                <h5 th:text="${post.dateOfCreated}"></h5>
-                <a th:href="@{/posts/{id}(id=${post.id})}">Read more</a>
-                <h5 th:text="${post.getNumberOfLikes()} + ' likes'"></h5>
-                <h5 th:text="${post.getNumberOfDislikes()} + ' dislikes'"></h5>
-                <div th:if="${principal != null}">
-                    <form  th:method="PATCH" th:action="@{/posts/{id}/like(id=${post.id})}">
-                        <button type="submit">Like</button>
-                    </form>
-                    <form th:method="PATCH" th:action="@{/posts/{id}/dislike(id=${post.id})}">
-                        <button type="submit">Dislike</button>
-                    </form>
-                </div>
-                <hr>
+            <hr>
+            <h2 th:text="${post.title}"></h2>
+            <img th:if="${post.images.size() != 0}" th:src="@{/posts/images/{id}(id=${post.previousId})}" alt="">
+            <a th:if="${post.isByAnonymous == false}" th:href="@{/users/{id}(id=${post.user.id})}" th:text="${post.user.getFullName()}"></a>
+            <h5 th:if="${post.isByAnonymous == true}">Anonymous</h5>
+            <p th:if="${post.text.length > 150}" th:utext="${#strings.substring(post.text, 0, 150)}"></p>
+            <p th:if="${post.text.length <= 150}" th:utext="${post.text}"></p>
+            <h5 th:text="${post.dateOfCreated}"></h5>
+            <a th:href="@{/posts/{id}(id=${post.id})}">Read more</a>
+            <h5 th:text="${post.getNumberOfLikes()} + ' likes'"></h5>
+            <h5 th:text="${post.getNumberOfDislikes()} + ' dislikes'"></h5>
+            <div th:if="${principal != null}">
+                <form  th:method="PATCH" th:action="@{/posts/{id}/like(id=${post.id})}">
+                    <button type="submit">Like</button>
+                </form>
+                <form th:method="PATCH" th:action="@{/posts/{id}/dislike(id=${post.id})}">
+                    <button type="submit">Dislike</button>
+                </form>
+            </div>
+            <hr>
             </li>
         </ul>
     </body>

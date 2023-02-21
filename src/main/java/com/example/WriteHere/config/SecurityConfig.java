@@ -40,7 +40,7 @@ public class SecurityConfig {
                                 "/posts/images/*",
                                 "/comments/images/*"
                         ).permitAll()
-                        .requestMatchers("/admin/*/**").hasRole(Role.ADMIN.name())
+                        .requestMatchers("/admin", "/admin/*/**").hasRole(Role.ADMIN.name())
                         .requestMatchers(
                                 "/profile",
                                 "/posts/*/like",

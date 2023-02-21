@@ -54,7 +54,7 @@ public class User {
     )
     @ToString.Exclude
     private List<Comment> comments = new ArrayList<>();
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
     @JoinTable(
             name = "user_liked_posts",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -62,7 +62,7 @@ public class User {
     )
     @ToString.Exclude
     private List<Post> likedPosts = new ArrayList<>();
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
     @JoinTable(
             name = "user_disliked_posts",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -70,7 +70,7 @@ public class User {
     )
     @ToString.Exclude
     private List<Post> dislikedPosts = new ArrayList<>();
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
     @JoinTable(
             name = "user_liked_comments",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -78,7 +78,7 @@ public class User {
     )
     @ToString.Exclude
     private List<Comment> likedComments = new ArrayList<>();
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
     @JoinTable(
             name = "user_disliked_comments",
             joinColumns = @JoinColumn(name = "user_id"),

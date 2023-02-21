@@ -9,8 +9,10 @@
     <ul>
         <li th:each="post: ${user.posts}">
             <h4 th:text="${post.title}"></h4>
-            <p th:text="${post.text}"></p>
+            <p th:utext="${post.text}"></p>
             <a th:href="@{/users/{id}(id=${post.user.id})}" th:text="${user.fullName}"></a>
+            <h3 th:text="${post.numberOfLikes} + ' Likes'"></h3>
+            <h3 th:text="${post.numberOfDislikes} + ' Dislikes'"></h3>
             <a th:href="@{/posts/{id}(id=${post.id})}">Read more</a>
         </li>
     </ul>

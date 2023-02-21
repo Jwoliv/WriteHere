@@ -1,5 +1,6 @@
 package com.example.WriteHere.service;
 
+import com.example.WriteHere.model.post.Comment;
 import com.example.WriteHere.model.post.Post;
 import com.example.WriteHere.model.post.Theme;
 import com.example.WriteHere.repository.PostRepository;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;

@@ -7,6 +7,7 @@ import com.example.WriteHere.model.image.ImagePost;
 import com.example.WriteHere.model.post.Post;
 import com.example.WriteHere.model.report.ReportByComment;
 import com.example.WriteHere.model.report.ReportByPost;
+import com.example.WriteHere.model.user.Role;
 import com.example.WriteHere.model.user.User;
 import com.example.WriteHere.service.CommentsService;
 import com.example.WriteHere.service.PostService;

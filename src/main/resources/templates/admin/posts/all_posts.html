@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All posts for admin</title>
+</head>
+<body>
+    <table>
+        <tr>
+            <td>Title of post</td>
+            <td>Number of comments</td>
+            <td>Number of like</td>
+            <td>Number of dislike</td>
+            <td>Number of report</td>
+            <td>Author</td>
+        </tr>
+        <tr th:each="post: ${all_posts}">
+            <td>
+                <a th:href="@{/admin/posts/{id}(id=${post.id})}" th:text="${post.title}"></a>
+            </td>
+            <td th:text="${post.comments.size()}"></td>
+            <td th:text="${post.numberOfLikes}"></td>
+            <td th:text="${post.numberOfDislikes}"></td>
+            <td th:text="${post.reports.size()}"></td>
+            <td th:if="${post.user == null}">Anonymous</td>
+            <td th:if="${post.user != null}">
+                <a th:href="@{/users/{id}(id=${post.user.id})}" th:text="${post.user.fullName}"></a>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

@@ -33,11 +33,9 @@ public class Comment {
     private Integer numberOfDislikes;
     private Boolean isByAnonymous;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "post_id")
+    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
     private Post post;
-    @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "user_id")
+    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
     private User user;
     @OneToMany(mappedBy = "element", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
@@ -45,10 +43,16 @@ public class Comment {
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<ReportByComment> reports = new ArrayList<>();
-    @ManyToMany(mappedBy = "likedComments", cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToMany(
+            mappedBy = "likedComments",
+            cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.MERGE}
+    )
     @ToString.Exclude
     private List<User> usersWhoLike = new ArrayList<>();
-    @ManyToMany(mappedBy = "dislikedComments", cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToMany(
+            mappedBy = "dislikedComments",
+            cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.MERGE}
+    )
     @ToString.Exclude
     private List<User> usersWhoDislike = new ArrayList<>();
 }
