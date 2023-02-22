@@ -96,6 +96,9 @@ public class PostsController {
         model.addAttribute("principal", principal);
         model.addAttribute("comment", new Comment());
         model.addAttribute("report", new ReportByPost());
+        if (post.getUser() != null && principal != null) {
+            model.addAttribute("userIsOwner", post.getUser().equals(userService.findByEmail(principal.getName())));
+        }
         return "/posts/selected_post";
     }
     @GetMapping("/new")
@@ -168,6 +171,18 @@ public class PostsController {
         postFromDB.setTheme(post.getTheme());
         postService.save(postFromDB);
         return "redirect:/posts/{id}";
+    }
+    @DeleteMapping("/{id}")
+    public String deletePost(@PathVariable Long id, Principal principal) {
+        User user = userService.findByEmail(principal.getName());
+        Post post = postService.findById(id);
+
+        if (user.getRole().equals(Role.ADMIN) || post.getUser() != null && post.getUser().equals(user)) {
+            postService.deleteById(id);
+            if (user.getRole().equals(Role.ADMIN)) return "redirect:/admin/posts";
+
+        }
+        return "redirect:/profile";
     }
     @PatchMapping("/{id}/like")
     public String likedPost(@PathVariable Long id, Principal principal) {

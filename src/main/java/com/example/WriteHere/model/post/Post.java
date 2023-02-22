@@ -60,4 +60,12 @@ public class Post {
     )
     @ToString.Exclude
     private List<User> usersWhoDislike = new ArrayList<>();
+    public void removeUserRelationships() {
+        this.getUsersWhoLike().forEach(user -> user.getLikedPosts().remove(this));
+        this.getUsersWhoDislike().forEach(user -> user.getDislikedPosts().remove(this));
+        this.getComments().forEach(comment -> {
+            comment.getUsersWhoLike().forEach(user -> user.getLikedComments().remove(comment));
+            comment.getUsersWhoDislike().forEach(user -> user.getDislikedComments().remove(comment));
+        });
+    }
 }
