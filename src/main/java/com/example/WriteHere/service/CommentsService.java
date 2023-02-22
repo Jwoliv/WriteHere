@@ -26,6 +26,9 @@ public class CommentsService {
     }
     @Transactional
     public void save(Comment comment) {
+        if (comment.getReports().size() >= 5) {
+            comment.setIsSuspicious(true);
+        }
         commentRepository.save(comment);
     }
     @Transactional

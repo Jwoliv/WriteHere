@@ -1,9 +1,9 @@
 package com.example.WriteHere.controller;
 
-import com.example.WriteHere.model.post.Comment;
 import com.example.WriteHere.model.image.AbstractImage;
 import com.example.WriteHere.model.image.ImageComment;
 import com.example.WriteHere.model.image.ImagePost;
+import com.example.WriteHere.model.post.Comment;
 import com.example.WriteHere.model.post.Post;
 import com.example.WriteHere.model.report.ReportByComment;
 import com.example.WriteHere.model.report.ReportByPost;
@@ -27,10 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/posts")
@@ -61,9 +58,19 @@ public class PostsController {
             @NonNull Model model,
             Principal principal
     ) {
-        model.addAttribute("all_posts", postService.findAll().stream().sorted(
-                Comparator.comparing(Post::getDateOfCreated).reversed()
-        ));
+        if (principal == null) {
+            model.addAttribute("all_posts", postService.findAll().stream().sorted(
+                    Comparator.comparing(Post::getDateOfCreated).reversed()
+            ));
+        }
+        else {
+            User user = userService.findByEmail(principal.getName());
+            List<Post> allPosts = new ArrayList<>(postService.findAll().stream().sorted(
+                    Comparator.comparing(Post::getDateOfCreated).reversed()
+            ).toList());
+            allPosts.removeAll(user.getBlackListOfPosts());
+            model.addAttribute("all_posts", allPosts);
+        }
         model.addAttribute("principal", principal);
         model.addAttribute("nameOfPage", "Posts");
         return "/posts/all_posts";
@@ -132,6 +139,7 @@ public class PostsController {
         post.setNumberOfLikes(0);
         post.setNumberOfDislikes(0);
         post.setText(convertTextToMarkDown(post.getText()));
+        post.setIsSuspicious(false);
 
         if (Arrays.stream(images).anyMatch(x -> !x.isEmpty())) {
             boolean flag = true;
@@ -169,6 +177,7 @@ public class PostsController {
         postFromDB.setTitle(post.getTitle());
         postFromDB.setText(post.getText());
         postFromDB.setTheme(post.getTheme());
+        postFromDB.setIsSuspicious(true);
         postService.save(postFromDB);
         return "redirect:/posts/{id}";
     }
@@ -250,6 +259,7 @@ public class PostsController {
         comment.setNumberOfLikes(0);
         comment.setDateOfCreated(new Date());
         comment.setText(convertTextToMarkDown(comment.getText()));
+        comment.setIsSuspicious(false);
         if (Arrays.stream(images).anyMatch(x -> !x.isEmpty())) {
             boolean flag = true;
             for (MultipartFile multipartFile : images) {
@@ -329,6 +339,7 @@ public class PostsController {
         if (principal == null) {
             return "redirect:/posts/{id}";
         }
+        report.setId(null);
         report.setComment(commentsService.findById(id_comment));
         reportCommentService.save(report);
         return "/success_report";
@@ -346,8 +357,16 @@ public class PostsController {
         if (principal == null) {
             return "redirect:/posts/{id}";
         }
+        report.setId(null);
         report.setPost(postService.findById(id));
         reportPostService.save(report);
+
+        User user = userService.findByEmail(principal.getName());
+        Post post = postService.findById(id);
+        if (!user.getBlackListOfPosts().contains(post)) {
+            user.getBlackListOfPosts().add(post);
+        }
+        userService.saveAfterChange(user);
         return "/success_report";
     }
     public <T> Integer changeRating(T element, Integer value, List<T> elementsByUser) {

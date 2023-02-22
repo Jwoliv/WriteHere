@@ -34,6 +34,9 @@ public class PostService {
     }
     @Transactional
     public void save(Post post) {
+        if (post.getReports().size() >= 50) {
+            post.setIsSuspicious(true);
+        }
         postRepository.save(post);
     }
     @Transactional

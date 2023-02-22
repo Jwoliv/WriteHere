@@ -1,7 +1,6 @@
 package com.example.WriteHere.model.post;
 
 import com.example.WriteHere.model.image.ImageComment;
-import com.example.WriteHere.model.post.Post;
 import com.example.WriteHere.model.report.ReportByComment;
 import com.example.WriteHere.model.user.User;
 import jakarta.persistence.*;
@@ -32,6 +31,7 @@ public class Comment {
     private Integer numberOfLikes;
     private Integer numberOfDislikes;
     private Boolean isByAnonymous;
+    private Boolean isSuspicious;
 
     @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
     private Post post;

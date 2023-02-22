@@ -36,6 +36,7 @@ public class Post {
     private Integer numberOfDislikes;
     private Boolean isByAnonymous;
     private Long previousId;
+    private Boolean isSuspicious;
     @OneToMany(mappedBy = "element", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<ImagePost> images = new ArrayList<>();
@@ -60,9 +61,16 @@ public class Post {
     )
     @ToString.Exclude
     private List<User> usersWhoDislike = new ArrayList<>();
+    @ManyToMany(
+            mappedBy = "blackListOfPosts",
+            cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST}
+    )
+    @ToString.Exclude
+    private List<User> usersWhoBlock = new ArrayList<>();
     public void removeUserRelationships() {
         this.getUsersWhoLike().forEach(user -> user.getLikedPosts().remove(this));
         this.getUsersWhoDislike().forEach(user -> user.getDislikedPosts().remove(this));
+        this.getUsersWhoBlock().forEach(user -> user.getBlackListOfPosts().remove(this));
         this.getComments().forEach(comment -> {
             comment.getUsersWhoLike().forEach(user -> user.getLikedComments().remove(comment));
             comment.getUsersWhoDislike().forEach(user -> user.getDislikedComments().remove(comment));
