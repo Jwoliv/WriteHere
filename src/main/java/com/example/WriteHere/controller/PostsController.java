@@ -1,21 +1,16 @@
 package com.example.WriteHere.controller;
 
-import com.example.WriteHere.model.image.AbstractImage;
 import com.example.WriteHere.model.image.ImageComment;
 import com.example.WriteHere.model.image.ImagePost;
 import com.example.WriteHere.model.post.Comment;
 import com.example.WriteHere.model.post.Post;
-import com.example.WriteHere.model.report.ReportByComment;
 import com.example.WriteHere.model.report.ReportByPost;
 import com.example.WriteHere.model.user.Role;
 import com.example.WriteHere.model.user.User;
 import com.example.WriteHere.service.CommentsService;
 import com.example.WriteHere.service.PostService;
-import com.example.WriteHere.service.report.ReportCommentService;
 import com.example.WriteHere.service.report.ReportPostService;
 import com.example.WriteHere.service.user.UserService;
-import com.vladsch.flexmark.html.HtmlRenderer;
-import com.vladsch.flexmark.parser.Parser;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +20,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.security.Principal;
 import java.util.*;
 
@@ -34,23 +28,23 @@ import java.util.*;
 public class PostsController {
     private final PostService postService;
     private final UserService userService;
-    private final CommentsService commentsService;
     private final ReportPostService reportPostService;
-    private final ReportCommentService reportCommentService;
+    private final ConvertMethods convertMethods;
+    private final CommentsService commentsService;
 
     @Autowired
     public PostsController(
             PostService postService,
             UserService userService,
-            CommentsService commentsService,
             ReportPostService reportPostService,
-            ReportCommentService reportCommentService
+            ConvertMethods convertMethods,
+            CommentsService commentsService
     ) {
         this.postService = postService;
         this.userService = userService;
-        this.commentsService = commentsService;
         this.reportPostService = reportPostService;
-        this.reportCommentService = reportCommentService;
+        this.convertMethods = convertMethods;
+        this.commentsService = commentsService;
     }
 
     @GetMapping()
@@ -97,14 +91,26 @@ public class PostsController {
         model.addAttribute("post", post);
         model.addAttribute("images", post.getImages());
         model.addAttribute("nameOfPage", post.getTitle());
-        model.addAttribute("comments", post.getComments().stream().sorted(
-                Comparator.comparing(Comment::getDateOfCreated).reversed()
-        ));
+        if (principal == null) {
+            model.addAttribute("comments", post.getComments().stream().sorted(
+                    Comparator.comparing(Comment::getDateOfCreated).reversed()
+            ).toList());
+        }
         model.addAttribute("principal", principal);
         model.addAttribute("comment", new Comment());
         model.addAttribute("report", new ReportByPost());
-        if (post.getUser() != null && principal != null) {
-            model.addAttribute("userIsOwner", post.getUser().equals(userService.findByEmail(principal.getName())));
+
+        if (principal != null) {
+            User user = userService.findByEmail(principal.getName());
+            if (post.getUser() != null) {
+                model.addAttribute("userIsOwner", post.getUser().equals(user));
+            }
+            model.addAttribute("createdReportIsExist", !user.getBlackListOfPosts().contains(post));
+            List<Comment> comments = new ArrayList<>(post.getComments().stream().sorted(
+                    Comparator.comparing(Comment::getDateOfCreated).reversed()
+            ).toList());
+            comments.removeAll(user.getBlackListOfComments());
+            model.addAttribute("comments", comments);
         }
         return "/posts/selected_post";
     }
@@ -138,14 +144,14 @@ public class PostsController {
         post.setDateOfCreated(new Date());
         post.setNumberOfLikes(0);
         post.setNumberOfDislikes(0);
-        post.setText(convertTextToMarkDown(post.getText()));
+        post.setText(convertMethods.convertTextToMarkDown(post.getText()));
         post.setIsSuspicious(false);
 
         if (Arrays.stream(images).anyMatch(x -> !x.isEmpty())) {
             boolean flag = true;
             for (MultipartFile multipartFile : images) {
                 if (!multipartFile.isEmpty()) {
-                    setImagesToList(multipartFile, post.getImages(), new ImagePost(), flag);
+                    convertMethods.setImagesToList(multipartFile, post.getImages(), new ImagePost(), flag);
                 }
                 flag = false;
             }
@@ -193,13 +199,54 @@ public class PostsController {
         }
         return "redirect:/profile";
     }
+    @PostMapping("{id}/add_comment")
+    public String saveNewComment(
+            @PathVariable Long id,
+            @RequestParam(value = "images", required = false) MultipartFile[] images,
+            Principal principal,
+            @ModelAttribute Comment comment,
+            BindingResult bindingResult
+    ) {
+        comment.setId(null);
+        if (principal == null) {
+            comment.setIsByAnonymous(true);
+        }
+        else {
+            User user = userService.findByEmail(principal.getName());
+            user.getComments().add(comment);
+            comment.setIsByAnonymous(false);
+            comment.setUser(user);
+        }
+        Post post = postService.findById(id);
+        comment.setPost(post);
+        post.getComments().add(comment);
+        comment.setNumberOfDislikes(0);
+        comment.setNumberOfLikes(0);
+        comment.setDateOfCreated(new Date());
+        comment.setText(convertMethods.convertTextToMarkDown(comment.getText()));
+        comment.setIsSuspicious(false);
+        if (Arrays.stream(images).anyMatch(x -> !x.isEmpty())) {
+            boolean flag = true;
+            for (MultipartFile multipartFile : images) {
+                if (!multipartFile.isEmpty()) {
+                    convertMethods.setImagesToList(multipartFile, comment.getImages(), new ImageComment(), flag);
+                }
+                flag = false;
+            }
+            comment.getImages().forEach(x -> x.setElement(comment));
+        }
+
+        commentsService.save(comment);
+        postService.save(post);
+        return "redirect:/posts/{id}";
+    }
     @PatchMapping("/{id}/like")
     public String likedPost(@PathVariable Long id, Principal principal) {
         Post post = postService.findById(id);
         if (principal != null) {
             User user = userService.findByEmail(principal.getName());
             post.setNumberOfLikes(
-                    changeRating(post, post.getNumberOfLikes(), user.getLikedPosts())
+                    convertMethods.changeRating(post, post.getNumberOfLikes(), user.getLikedPosts())
             );
             user.setLikedPosts(
                     togglePostToTheSecondCollectionOfUser(user.getLikedPosts(), post, user)
@@ -220,7 +267,7 @@ public class PostsController {
         if (principal != null) {
             User user = userService.findByEmail(principal.getName());
             post.setNumberOfDislikes(
-                    changeRating(post, post.getNumberOfDislikes(), user.getDislikedPosts())
+                    convertMethods.changeRating(post, post.getNumberOfDislikes(), user.getDislikedPosts())
             );
             user.setDislikedPosts(
                     togglePostToTheSecondCollectionOfUser(user.getDislikedPosts(), post, user)
@@ -235,115 +282,7 @@ public class PostsController {
         }
         return "redirect:/posts/{id}";
     }
-    @PostMapping("/{id}/add_comment")
-    public String saveNewComment(
-            @PathVariable Long id,
-            @RequestParam(value = "images", required = false) MultipartFile[] images,
-            Principal principal,
-            @ModelAttribute Comment comment,
-            BindingResult bindingResult
-    ) {
-        if (principal == null) {
-            comment.setIsByAnonymous(true);
-        }
-        else {
-            User user = userService.findByEmail(principal.getName());
-            user.getComments().add(comment);
-            comment.setIsByAnonymous(false);
-            comment.setUser(user);
-        }
-        Post post = postService.findById(id);
-        comment.setPost(post);
-        post.getComments().add(comment);
-        comment.setNumberOfDislikes(0);
-        comment.setNumberOfLikes(0);
-        comment.setDateOfCreated(new Date());
-        comment.setText(convertTextToMarkDown(comment.getText()));
-        comment.setIsSuspicious(false);
-        if (Arrays.stream(images).anyMatch(x -> !x.isEmpty())) {
-            boolean flag = true;
-            for (MultipartFile multipartFile : images) {
-                if (!multipartFile.isEmpty()) {
-                    setImagesToList(multipartFile, comment.getImages(), new ImageComment(), flag);
-                }
-                flag = false;
-            }
-            comment.getImages().forEach(x -> x.setElement(comment));
-        }
 
-        commentsService.save(comment);
-        postService.save(post);
-        return "redirect:/posts/{id}";
-    }
-    @PatchMapping("/{id_post}/comments/{id_comment}/like")
-    public String pageOfLikedComment(
-            @PathVariable Long id_post,
-            @PathVariable Long id_comment,
-            Principal principal
-    ) {
-        if (principal == null) {
-            return "redirect:/posts/{id_post}";
-        }
-        User user = userService.findByEmail(principal.getName());
-        Comment comment = commentsService.findById(id_comment);
-        comment.setNumberOfLikes(
-                changeRating(comment, comment.getNumberOfLikes(), user.getLikedComments())
-        );
-        user.setLikedComments(
-                toggleCommentToTheSecondCollectionOfUser(user.getLikedComments(), comment, user)
-        );
-        if (user.getDislikedComments().contains(comment)) {
-            user.getDislikedComments().remove(comment);
-            comment.setNumberOfDislikes(comment.getNumberOfDislikes() - 1);
-        }
-        userService.saveAfterChange(user);
-        commentsService.save(comment);
-        return "redirect:/posts/{id_post}";
-    }
-    @PatchMapping("/{id_post}/comments/{id_comment}/dislike")
-    public String pageOfDislikedComment(
-            @PathVariable("id_post") Long id_post,
-            @PathVariable("id_comment") Long id_comment,
-            Principal principal
-    ) {
-        if (principal == null) {
-            return "redirect:/posts/{id_post}";
-        }
-        User user = userService.findByEmail(principal.getName());
-        Comment comment = commentsService.findById(id_comment);
-        comment.setNumberOfDislikes(
-                changeRating(comment, comment.getNumberOfDislikes(), user.getDislikedComments())
-        );
-        user.setDislikedComments(
-                toggleCommentToTheSecondCollectionOfUser(user.getDislikedComments(), comment, user)
-        );
-        if (user.getLikedComments().contains(comment)) {
-            user.getLikedComments().remove(comment);
-            comment.setNumberOfLikes(comment.getNumberOfLikes() - 1);
-        }
-        userService.saveAfterChange(user);
-        commentsService.save(comment);
-        return "redirect:/posts/{id_post}";
-    }
-    @PostMapping("/{id_post}/comments/{id_comment}/report")
-    public String createNewReportForComment(
-            Principal principal,
-            @PathVariable("id_post") Long id_post,
-            @PathVariable("id_comment") Long id_comment,
-            @ModelAttribute("report") @Valid ReportByComment report,
-            BindingResult bindingResult
-    ) {
-        if (bindingResult.hasErrors()) {
-            return "redirect:/posts/{id_post}";
-        }
-        if (principal == null) {
-            return "redirect:/posts/{id}";
-        }
-        report.setId(null);
-        report.setComment(commentsService.findById(id_comment));
-        reportCommentService.save(report);
-        return "/success_report";
-    }
     @PostMapping("/{id}/report")
     public String createNewReportForPost(
             @PathVariable Long id,
@@ -357,21 +296,18 @@ public class PostsController {
         if (principal == null) {
             return "redirect:/posts/{id}";
         }
-        report.setId(null);
-        report.setPost(postService.findById(id));
-        reportPostService.save(report);
-
         User user = userService.findByEmail(principal.getName());
         Post post = postService.findById(id);
+
         if (!user.getBlackListOfPosts().contains(post)) {
+            report.setId(null);
+            report.setPost(postService.findById(id));
+            reportPostService.save(report);
             user.getBlackListOfPosts().add(post);
         }
+
         userService.saveAfterChange(user);
         return "/success_report";
-    }
-    public <T> Integer changeRating(T element, Integer value, List<T> elementsByUser) {
-        if (elementsByUser.contains(element)) return --value;
-        return ++value;
     }
     public List<Post> togglePostToTheSecondCollectionOfUser(List<Post> collection, Post post, User user) {
         if (collection.contains(post)) {
@@ -383,48 +319,5 @@ public class PostsController {
             post.getUsersWhoDislike().add(user);
         }
         return collection;
-    }
-    public List<Comment> toggleCommentToTheSecondCollectionOfUser(List<Comment> collection, Comment comment, User user) {
-        if (collection.contains(comment)) {
-            collection.remove(comment);
-            comment.getUsersWhoDislike().remove(user);
-        }
-        else {
-            collection.add(comment);
-            comment.getUsersWhoDislike().add(user);
-        }
-        return collection;
-    }
-    public <T extends AbstractImage> void setImagesToList(
-            MultipartFile multipartFile,
-            List<T> images,
-            T imageEmpty,
-            Boolean isPrevious
-    ) {
-        T image = convertToImage(multipartFile, isPrevious, imageEmpty);
-        images.add(image);
-    }
-
-    public <T extends AbstractImage> T convertToImage(
-            MultipartFile file,
-            Boolean isPreviews,
-            T image
-    ) {
-        image.setName(file.getOriginalFilename());
-        image.setOriginalName(file.getOriginalFilename());
-        image.setSize(file.getSize());
-        image.setContentType(file.getContentType());
-        image.setIsPreviews(isPreviews);
-        try {
-            image.setBytes(file.getBytes());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return image;
-    }
-    public String convertTextToMarkDown(String text) {
-        HtmlRenderer renderer = HtmlRenderer.builder().build();
-        Parser parser = Parser.builder().build();
-        return renderer.render(parser.parse(text));
     }
 }

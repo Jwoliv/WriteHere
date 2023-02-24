@@ -55,4 +55,10 @@ public class Comment {
     )
     @ToString.Exclude
     private List<User> usersWhoDislike = new ArrayList<>();
+    @ManyToMany(
+            mappedBy = "blackListOfComments",
+            cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST}
+    )
+    @ToString.Exclude
+    private List<User> usersWhoBlock = new ArrayList<>();
 }

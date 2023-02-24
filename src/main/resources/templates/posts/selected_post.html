@@ -43,19 +43,21 @@
                 <input type="file" name="images" multiple="multiple">
                 <button type="submit">New comment</button>
             </form>
-            <form th:if="${principal != null}" method="post" th:action="@{/posts/{id}/report(id=${post.id})}" th:object="${report}">
-                <label>
-                    <textarea th:field="${report.message}"></textarea>
-                </label>
-                <label>
-                    <select th:field="${report.complaintType}">
-                        <option th:each="value: ${T(com.example.WriteHere.model.report.ComplaintType).values()}"
-                                th:value="${value}"
-                                th:text="${value.displayName}"></option>
-                    </select>
-                </label>
-                <button type="submit">New report</button>
-            </form>
+            <div th:if="${principal != null && createdReportIsExist}">
+                <form  method="post" th:action="@{/posts/{id}/report(id=${post.id})}" th:object="${report}">
+                    <label>
+                        <textarea th:field="${report.message}"></textarea>
+                    </label>
+                    <label>
+                        <select th:field="${report.complaintType}">
+                            <option th:each="value: ${T(com.example.WriteHere.model.report.ComplaintType).values()}"
+                                    th:value="${value}"
+                                    th:text="${value.displayName}"></option>
+                        </select>
+                    </label>
+                    <button type="submit">New report</button>
+                </form>
+            </div>
 
             <ul>
                 <li th:each="comment: ${comments}">
@@ -71,14 +73,14 @@
                     <h5 th:text="${comment.getNumberOfLikes()} + ' likes'"></h5>
                     <h5 th:text="${comment.getNumberOfDislikes()} + ' dislikes'"></h5>
                     <div th:if="${principal != null}">
-                        <form th:method="PATCH" th:action="@{/posts/{id_post}/comments/{id_comment}/like(id_post=${post.id}, id_comment=${comment.id})}">
+                        <form th:method="PATCH" th:action="@{/comments/{id}/like(id=${comment.id})}">
                             <button type="submit">Like</button>
                         </form>
-                        <form th:method="PATCH" th:action="@{/posts/{id_post}/comments/{id_comment}/dislike(id_post=${post.id}, id_comment=${comment.id})}">
+                        <form th:method="PATCH" th:action="@{/comments/{id}/dislike(id=${comment.id})}">
                             <button type="submit">Dislike</button>
                         </form>
                     </div>
-                    <form th:if="${principal != null}" method="post" th:action="@{/posts/{id_post}/comments/{id_comment}/report(id_post=${post.id}, id_comment=${comment.id})}" th:object="${report}">
+                    <form th:if="${principal != null}" method="post" th:action="@{/comments/{id}/report(id=${comment.id})}" th:object="${report}">
                         <label>
                             <textarea th:field="${report.message}"></textarea>
                         </label>

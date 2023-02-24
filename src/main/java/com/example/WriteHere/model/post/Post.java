@@ -74,6 +74,7 @@ public class Post {
         this.getComments().forEach(comment -> {
             comment.getUsersWhoLike().forEach(user -> user.getLikedComments().remove(comment));
             comment.getUsersWhoDislike().forEach(user -> user.getDislikedComments().remove(comment));
+            comment.getUsersWhoBlock().forEach(user -> user.getBlackListOfComments().remove(comment));
         });
     }
 }

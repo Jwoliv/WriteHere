@@ -45,10 +45,11 @@ public class SecurityConfig {
                                 "/profile",
                                 "/posts/*/like",
                                 "/posts/*/dislike",
-                                "/posts/*/comments/*/like",
-                                "/posts/*/comments/*/dislike",
+                                "/comments/*/like",
+                                "/comments/*/dislike",
                                 "/profile",
                                 "/users/**",
+                                "/comments/*/report",
                                 "/posts/*/report"
                         ).hasAnyRole(Role.USER.name(), Role.ADMIN.name())
                         .anyRequest().authenticated()

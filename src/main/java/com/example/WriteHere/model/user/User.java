@@ -94,6 +94,14 @@ public class User {
     )
     @ToString.Exclude
     private List<Post> blackListOfPosts = new ArrayList<>();
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
+    @JoinTable(
+            name = "block_comments",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "comment_id")
+    )
+    @ToString.Exclude
+    private List<Comment> blackListOfComments = new ArrayList<>();
     public String getFullName() {
         return firstname + " " + lastname;
     }
