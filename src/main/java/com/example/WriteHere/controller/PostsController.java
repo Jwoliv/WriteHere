@@ -259,12 +259,13 @@ public class PostsController {
             postService.save(post);
             return "redirect:/posts/{id}";
         }
-        return "redirect:/posts/{id}";
+        return "redirect:/login";
     }
     @PatchMapping("/{id}/dislike")
     public String dislikedPost(@PathVariable Long id, Principal principal) {
         Post post = postService.findById(id);
         if (principal != null) {
+
             User user = userService.findByEmail(principal.getName());
             post.setNumberOfDislikes(
                     convertMethods.changeRating(post, post.getNumberOfDislikes(), user.getDislikedPosts())
@@ -280,7 +281,7 @@ public class PostsController {
             postService.save(post);
             return "redirect:/posts/{id}";
         }
-        return "redirect:/posts/{id}";
+        return "redirect:/login";
     }
 
     @PostMapping("/{id}/report")

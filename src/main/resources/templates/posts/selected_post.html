@@ -22,11 +22,11 @@
             <h5 th:text="${post.getNumberOfLikes()} + ' likes'"></h5>
             <h5 th:text="${post.getNumberOfDislikes()} + ' dislikes'"></h5>
             <div th:if="${principal != null}">
-                <form  th:method="PATCH" th:action="@{/posts/{id}/like(id=${post.id})}">
-                    <button type="submit">Like</button>
+                <form id="like_post" th:method="PATCH" th:action="@{/posts/{id}/like(id=${post.id})}">
+                    <button class="like-btn" type="submit">Like</button>
                 </form>
-                <form th:method="PATCH" th:action="@{/posts/{id}/dislike(id=${post.id})}">
-                    <button type="submit">Dislike</button>
+                <form id="dislike_post" th:method="PATCH" th:action="@{/posts/{id}/dislike(id=${post.id})}">
+                    <button class="dislike-btn" type="submit">Dislike</button>
                 </form>
             </div>
             <br><br><br><br>
@@ -43,7 +43,7 @@
                 <input type="file" name="images" multiple="multiple">
                 <button type="submit">New comment</button>
             </form>
-            <div th:if="${principal != null && createdReportIsExist}">
+            <div th:if="${principal != null && !createdReportIsExist}">
                 <form  method="post" th:action="@{/posts/{id}/report(id=${post.id})}" th:object="${report}">
                     <label>
                         <textarea th:field="${report.message}"></textarea>
@@ -97,4 +97,6 @@
             </ul>
         </div>
     </body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/static/script/selectedPost.js"></script>
 </html>
