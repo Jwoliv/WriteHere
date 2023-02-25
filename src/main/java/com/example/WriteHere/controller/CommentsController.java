@@ -146,5 +146,6 @@ public class CommentsController {
         notification.setUser(comment.getUser());
         notification.setCheckedStatus(false);
         comment.getUser().getNotifications().add(notification);
+        userService.saveAfterChange(comment.getUser());
     }
 }

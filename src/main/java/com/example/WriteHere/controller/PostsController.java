@@ -145,12 +145,12 @@ public class PostsController {
         post.setIsSuspicious(false);
 
         if (Arrays.stream(images).anyMatch(x -> !x.isEmpty())) {
-            boolean flag = true;
+            boolean isPrevious = true;
             for (MultipartFile multipartFile : images) {
                 if (!multipartFile.isEmpty()) {
-                    convertMethods.setImagesToList(multipartFile, post.getImages(), new ImagePost(), flag);
+                    convertMethods.setImagesToList(multipartFile, post.getImages(), new ImagePost(), isPrevious);
                 }
-                flag = false;
+                isPrevious = false;
             }
             post.getImages().forEach(x -> x.setElement(post));
             postService.save(post);
@@ -194,7 +194,8 @@ public class PostsController {
                 Notification notification = new Notification();
                 notification.setTitle("Your posts is deleted");
                 notification.setText(
-                        "Your posts with name: " + post.getTitle() + " in the theme: " + post.getTheme() + " was deleted by admin"
+                        "Your posts with name: " + post.getTitle() +
+                        " in the theme: " + post.getTheme().getDisplayName() + " was deleted by admin"
                 );
                 setTheSameFieldsForNotification(notification, post, TypeOfNotification.PostIsDeleted);
             }
@@ -246,11 +247,16 @@ public class PostsController {
             if (principal != null) {
                 User authorOfComment = userService.findByEmail(principal.getName());
                 notification.setText(
-                        "Your posts with name: " + post.getTitle() + " in the theme: " + post.getTheme() + " has a new comment, author of this comment is: " + authorOfComment.getFullName()
+                        "Your posts with name: " + post.getTitle() +
+                        " in the theme: " + post.getTheme().getDisplayName() +
+                        " has a new comment, author of this comment is: " +
+                        authorOfComment.getFullName()
                 );
             } else {
                 notification.setText(
-                        "Your posts with name: " + post.getTitle() + " in the theme: " + post.getTheme() + " has a new comment, author of this comment is Anonymous"
+                        "Your posts with name: " + post.getTitle() +
+                        " in the theme: " + post.getTheme().getDisplayName() +
+                        " has a new comment, author of this comment is Anonymous"
                 );
             }
             setTheSameFieldsForNotification(notification, post, TypeOfNotification.NewComment);
@@ -278,7 +284,9 @@ public class PostsController {
                 Notification notification = new Notification();
                 notification.setTitle("Your posts is liked");
                 notification.setText(
-                        "Your posts with name: " + post.getTitle() + " in the theme: " + post.getTheme() + " was liked by " + user.getFullName()
+                        "Your posts with name: " + post.getTitle() +
+                        " in the theme: " + post.getTheme().getDisplayName() +
+                        " was liked by " + user.getFullName()
                 );
                 setTheSameFieldsForNotification(notification, post, TypeOfNotification.LikePost);
             }
@@ -307,7 +315,9 @@ public class PostsController {
                 Notification notification = new Notification();
                 notification.setTitle("Your posts is disliked");
                 notification.setText(
-                        "Your posts with name: " + post.getTitle() + " in the theme: " + post.getTheme() + " was disliked by " + user.getFullName()
+                        "Your posts with name: " + post.getTitle() +
+                        " in the theme: " + post.getTheme().getDisplayName() +
+                        " was disliked by " + user.getFullName()
                 );
                 setTheSameFieldsForNotification(notification, post, TypeOfNotification.DislikePost);
             }
@@ -382,5 +392,6 @@ public class PostsController {
         notification.setUser(post.getUser());
         notification.setCheckedStatus(false);
         post.getUser().getNotifications().add(notification);
+        userService.saveAfterChange(post.getUser());
     }
 }

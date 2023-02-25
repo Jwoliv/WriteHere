@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Notifications</title>
+</head>
+<body>
+  <ul>
+    <form th:action="@{/notifications/check-all}" th:method="patch">
+      <button type="submit">Check all</button>
+    </form>
+    <form th:action="@{/notifications/delete-all}" th:method="delete">
+      <button type="submit">Delete all</button>
+    </form>
+    <li th:each="notification: ${notifications}">
+      <h4 th:text="${notification.title}"></h4>
+      <p th:text="${notification.text}"></p>
+      <h3 th:text="${notification.dateOfCreated}"></h3>
+      <form th:action="@{/notifications/{id}(id=${notification.id})}" th:method="delete">
+        <button type="submit">Delete</button>
+      </form>
+      <form th:action="@{/notifications/{id}/check(id=${notification.id})}" th:method="patch">
+        <button type="submit">Check notification</button>
+      </form>
+      <hr>
+    </li>
+  </ul>
+</body>
+</html>

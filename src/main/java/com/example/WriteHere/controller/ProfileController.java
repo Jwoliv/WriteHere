@@ -1,5 +1,7 @@
 package com.example.WriteHere.controller;
 
+import com.example.WriteHere.model.notification.Notification;
+import com.example.WriteHere.model.user.User;
 import com.example.WriteHere.service.user.UserService;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
+import java.util.Comparator;
 
 @Controller
 @RequestMapping("/profile")
@@ -24,6 +27,18 @@ public class ProfileController {
     public String pageOfProfile(@NonNull Model model, Principal principal) {
         model.addAttribute("principal", principal);
         model.addAttribute("user", userService.findByEmail(principal.getName()));
-        return "/profile";
+        return "/profile/profile";
+    }
+    @GetMapping("/notifications")
+    public String pageOfNotificationOfUser(Model model, Principal principal) {
+        User user = userService.findByEmail(principal.getName());
+        model.addAttribute("principal", principal);
+        model.addAttribute("notifications",
+                user.getNotifications().stream().sorted(
+                        Comparator.comparing(Notification::getDateOfCreated
+                ).reversed()).toList()
+        );
+        model.addAttribute("user", user);
+        return "/profile/notifications";
     }
 }
