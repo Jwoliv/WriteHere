@@ -1,5 +1,6 @@
 package com.example.WriteHere.model.user;
 
+import com.example.WriteHere.model.notification.Notification;
 import com.example.WriteHere.model.post.Comment;
 import com.example.WriteHere.model.post.Post;
 import jakarta.persistence.*;
@@ -102,6 +103,13 @@ public class User {
     )
     @ToString.Exclude
     private List<Comment> blackListOfComments = new ArrayList<>();
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    @ToString.Exclude
+    private List<Notification> notifications = new ArrayList<>();
     public String getFullName() {
         return firstname + " " + lastname;
     }

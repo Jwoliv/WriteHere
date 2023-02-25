@@ -2,6 +2,8 @@ package com.example.WriteHere.controller;
 
 import com.example.WriteHere.model.image.ImageComment;
 import com.example.WriteHere.model.image.ImagePost;
+import com.example.WriteHere.model.notification.Notification;
+import com.example.WriteHere.model.notification.TypeOfNotification;
 import com.example.WriteHere.model.post.Comment;
 import com.example.WriteHere.model.post.Post;
 import com.example.WriteHere.model.report.ReportByPost;
@@ -99,18 +101,13 @@ public class PostsController {
         model.addAttribute("principal", principal);
         model.addAttribute("comment", new Comment());
         model.addAttribute("report", new ReportByPost());
-
         if (principal != null) {
             User user = userService.findByEmail(principal.getName());
             if (post.getUser() != null) {
                 model.addAttribute("userIsOwner", post.getUser().equals(user));
             }
             model.addAttribute("createdReportIsExist", !user.getBlackListOfPosts().contains(post));
-            List<Comment> comments = new ArrayList<>(post.getComments().stream().sorted(
-                    Comparator.comparing(Comment::getDateOfCreated).reversed()
-            ).toList());
-            comments.removeAll(user.getBlackListOfComments());
-            model.addAttribute("comments", comments);
+            model.addAttribute("comments", findComments(principal, post));
         }
         return "/posts/selected_post";
     }
@@ -183,7 +180,7 @@ public class PostsController {
         postFromDB.setTitle(post.getTitle());
         postFromDB.setText(post.getText());
         postFromDB.setTheme(post.getTheme());
-        postFromDB.setIsSuspicious(true);
+        postFromDB.setIsSuspicious(false);
         postService.save(postFromDB);
         return "redirect:/posts/{id}";
     }
@@ -193,9 +190,17 @@ public class PostsController {
         Post post = postService.findById(id);
 
         if (user.getRole().equals(Role.ADMIN) || post.getUser() != null && post.getUser().equals(user)) {
+            if (user.getRole().equals(Role.ADMIN)) {
+                Notification notification = new Notification();
+                notification.setTitle("Your posts is deleted");
+                notification.setText(
+                        "Your posts with name: " + post.getTitle() + " in the theme: " + post.getTheme() + " was deleted by admin"
+                );
+                setTheSameFieldsForNotification(notification, post, TypeOfNotification.PostIsDeleted);
+            }
             postService.deleteById(id);
+            userService.saveAfterChange(user);
             if (user.getRole().equals(Role.ADMIN)) return "redirect:/admin/posts";
-
         }
         return "redirect:/profile";
     }
@@ -235,7 +240,21 @@ public class PostsController {
             }
             comment.getImages().forEach(x -> x.setElement(comment));
         }
-
+        if (post.getUser() != null) {
+            Notification notification = new Notification();
+            notification.setTitle("New comment of post");
+            if (principal != null) {
+                User authorOfComment = userService.findByEmail(principal.getName());
+                notification.setText(
+                        "Your posts with name: " + post.getTitle() + " in the theme: " + post.getTheme() + " has a new comment, author of this comment is: " + authorOfComment.getFullName()
+                );
+            } else {
+                notification.setText(
+                        "Your posts with name: " + post.getTitle() + " in the theme: " + post.getTheme() + " has a new comment, author of this comment is Anonymous"
+                );
+            }
+            setTheSameFieldsForNotification(notification, post, TypeOfNotification.NewComment);
+        }
         commentsService.save(comment);
         postService.save(post);
         return "redirect:/posts/{id}";
@@ -255,6 +274,14 @@ public class PostsController {
                 user.getDislikedPosts().remove(post);
                 post.setNumberOfDislikes(post.getNumberOfDislikes() - 1);
             }
+            if (post.getUser() != null) {
+                Notification notification = new Notification();
+                notification.setTitle("Your posts is liked");
+                notification.setText(
+                        "Your posts with name: " + post.getTitle() + " in the theme: " + post.getTheme() + " was liked by " + user.getFullName()
+                );
+                setTheSameFieldsForNotification(notification, post, TypeOfNotification.LikePost);
+            }
             userService.saveAfterChange(user);
             postService.save(post);
             return "redirect:/posts/{id}";
@@ -265,7 +292,6 @@ public class PostsController {
     public String dislikedPost(@PathVariable Long id, Principal principal) {
         Post post = postService.findById(id);
         if (principal != null) {
-
             User user = userService.findByEmail(principal.getName());
             post.setNumberOfDislikes(
                     convertMethods.changeRating(post, post.getNumberOfDislikes(), user.getDislikedPosts())
@@ -276,6 +302,14 @@ public class PostsController {
             if (user.getLikedPosts().contains(post)) {
                 user.getLikedPosts().remove(post);
                 post.setNumberOfLikes(post.getNumberOfLikes() - 1);
+            }
+            if (post.getUser() != null) {
+                Notification notification = new Notification();
+                notification.setTitle("Your posts is disliked");
+                notification.setText(
+                        "Your posts with name: " + post.getTitle() + " in the theme: " + post.getTheme() + " was disliked by " + user.getFullName()
+                );
+                setTheSameFieldsForNotification(notification, post, TypeOfNotification.DislikePost);
             }
             userService.saveAfterChange(user);
             postService.save(post);
@@ -320,5 +354,33 @@ public class PostsController {
             post.getUsersWhoDislike().add(user);
         }
         return collection;
+    }
+    public List<Comment> findComments(Principal principal, Post post) {
+        List<Comment> comments;
+        if (principal == null) {
+            comments = post.getComments().stream().sorted(
+                    Comparator.comparing(Comment::getDateOfCreated).reversed()
+            ).toList();
+        }
+        else {
+            User user = userService.findByEmail(principal.getName());
+            comments = new ArrayList<>(post.getComments().stream().sorted(
+                    Comparator.comparing(Comment::getDateOfCreated).reversed()
+            ).toList());
+            comments.removeAll(user.getBlackListOfComments());
+            return comments;
+        }
+        return comments;
+    }
+    public void setTheSameFieldsForNotification(
+            Notification notification,
+            Post post,
+            TypeOfNotification typeOfNotification
+    ) {
+        notification.setTypeOfNotification(typeOfNotification);
+        notification.setDateOfCreated(new Date());
+        notification.setUser(post.getUser());
+        notification.setCheckedStatus(false);
+        post.getUser().getNotifications().add(notification);
     }
 }

@@ -19,14 +19,14 @@
                 </li>
             </ul>
             <h5 th:text="${post.dateOfCreated}"></h5>
-            <h5 th:text="${post.getNumberOfLikes()} + ' likes'"></h5>
-            <h5 th:text="${post.getNumberOfDislikes()} + ' dislikes'"></h5>
+            <h5 id="numberOfLikes" th:text="${post.getNumberOfLikes()} + ' likes'"></h5>
+            <h5 id="numberOfDislikes" th:text="${post.getNumberOfDislikes()} + ' dislikes'"></h5>
             <div th:if="${principal != null}">
                 <form id="like_post" th:method="PATCH" th:action="@{/posts/{id}/like(id=${post.id})}">
-                    <button class="like-btn" type="submit">Like</button>
+                    <button class="like-button" type="submit">Like</button>
                 </form>
                 <form id="dislike_post" th:method="PATCH" th:action="@{/posts/{id}/dislike(id=${post.id})}">
-                    <button class="dislike-btn" type="submit">Dislike</button>
+                    <button class="dislike-button" type="submit">Dislike</button>
                 </form>
             </div>
             <br><br><br><br>
@@ -61,7 +61,7 @@
 
             <ul>
                 <li th:each="comment: ${comments}">
-                    <a th:if="${comment.user != null}" th:href="@{/user/{id}(id=${comment.user.id})}" th:text="${comment.user.getFullName()}"></a>
+                    <a th:if="${comment.user != null}" th:href="@{/users/{id}(id=${comment.user.id})}" th:text="${comment.user.getFullName()}"></a>
                     <h5 th:if="${comment.user == null}">Anonymous</h5>
                     <p th:utext="${comment.text}"></p>
                     <ul>
@@ -97,6 +97,4 @@
             </ul>
         </div>
     </body>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="/static/script/selectedPost.js"></script>
 </html>

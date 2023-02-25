@@ -1,5 +1,7 @@
 package com.example.WriteHere.controller;
 
+import com.example.WriteHere.model.notification.Notification;
+import com.example.WriteHere.model.notification.TypeOfNotification;
 import com.example.WriteHere.model.post.Comment;
 import com.example.WriteHere.model.report.ReportByComment;
 import com.example.WriteHere.model.user.User;
@@ -12,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -54,6 +57,14 @@ public class CommentsController {
             user.getDislikedComments().remove(comment);
             comment.setNumberOfDislikes(comment.getNumberOfDislikes() - 1);
         }
+        if (comment.getUser() != null) {
+            Notification notification = new Notification();
+            notification.setTitle("Your comment is liked");
+            notification.setText(
+                    "Your comment under post: " + comment.getPost().getTitle() + " was liked by " + user.getFullName()
+            );
+            setTheSameFieldsForNotification(notification, comment, TypeOfNotification.LikeComment);
+        }
         userService.saveAfterChange(user);
         commentsService.save(comment);
         return "redirect:/posts/" + comment.getPost().getId();
@@ -77,6 +88,14 @@ public class CommentsController {
         if (user.getLikedComments().contains(comment)) {
             user.getLikedComments().remove(comment);
             comment.setNumberOfLikes(comment.getNumberOfLikes() - 1);
+        }
+        if (comment.getUser() != null) {
+            Notification notification = new Notification();
+            notification.setTitle("Your comment is disliked");
+            notification.setText(
+                    "Your comment under post: " + comment.getPost().getTitle() + " was disliked by " + user.getFullName()
+            );
+            setTheSameFieldsForNotification(notification, comment, TypeOfNotification.DislikeComment);
         }
         userService.saveAfterChange(user);
         commentsService.save(comment);
@@ -116,5 +135,16 @@ public class CommentsController {
             comment.getUsersWhoDislike().add(user);
         }
         return collection;
+    }
+    public void setTheSameFieldsForNotification(
+            Notification notification,
+            Comment comment,
+            TypeOfNotification typeOfNotification
+    ) {
+        notification.setTypeOfNotification(typeOfNotification);
+        notification.setDateOfCreated(new Date());
+        notification.setUser(comment.getUser());
+        notification.setCheckedStatus(false);
+        comment.getUser().getNotifications().add(notification);
     }
 }
