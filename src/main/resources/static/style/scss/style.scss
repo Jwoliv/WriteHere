@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap');
+@import "_all_posts";
+@import "_css_reset";
+@import "element/_header";
+
+body {
+	background-color: #000000;
+	font-family: 'PT Sans', sans-serif;
+}
+.wrapper {
+	min-height: 100%;
+	display: flex;
+	margin: 0 10px 0;
+	flex-direction: column;
+}
+.container {
+	max-width: 1460px;
+	margin: 0 auto;
+}
+.header {
+	&__container {
+	}
+}
+.main {
+	flex: 1 1 auto;
+	&__container {
+	}
+}
+.footer {
+	&__container {
+	}
+}
+
+@media (max-width: 1480px) {
+	.container {
+		max-width: 970px;
+	}
+}
+@media (max-width: 992px) {
+	.container {
+		max-width: 750px;
+	}
+}
+@media (max-width: 767px) {
+	.container {
+		max-width: none;
+	}
+}

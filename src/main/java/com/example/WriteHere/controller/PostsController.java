@@ -66,6 +66,7 @@ public class PostsController {
             ).toList());
             allPosts.removeAll(user.getBlackListOfPosts());
             model.addAttribute("all_posts", allPosts);
+            model.addAttribute("user", userService.findByEmail(principal.getName()));
         }
         model.addAttribute("principal", principal);
         model.addAttribute("nameOfPage", "Posts");
@@ -78,7 +79,13 @@ public class PostsController {
             Principal principal
     ) {
         model.addAttribute("principal", principal);
-        model.addAttribute("all_posts", postService.findByTitleOrText(name));
+        model.addAttribute(
+                "all_posts",
+                postService.findByTitleOrText(name)
+                        .stream()
+                        .sorted(Comparator.comparing(Post::getDateOfCreated).reversed())
+                        .toList()
+        );
         model.addAttribute("nameOfPage", name);
         model.addAttribute("name", name);
         return "/posts/all_posts";

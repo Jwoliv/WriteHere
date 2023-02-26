@@ -40,9 +40,9 @@ public class ThemesController {
     ) {
         model.addAttribute("nameOfPage", theme.getDisplayName());
         model.addAttribute("principal", principal);
-        model.addAttribute("posts", postService.findByTheme(theme).stream().sorted(
+        model.addAttribute("all_posts", postService.findByTheme(theme).stream().sorted(
                 Comparator.comparing(Post::getDateOfCreated).reversed()
-        ));
+        ).toList());
         return "/posts/all_posts";
     }
 }
