@@ -1,29 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Notifications</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" th:href="@{/style/css/style.css}">
+  <title>Notifications</title>
 </head>
 <body>
-  <ul>
-    <form th:action="@{/notifications/check-all}" th:method="patch">
-      <button type="submit">Check all</button>
-    </form>
-    <form th:action="@{/notifications/delete-all}" th:method="delete">
-      <button type="submit">Delete all</button>
-    </form>
-    <li th:each="notification: ${notifications}">
-      <h4 th:text="${notification.title}"></h4>
-      <p th:text="${notification.text}"></p>
-      <h3 th:text="${notification.dateOfCreated}"></h3>
-      <form th:action="@{/notifications/{id}(id=${notification.id})}" th:method="delete">
-        <button type="submit">Delete</button>
-      </form>
-      <form th:action="@{/notifications/{id}/check(id=${notification.id})}" th:method="patch">
-        <button type="submit">Check notification</button>
-      </form>
-      <hr>
-    </li>
-  </ul>
+<div class="wrapper">
+  <header class="header">
+    <div class="header__container container">
+      <a th:href="@{/profile}" class="header__return-to-profile">Return to profile</a>
+    </div>
+  </header>
+  <main class="main">
+    <div class="main__container container">
+      <div th:if="${notifications.size() != 0}" class="notifications__row notifications__row-high">
+        <form th:action="@{/notifications/delete-all}" th:method="delete">
+          <button class="notifications__button" type="submit">Delete all</button>
+        </form>
+        <form th:if="${hasAnyAreNotChecked}" th:action="@{/notifications/check-all}" th:method="patch">
+          <button class="notifications__button" type="submit">Check all</button>
+        </form>
+      </div>
+
+      <ul class="notifications__list">
+        <li class="notifications__item"  th:each="notification: ${notifications}">
+          <h3 class="notifications__title" th:text-="${notification.title}">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</h3>
+          <p class="notifications__text" th:text="${notification.text}"></p>
+          <h4 class="notifications__date" th:text="${notification.dateOfCreated}"></h4>
+          <div class="notifications__row">
+            <form th:action="@{/notifications/{id}(id=${notification.id})}" th:method="delete">
+              <button class="notifications__button" type="submit">Delete</button>
+            </form>
+            <form th:if="${!notification.checkedStatus}" th:action="@{/notifications/{id}/check(id=${notification.id})}" th:method="patch">
+              <button class="notifications__button" type="submit">Check</button>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+</main>
+</div>
 </body>
 </html>

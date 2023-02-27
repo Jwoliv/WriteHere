@@ -27,7 +27,7 @@ public class Post {
     @NotBlank
     private String title;
     @NotBlank
-    @Size(min = 1, max = 1000)
+    @Size(min = 1, max = 5000)
     private String text;
     private Date dateOfCreated;
     @Enumerated(EnumType.STRING)

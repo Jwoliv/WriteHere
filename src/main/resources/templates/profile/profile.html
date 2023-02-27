@@ -3,18 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${user.fullName}"></title>
+    <link rel="stylesheet" th:href="@{/style/css/style.css}">
 </head>
   <body>
-    <h3>Liked posts</h3>
-    <ul>
-        <li th:each="post: ${user.posts}">
-            <h4 th:text="${post.title}"></h4>
-            <p th:utext="${post.text}"></p>
-            <a th:href="@{/users/{id}(id=${post.user.id})}" th:text="${user.fullName}"></a>
-            <h3 th:text="${post.numberOfLikes} + ' Likes'"></h3>
-            <h3 th:text="${post.numberOfDislikes} + ' Dislikes'"></h3>
-            <a th:href="@{/posts/{id}(id=${post.id})}">Read more</a>
-        </li>
-    </ul>
+      <div class="wrapper">
+          <main class="main">
+              <div class="main__container container">
+                  <ul class="posts">
+                      <li class="posts__post" th:each="post: ${user.posts}">
+                          <h3 class="post__title" th:text="${post.title}"></h3>
+                          <div class="post__row">
+                              <div class="post__text" th:if="${post.text.length > 300}" th:utext="${#strings.substring(post.text, 0, 300)}"></div>
+                              <div class="post__text" th:if="${post.text.length <= 300}" th:utext="${post.text}"></div>
+                              <div th:if="${post.images.size() != 0}" class="post__wrapper-img">
+                                  <img th:src="@{/posts/images/{id}(id=${post.previousId})}"
+                                       class="post__img" alt="">
+                              </div>
+                          </div>
+                          <div class="post__low-row">
+                              <a th:href="@{/posts/{id}(id=${post.id})}" class="post__read-more">READ MORE</a>
+                              <a class="post__author" th:if="${post.isByAnonymous == false}" th:href="@{/users/{id}(id=${post.user.id})}" th:text="${post.user.getFullName()}"></a>
+                              <h5 class="post__author" th:if="${post.isByAnonymous == true}">Anonymous</h5>
+                          </div>
+                      </li>
+                   </ul>
+              </div>
+          </main>
+      </div>
   </body>
 </html>

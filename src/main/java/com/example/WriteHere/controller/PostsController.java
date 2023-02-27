@@ -67,6 +67,7 @@ public class PostsController {
             allPosts.removeAll(user.getBlackListOfPosts());
             model.addAttribute("all_posts", allPosts);
             model.addAttribute("user", userService.findByEmail(principal.getName()));
+            model.addAttribute("countOfNotifications", (int) user.getNotifications().stream().filter(notification -> !notification.getCheckedStatus()).count());
         }
         model.addAttribute("principal", principal);
         model.addAttribute("nameOfPage", "Posts");
@@ -197,7 +198,7 @@ public class PostsController {
         Post post = postService.findById(id);
 
         if (user.getRole().equals(Role.ADMIN) || post.getUser() != null && post.getUser().equals(user)) {
-            if (user.getRole().equals(Role.ADMIN)) {
+            if (user.getRole().equals(Role.ADMIN) && post.getUser() != null) {
                 Notification notification = new Notification();
                 notification.setTitle("Your posts is deleted");
                 notification.setText(

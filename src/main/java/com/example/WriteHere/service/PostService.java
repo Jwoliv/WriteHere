@@ -50,4 +50,8 @@ public class PostService {
     public List<Post> findByTitleOrText(String name) {
         return postRepository.findByTitleOrText(name.toUpperCase(Locale.ROOT));
     }
+
+    public List<Post> findByTitleOrTextAndUserId(String name, Long id) {
+        return postRepository.findByTitleOrTextAndUserId(name, id);
+    }
 }
