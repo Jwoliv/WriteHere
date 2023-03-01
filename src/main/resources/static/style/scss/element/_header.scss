@@ -1,5 +1,6 @@
 .header {
 	height: 80px;
+	margin-bottom: 50px;
 	&__container {
 	}
 
@@ -195,5 +196,17 @@
 	}
 
 	&__account {
+	}
+	&__below-row {
+		display: flex;
+		justify-content: space-between;
+		margin-top: 10px;
+	}
+	&__below-row_link {
+		font-size: 30px;
+		color: #ffffff;
+		&:hover {
+			text-decoration: underline;
+		}
 	}
 }

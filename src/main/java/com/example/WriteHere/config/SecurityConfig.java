@@ -59,7 +59,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
-                        .loginPage("/login")
+                        .loginPage("/login").defaultSuccessUrl("/posts")
                         .permitAll()
                 )
                 .logout(LogoutConfigurer::permitAll);

@@ -198,7 +198,8 @@ public class PostsController {
         Post post = postService.findById(id);
 
         if (user.getRole().equals(Role.ADMIN) || post.getUser() != null && post.getUser().equals(user)) {
-            if (user.getRole().equals(Role.ADMIN) && post.getUser() != null) {
+            User userOfTheSession = userService.findByEmail(principal.getName());
+            if (user.getRole().equals(Role.ADMIN) && post.getUser() != null && userOfTheSession != post.getUser()) {
                 Notification notification = new Notification();
                 notification.setTitle("Your posts is deleted");
                 notification.setText(
@@ -278,6 +279,19 @@ public class PostsController {
         Post post = postService.findById(id);
         if (principal != null) {
             User user = userService.findByEmail(principal.getName());
+            User userOfTheSession = userService.findByEmail(principal.getName());
+            if (user.getLikedPosts().contains(post) && post.getUser() != null
+                    && !userOfTheSession.getId().equals(user.getId())
+            ) {
+                Notification notification = new Notification();
+                notification.setTitle("Your posts is liked");
+                notification.setText(
+                        "Your posts with name: " + post.getTitle() +
+                                " in the theme: " + post.getTheme().getDisplayName() +
+                                " was liked by " + user.getFullName()
+                );
+                setTheSameFieldsForNotification(notification, post, TypeOfNotification.LikePost);
+            }
             post.setNumberOfLikes(
                     convertMethods.changeRating(post, post.getNumberOfLikes(), user.getLikedPosts())
             );
@@ -287,16 +301,6 @@ public class PostsController {
             if (user.getDislikedPosts().contains(post)) {
                 user.getDislikedPosts().remove(post);
                 post.setNumberOfDislikes(post.getNumberOfDislikes() - 1);
-            }
-            if (post.getUser() != null) {
-                Notification notification = new Notification();
-                notification.setTitle("Your posts is liked");
-                notification.setText(
-                        "Your posts with name: " + post.getTitle() +
-                        " in the theme: " + post.getTheme().getDisplayName() +
-                        " was liked by " + user.getFullName()
-                );
-                setTheSameFieldsForNotification(notification, post, TypeOfNotification.LikePost);
             }
             userService.saveAfterChange(user);
             postService.save(post);
@@ -309,6 +313,19 @@ public class PostsController {
         Post post = postService.findById(id);
         if (principal != null) {
             User user = userService.findByEmail(principal.getName());
+            User userOfTheSession = userService.findByEmail(principal.getName());
+            if (!user.getDislikedPosts().contains(post) && post.getUser() != null
+                    && !userOfTheSession.getId().equals(user.getId())
+            ) {
+               Notification notification = new Notification();
+                notification.setTitle("Your posts is disliked");
+                notification.setText(
+                        "Your posts with name: " + post.getTitle() +
+                                " in the theme: " + post.getTheme().getDisplayName() +
+                                " was disliked by " + user.getFullName()
+                );
+                setTheSameFieldsForNotification(notification, post, TypeOfNotification.DislikePost);
+            }
             post.setNumberOfDislikes(
                     convertMethods.changeRating(post, post.getNumberOfDislikes(), user.getDislikedPosts())
             );
@@ -318,16 +335,6 @@ public class PostsController {
             if (user.getLikedPosts().contains(post)) {
                 user.getLikedPosts().remove(post);
                 post.setNumberOfLikes(post.getNumberOfLikes() - 1);
-            }
-            if (post.getUser() != null) {
-                Notification notification = new Notification();
-                notification.setTitle("Your posts is disliked");
-                notification.setText(
-                        "Your posts with name: " + post.getTitle() +
-                        " in the theme: " + post.getTheme().getDisplayName() +
-                        " was disliked by " + user.getFullName()
-                );
-                setTheSameFieldsForNotification(notification, post, TypeOfNotification.DislikePost);
             }
             userService.saveAfterChange(user);
             postService.save(post);
