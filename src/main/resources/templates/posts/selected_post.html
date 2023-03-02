@@ -2,99 +2,157 @@
 <html lang="en"  xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/style/css/style.css}">
     <title th:text="${nameOfPage}"></title>
 </head>
     <body>
-        <div>
-            <h2 th:text="${post.title}"></h2>
-            <form th:method="delete" th:if="${userIsOwner}" th:action="@{/posts/{id}(id=${post.id})}">
-                <button type="submit">Delete post</button>
-            </form>
-            <a th:if="${post.user != null}" th:href="@{/user/{id}(id=${post.user.id})}" th:text="${post.user.getFullName()}"></a>
-            <h5 th:if="${post.user == null}">Anonymous</h5>
-            <p th:utext="${post.text}"></p>
-            <ul>
-                <li th:each="image: ${images}">
-                    <img th:src="@{/posts/images/{id}(id=${image.id})}" alt="">
-                </li>
-            </ul>
-            <h5 th:text="${post.dateOfCreated}"></h5>
-            <h5 id="numberOfLikes" th:text="${post.getNumberOfLikes()} + ' likes'"></h5>
-            <h5 id="numberOfDislikes" th:text="${post.getNumberOfDislikes()} + ' dislikes'"></h5>
-            <div th:if="${principal != null}">
-                <form id="like_post" th:method="PATCH" th:action="@{/posts/{id}/like(id=${post.id})}">
-                    <button class="like-button" type="submit">Like</button>
-                </form>
-                <form id="dislike_post" th:method="PATCH" th:action="@{/posts/{id}/dislike(id=${post.id})}">
-                    <button class="dislike-button" type="submit">Dislike</button>
-                </form>
+    <div class="wrapper">
+        <header class="header">
+            <div class="header__container container">
+                <div class="header__below-row">
+                    <a th:href="@{/posts}" class="header__below-row_link">Posts</a>
+                    <a th:href="@{/theme}" class="header__below-row_link">Theme</a>
+                </div>
             </div>
-            <br><br><br><br>
-            <hr>
-            <form method="POST" th:action="@{/posts/{id}/add_comment(id=${post.id})}" th:object="${comment}" enctype="multipart/form-data">
-                <label>
-                    <textarea th:field="${comment.text}"></textarea>
-                </label>
-                <input type="file" name="images" multiple="multiple">
-                <input type="file" name="images" multiple="multiple">
-                <input type="file" name="images" multiple="multiple">
-                <input type="file" name="images" multiple="multiple">
-                <input type="file" name="images" multiple="multiple">
-                <input type="file" name="images" multiple="multiple">
-                <button type="submit">New comment</button>
-            </form>
-            <div th:if="${principal != null && !createdReportIsExist}">
-                <form  method="post" th:action="@{/posts/{id}/report(id=${post.id})}" th:object="${report}">
-                    <label>
-                        <textarea th:field="${report.message}"></textarea>
-                    </label>
-                    <label>
-                        <select th:field="${report.complaintType}">
-                            <option th:each="value: ${T(com.example.WriteHere.model.report.ComplaintType).values()}"
-                                    th:value="${value}"
-                                    th:text="${value.displayName}"></option>
-                        </select>
-                    </label>
-                    <button type="submit">New report</button>
-                </form>
-            </div>
-
-            <ul>
-                <li th:each="comment: ${comments}">
-                    <a th:if="${comment.user != null}" th:href="@{/users/{id}(id=${comment.user.id})}" th:text="${comment.user.getFullName()}"></a>
-                    <h5 th:if="${comment.user == null}">Anonymous</h5>
-                    <p th:utext="${comment.text}"></p>
-                    <ul>
-                        <li th:each="image: ${comment.images}">
-                            <img th:src="@{/comments/images/{id}(id=${image.id})}" alt="">
-                        </li>
-                    </ul>
-                    <h5 th:text="${comment.dateOfCreated}"></h5>
-                    <h5 th:text="${comment.getNumberOfLikes()} + ' likes'"></h5>
-                    <h5 th:text="${comment.getNumberOfDislikes()} + ' dislikes'"></h5>
-                    <div th:if="${principal != null}">
-                        <form th:method="PATCH" th:action="@{/comments/{id}/like(id=${comment.id})}">
-                            <button type="submit">Like</button>
+        </header>
+        <main class="main">
+            <div class="main__container container">
+                <div class="post">
+                    <h1 class="post__title selected-post-title" th:text="${post.title}"></h1>
+                    <form th:method="delete" th:if="${userIsOwner}" th:action="@{/posts/{id}(id=${post.id})}">
+                        <button type="submit">Delete post</button>
+                    </form>
+                    <div class="post__text selected-post-text" th:utext="${post.text}"></div>
+                    <div class="images__block">
+                        <div  th:each="image: ${images}">
+                            <img class="post__img selected-post-img" th:src="@{/posts/images/{id}(id=${image.id})}" alt="">
+                        </div>
+                    </div>
+                    <div class="comment__form"  th:if="${principal != null}">
+                        <form th:method="PATCH" th:action="@{/posts/{id}/like(id=${post.id})}">
+                            <label for="like-post" class="comment__form-like-label">
+                                <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M40.3751 17.0001C39.7897 16.2972 39.0572 15.7315 38.2292 15.3427C37.4013 14.9539 36.4981 14.7516 35.5834 14.7501H26.0834L27.2501 11.7709C27.7354 10.4665 27.897 9.06381 27.721 7.68322C27.5451 6.30263 27.0369 4.98532 26.2401 3.84428C25.4432 2.70324 24.3814 1.77254 23.1458 1.13202C21.9102 0.491489 20.5377 0.160252 19.1459 0.166719C18.7452 0.167555 18.3532 0.283959 18.0169 0.501975C17.6806 0.71999 17.4144 1.03036 17.2501 1.39589L11.3126 14.7501H6.41675C4.75914 14.7501 3.16943 15.4085 1.99733 16.5806C0.825228 17.7527 0.166748 19.3424 0.166748 21.0001V35.5834C0.166748 37.241 0.825228 38.8307 1.99733 40.0028C3.16943 41.1749 4.75914 41.8334 6.41675 41.8334H32.9376C34.3997 41.8329 35.8153 41.3198 36.9383 40.3834C38.0612 39.447 38.8202 38.1466 39.0834 36.7084L41.7292 22.1251C41.8929 21.2238 41.8564 20.2975 41.6224 19.4119C41.3884 18.5262 40.9626 17.7029 40.3751 17.0001ZM10.5834 37.6667H6.41675C5.86421 37.6667 5.33431 37.4472 4.94361 37.0565C4.55291 36.6658 4.33341 36.1359 4.33341 35.5834V21.0001C4.33341 20.4475 4.55291 19.9176 4.94361 19.5269C5.33431 19.1362 5.86421 18.9167 6.41675 18.9167H10.5834V37.6667ZM37.6667 21.3751L35.0209 35.9584C34.9322 36.4437 34.6741 36.8818 34.2926 37.1946C33.911 37.5075 33.4309 37.6748 32.9376 37.6667H14.7501V17.2709L20.4167 4.52089C21 4.69094 21.5418 4.98007 22.0077 5.37002C22.4736 5.75997 22.8537 6.24228 23.1238 6.7865C23.394 7.33072 23.5484 7.92503 23.5773 8.53193C23.6062 9.13882 23.509 9.74512 23.2917 10.3126L22.1876 13.2917C21.9523 13.9214 21.8729 14.5987 21.9561 15.2657C22.0393 15.9328 22.2826 16.5698 22.6654 17.1224C23.0481 17.675 23.5589 18.1269 24.1541 18.4393C24.7492 18.7517 25.4112 18.9155 26.0834 18.9167H35.5834C35.8895 18.9162 36.1919 18.9832 36.4692 19.1128C36.7464 19.2424 36.9917 19.4315 37.1876 19.6667C37.3883 19.8986 37.5353 20.172 37.6181 20.4673C37.7009 20.7626 37.7175 21.0726 37.6667 21.3751Z" fill="white"/>
+                                </svg>
+                            </label>
+                            <button class="comment__form-like-button"  id="like-post" type="submit">Like</button>
                         </form>
-                        <form th:method="PATCH" th:action="@{/comments/{id}/dislike(id=${comment.id})}">
-                            <button type="submit">Dislike</button>
+                        <form th:method="PATCH" th:action="@{/posts/{id}/dislike(id=${post.id})}">
+                            <label for="dislike-post" class="comment__form-dislike-label">
+                                <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M35.5835 0.166626H9.0627C7.60059 0.167113 6.18493 0.680187 5.06203 1.61658C3.93912 2.55297 3.18004 3.8534 2.91686 5.29163L0.271029 19.875C0.106172 20.7759 0.141331 21.702 0.374018 22.5878C0.606705 23.4737 1.03123 24.2975 1.61756 25.0011C2.20389 25.7047 2.93769 26.2708 3.76703 26.6595C4.59637 27.0481 5.50099 27.2497 6.41686 27.25H15.9169L14.7502 30.2291C14.2649 31.5335 14.1033 32.9362 14.2792 34.3168C14.4551 35.6974 14.9633 37.0147 15.7602 38.1557C16.5571 39.2968 17.6189 40.2275 18.8545 40.868C20.0901 41.5085 21.4626 41.8398 22.8544 41.8333C23.2551 41.8325 23.6471 41.7161 23.9834 41.498C24.3196 41.28 24.5859 40.9697 24.7502 40.6041L30.6877 27.25H35.5835C37.2411 27.25 38.8308 26.5915 40.0029 25.4194C41.175 24.2473 41.8335 22.6576 41.8335 21V6.41663C41.8335 4.75902 41.175 3.16931 40.0029 1.99721C38.8308 0.825107 37.2411 0.166626 35.5835 0.166626ZM27.2502 24.7291L21.5835 37.4791C21.0037 37.3037 20.466 37.0114 20.0034 36.6203C19.5408 36.2291 19.1633 35.7474 18.8939 35.2048C18.6246 34.6623 18.4692 34.0703 18.4373 33.4653C18.4054 32.8604 18.4977 32.2554 18.7085 31.6875L19.8127 28.7083C20.048 28.0786 20.1274 27.4013 20.0442 26.7343C19.961 26.0672 19.7177 25.4302 19.3349 24.8776C18.9522 24.325 18.4414 23.8732 17.8462 23.5607C17.251 23.2483 16.5891 23.0845 15.9169 23.0833H6.41686C6.1108 23.0838 5.80838 23.0168 5.53113 22.8872C5.25387 22.7576 5.00858 22.5685 4.8127 22.3333C4.612 22.1014 4.46499 21.828 4.38216 21.5327C4.29933 21.2374 4.28273 20.9274 4.33353 20.625L6.97936 6.04163C7.0681 5.5563 7.32621 5.11821 7.70772 4.80537C8.08923 4.49254 8.56939 4.32525 9.0627 4.33329H27.2502V24.7291ZM37.6669 21C37.6669 21.5525 37.4474 22.0824 37.0567 22.4731C36.666 22.8638 36.1361 23.0833 35.5835 23.0833H31.4169V4.33329H35.5835C36.1361 4.33329 36.666 4.55279 37.0567 4.94349C37.4474 5.33419 37.6669 5.86409 37.6669 6.41663V21Z" fill="white"/>
+                                </svg>
+                            </label>
+                            <button class="comment__form-dislike-button" id="dislike-post" type="submit">Dislike</button>
                         </form>
                     </div>
-                    <form th:if="${principal != null}" method="post" th:action="@{/comments/{id}/report(id=${comment.id})}" th:object="${report}">
+
+                    <div class="info-like-dislike">
+                        <div class="like-info" th:text="${post.getNumberOfLikes()} + ' likes'"></div>
+                        <div class="dislike-info" th:text="${post.getNumberOfDislikes()} + ' dislikes'"></div>
+                    </div>
+                    <a class="post__text selected-post-text" th:if="${post.user != null}" th:href="@{/user/{id}(id=${post.user.id})}" th:text="${post.user.getFullName()}"></a>
+                    <h5 class="post__text selected-post-text" th:if="${post.user == null}">Anonymous</h5>
+                    <div class="images__block-main">
+                        <div  th:each="image: ${images}">
+                            <div class="images__block-main-button">
+                                <svg width="50" height="50" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M725 50H75C33.5938 50 0 83.5938 0 125V675C0 716.406 33.5938 750 75 750H725C766.406 750 800 716.406 800 675V125C800 83.5938 766.406 50 725 50ZM594.375 503.906C601.875 511.406 601.875 523.594 594.375 531.094L531.094 594.375C523.594 601.875 511.406 601.875 503.906 594.375L400 489.531L296.094 594.375C288.594 601.875 276.406 601.875 268.906 594.375L205.625 531.094C198.125 523.594 198.125 511.406 205.625 503.906L310.469 400L205.625 296.094C198.125 288.594 198.125 276.406 205.625 268.906L268.906 205.625C276.406 198.125 288.594 198.125 296.094 205.625L400 310.469L503.906 205.625C511.406 198.125 523.594 198.125 531.094 205.625L594.375 268.906C601.875 276.406 601.875 288.594 594.375 296.094L489.531 400L594.375 503.906Z" fill="white"/>
+                                </svg>
+                            </div>
+                            <img class="selected-post-main-img"  th:src="@{/posts/images/{id}(id=${image.id})}" alt="">
+                        </div>
+                    </div>
+                    <form method="POST" th:action="@{/posts/{id}/add_comment(id=${post.id})}" th:object="${comment}" enctype="multipart/form-data">
                         <label>
-                            <textarea th:field="${report.message}"></textarea>
+                            <textarea th:field="${comment.text}"></textarea>
                         </label>
-                        <label>
-                            <select th:field="${report.complaintType}">
-                                <option th:each="value: ${T(com.example.WriteHere.model.report.ComplaintType).values()}"
-                                        th:value="${value}"
-                                        th:text="${value.displayName}"></option>
-                            </select>
-                        </label>
-                        <button type="submit">New report</button>
+                        <input type="file" name="images" multiple="multiple">
+                        <input type="file" name="images" multiple="multiple">
+                        <input type="file" name="images" multiple="multiple">
+                        <input type="file" name="images" multiple="multiple">
+                        <input type="file" name="images" multiple="multiple">
+                        <input type="file" name="images" multiple="multiple">
+                        <button type="submit">New comment</button>
                     </form>
-                </li>
-            </ul>
-        </div>
+                    <div th:if="${principal != null && !createdReportIsExist}">
+                        <form  method="post" th:action="@{/posts/{id}/report(id=${post.id})}" th:object="${report}">
+                            <label>
+                                <textarea th:field="${report.message}"></textarea>
+                            </label>
+                            <label>
+                                <select th:field="${report.complaintType}">
+                                    <option th:each="value: ${T(com.example.WriteHere.model.report.ComplaintType).values()}"
+                                            th:value="${value}"
+                                            th:text="${value.displayName}"></option>
+                                </select>
+                            </label>
+                            <button type="submit">New report</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="comments">
+                    <div class="comments__title" th:if="${comments.size() != 0}">Comments</div>
+                    <div class="comments__posts">
+                        <div class="comments__post post" th:each="comment: ${post.getComments()}">
+                            <div class="post__text selected-post-text" th:utext="${comment.text}"></div>
+                            <div class="images__block">
+                                <div th:each="image: ${comment.images}">
+                                    <img class="post__img selected-post-img" th:src="@{/comments/images/{id}(id=${image.id})}" alt="">
+                                </div>
+                            </div>
+                            <div class="comment__form"  th:if="${principal != null}">
+                                <form th:method="PATCH" th:action="@{/comments/{id}/like(id=${comment.id})}">
+                                    <label for="like" class="comment__form-like-label">
+                                        <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M40.3751 17.0001C39.7897 16.2972 39.0572 15.7315 38.2292 15.3427C37.4013 14.9539 36.4981 14.7516 35.5834 14.7501H26.0834L27.2501 11.7709C27.7354 10.4665 27.897 9.06381 27.721 7.68322C27.5451 6.30263 27.0369 4.98532 26.2401 3.84428C25.4432 2.70324 24.3814 1.77254 23.1458 1.13202C21.9102 0.491489 20.5377 0.160252 19.1459 0.166719C18.7452 0.167555 18.3532 0.283959 18.0169 0.501975C17.6806 0.71999 17.4144 1.03036 17.2501 1.39589L11.3126 14.7501H6.41675C4.75914 14.7501 3.16943 15.4085 1.99733 16.5806C0.825228 17.7527 0.166748 19.3424 0.166748 21.0001V35.5834C0.166748 37.241 0.825228 38.8307 1.99733 40.0028C3.16943 41.1749 4.75914 41.8334 6.41675 41.8334H32.9376C34.3997 41.8329 35.8153 41.3198 36.9383 40.3834C38.0612 39.447 38.8202 38.1466 39.0834 36.7084L41.7292 22.1251C41.8929 21.2238 41.8564 20.2975 41.6224 19.4119C41.3884 18.5262 40.9626 17.7029 40.3751 17.0001ZM10.5834 37.6667H6.41675C5.86421 37.6667 5.33431 37.4472 4.94361 37.0565C4.55291 36.6658 4.33341 36.1359 4.33341 35.5834V21.0001C4.33341 20.4475 4.55291 19.9176 4.94361 19.5269C5.33431 19.1362 5.86421 18.9167 6.41675 18.9167H10.5834V37.6667ZM37.6667 21.3751L35.0209 35.9584C34.9322 36.4437 34.6741 36.8818 34.2926 37.1946C33.911 37.5075 33.4309 37.6748 32.9376 37.6667H14.7501V17.2709L20.4167 4.52089C21 4.69094 21.5418 4.98007 22.0077 5.37002C22.4736 5.75997 22.8537 6.24228 23.1238 6.7865C23.394 7.33072 23.5484 7.92503 23.5773 8.53193C23.6062 9.13882 23.509 9.74512 23.2917 10.3126L22.1876 13.2917C21.9523 13.9214 21.8729 14.5987 21.9561 15.2657C22.0393 15.9328 22.2826 16.5698 22.6654 17.1224C23.0481 17.675 23.5589 18.1269 24.1541 18.4393C24.7492 18.7517 25.4112 18.9155 26.0834 18.9167H35.5834C35.8895 18.9162 36.1919 18.9832 36.4692 19.1128C36.7464 19.2424 36.9917 19.4315 37.1876 19.6667C37.3883 19.8986 37.5353 20.172 37.6181 20.4673C37.7009 20.7626 37.7175 21.0726 37.6667 21.3751Z" fill="white"/>
+                                        </svg>
+                                    </label>
+                                    <button class="comment__form-like-button"  id="like" type="submit">Like</button>
+                                </form>
+                                <form th:method="PATCH" th:action="@{/comments/{id}/dislike(id=${comment.id})}">
+                                    <label for="dislike" class="comment__form-dislike-label">
+                                        <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M35.5835 0.166626H9.0627C7.60059 0.167113 6.18493 0.680187 5.06203 1.61658C3.93912 2.55297 3.18004 3.8534 2.91686 5.29163L0.271029 19.875C0.106172 20.7759 0.141331 21.702 0.374018 22.5878C0.606705 23.4737 1.03123 24.2975 1.61756 25.0011C2.20389 25.7047 2.93769 26.2708 3.76703 26.6595C4.59637 27.0481 5.50099 27.2497 6.41686 27.25H15.9169L14.7502 30.2291C14.2649 31.5335 14.1033 32.9362 14.2792 34.3168C14.4551 35.6974 14.9633 37.0147 15.7602 38.1557C16.5571 39.2968 17.6189 40.2275 18.8545 40.868C20.0901 41.5085 21.4626 41.8398 22.8544 41.8333C23.2551 41.8325 23.6471 41.7161 23.9834 41.498C24.3196 41.28 24.5859 40.9697 24.7502 40.6041L30.6877 27.25H35.5835C37.2411 27.25 38.8308 26.5915 40.0029 25.4194C41.175 24.2473 41.8335 22.6576 41.8335 21V6.41663C41.8335 4.75902 41.175 3.16931 40.0029 1.99721C38.8308 0.825107 37.2411 0.166626 35.5835 0.166626ZM27.2502 24.7291L21.5835 37.4791C21.0037 37.3037 20.466 37.0114 20.0034 36.6203C19.5408 36.2291 19.1633 35.7474 18.8939 35.2048C18.6246 34.6623 18.4692 34.0703 18.4373 33.4653C18.4054 32.8604 18.4977 32.2554 18.7085 31.6875L19.8127 28.7083C20.048 28.0786 20.1274 27.4013 20.0442 26.7343C19.961 26.0672 19.7177 25.4302 19.3349 24.8776C18.9522 24.325 18.4414 23.8732 17.8462 23.5607C17.251 23.2483 16.5891 23.0845 15.9169 23.0833H6.41686C6.1108 23.0838 5.80838 23.0168 5.53113 22.8872C5.25387 22.7576 5.00858 22.5685 4.8127 22.3333C4.612 22.1014 4.46499 21.828 4.38216 21.5327C4.29933 21.2374 4.28273 20.9274 4.33353 20.625L6.97936 6.04163C7.0681 5.5563 7.32621 5.11821 7.70772 4.80537C8.08923 4.49254 8.56939 4.32525 9.0627 4.33329H27.2502V24.7291ZM37.6669 21C37.6669 21.5525 37.4474 22.0824 37.0567 22.4731C36.666 22.8638 36.1361 23.0833 35.5835 23.0833H31.4169V4.33329H35.5835C36.1361 4.33329 36.666 4.55279 37.0567 4.94349C37.4474 5.33419 37.6669 5.86409 37.6669 6.41663V21Z" fill="white"/>
+                                        </svg>
+                                    </label>
+                                    <button class="comment__form-dislike-button" id="dislike" type="submit">Dislike</button>
+                                </form>
+                            </div>
+                            <div class="info-like-dislike">
+                                <div class="like-info" th:text="${comment.getNumberOfLikes()} + ' likes'"></div>
+                                <div class="dislike-info" th:text="${comment.getNumberOfDislikes()} + ' dislikes'"></div>
+                            </div>
+                            <a class="post__author" th:if="${comment.user != null}" th:href="@{/user/{id}(id=${comment.user.id})}" th:text="${comment.user.getFullName()}"></a>
+                            <h5 class="post__author" th:if="${comment.user == null}">Anonymous</h5>
+                            <div class="images__block-main" th:each="image: ${comment.images}">
+                                <div class="images__block-main-button">
+                                    <svg width="50" height="50" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M725 50H75C33.5938 50 0 83.5938 0 125V675C0 716.406 33.5938 750 75 750H725C766.406 750 800 716.406 800 675V125C800 83.5938 766.406 50 725 50ZM594.375 503.906C601.875 511.406 601.875 523.594 594.375 531.094L531.094 594.375C523.594 601.875 511.406 601.875 503.906 594.375L400 489.531L296.094 594.375C288.594 601.875 276.406 601.875 268.906 594.375L205.625 531.094C198.125 523.594 198.125 511.406 205.625 503.906L310.469 400L205.625 296.094C198.125 288.594 198.125 276.406 205.625 268.906L268.906 205.625C276.406 198.125 288.594 198.125 296.094 205.625L400 310.469L503.906 205.625C511.406 198.125 523.594 198.125 531.094 205.625L594.375 268.906C601.875 276.406 601.875 288.594 594.375 296.094L489.531 400L594.375 503.906Z" fill="white"/>
+                                    </svg>
+                                </div>
+                                <img class="selected-post-main-img" th:src="@{/comments/images/{id}(id=${image.id})}" alt="">
+                            </div>
+                            <form th:if="${principal != null}" method="post" th:action="@{/comments/{id}/report(id=${comment.id})}" th:object="${report}">
+                                <label>
+                                    <textarea th:field="${report.message}"></textarea>
+                                </label>
+                                <label>
+                                    <select th:field="${report.complaintType}">
+                                        <option th:each="value: ${T(com.example.WriteHere.model.report.ComplaintType).values()}"
+                                                th:value="${value}"
+                                                th:text="${value.displayName}"></option>
+                                    </select>
+                                </label>
+                                <button type="submit">New report</button>
+                            </form>
+                        </div>
+                        <div class="comments__button">Show more</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
     </body>
+<script th:src="@{/script/script.js}"></script>
 </html>

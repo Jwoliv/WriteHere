@@ -482,7 +482,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 .header__below-row_link {
   font-size: 30px;
-  background-color: #000000;
   color: #ffffff;
 }
 .header__below-row_link:hover {
@@ -577,6 +576,138 @@ h1, h2, h3, h4, h5, h6 {
   transition-duration: 0.3s;
   background-color: #ffffff;
   color: #000000;
+}
+
+.selected-post-title {
+  margin-top: -150px;
+  margin-bottom: 30px;
+}
+
+.images__block {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 30px;
+}
+@media (max-width: 992px) {
+  .images__block {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 767px) {
+  .images__block {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.selected-post-img {
+  cursor: pointer;
+  height: 300px;
+  -o-object-fit: cover;
+  object-fit: cover;
+}
+@media (max-width: 1480px) {
+  .selected-post-img {
+    height: 200px;
+  }
+}
+
+.selected-post-main-img {
+  max-width: 100%;
+  display: none;
+  -o-object-fit: cover;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.selected-post-main-img._active {
+  display: block;
+  text-align: center;
+}
+
+.images__block-main-button {
+  display: none;
+}
+
+.images__block-main-button._active {
+  display: block;
+  z-index: 2;
+  cursor: pointer;
+}
+
+.comments__post {
+  display: none;
+}
+
+.comments__post._active {
+  display: block;
+}
+
+.comments__title {
+  color: #ffffff;
+  font-size: 60px;
+  margin-top: 30px;
+}
+.comments__posts {
+  margin-top: -150px;
+  position: relative;
+  margin-left: 20px;
+}
+.comments__posts::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -20px;
+  height: 100%;
+  width: 5px;
+  background-color: #ffffff;
+}
+.comments__post {
+  margin-top: 20px;
+}
+.comments__post:first-child {
+  margin-top: 200px;
+}
+.comments__button {
+  background-color: #ffffff;
+  font-size: 30px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.comments__button._hidden {
+  display: none;
+}
+
+.comment__form {
+  margin-top: 20px;
+  display: flex;
+  gap: 20px;
+}
+.comment__form-like-button {
+  display: none;
+}
+.comment__form-dislike-button {
+  display: none;
+}
+
+.info-like-dislike {
+  margin-top: 10px;
+}
+
+.like-info {
+  font-size: 20px;
+  color: #ffffff;
+  margin-bottom: 5px;
+}
+
+.dislike-info {
+  font-size: 20px;
+  color: #ffffff;
 }
 
 body {
