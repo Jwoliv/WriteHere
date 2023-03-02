@@ -1,0 +1,28 @@
+.theme {
+
+  &__list {
+    margin-top: -100px;
+  }
+
+  &__item {
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60px;
+    margin-bottom: 10px;
+    width: 100%;
+    font-size: 30px;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+    transition-duration: .3s;
+    &:hover {
+      transition-duration: .3s;
+      background-color: #ffffff;
+      color: #000000;
+      border-radius: 20px;
+    }
+  }
+}

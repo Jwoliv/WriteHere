@@ -3,12 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <title>Themes</title>
+    <link rel="stylesheet" th:href="@{/style/css/style.css}">
 </head>
   <body>
-    <ul>
-      <li th:each="theme: ${T(com.example.WriteHere.model.post.Theme).values()}">
-        <a th:href="@{/theme/{url}(url=${theme})}" th:text="${theme.displayName}"></a>
-      </li>
-    </ul>
+  <div class="wrapper">
+      <header class="header">
+          <div class="header__container container">
+              <div class="header__below-row">
+                  <a th:href="@{/posts}" class="header__below-row_link">Posts</a>
+                  <a th:href="@{/theme}" class="header__below-row_link">Themes</a>
+                  <a th:if="${principal == null}" th:href="@{/login}" class="header__below-row_link">Login</a>
+                  <a th:if="${principal == null}" th:href="@{/sing-in}" class="header__below-row_link">Sing in</a>
+                  <form method="post" th:if="${principal != null}" th:action="@{/logout}">
+                      <button class="header__below-row_link" type="submit">Logout</button>
+                  </form>
+              </div>
+          </div>
+      </header>
+      <main class="main">
+          <div class="main__container container">
+              <ul class="theme__list">
+                  <li class="theme__item" th:each="theme: ${T(com.example.WriteHere.model.post.Theme).values()}">
+                      <a th:href="@{/theme/{url}(url=${theme})}" th:text="${theme.displayName}" class="theme__link"></a>
+                  </li>
+              </ul>
+          </div>
+      </main>
+  </div>
   </body>
 </html>

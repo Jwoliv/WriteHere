@@ -8,21 +8,33 @@
     <link rel="stylesheet" th:href="@{/style/css/style.css}">
 </head>
 <body>
-<div class="wrapper wrapper-background">
+<div class="wrapper">
+    <header class="header">
+        <div class="header__container container">
+            <div class="header__below-row">
+                <a th:href="@{/posts}" class="header__below-row_link">Posts</a>
+                <a th:href="@{/theme}" class="header__below-row_link">Themes</a>
+                <a th:if="${principal == null}" th:href="@{/login}" class="header__below-row_link">Login</a>
+                <a th:if="${principal == null}" th:href="@{/sing-in}" class="header__below-row_link">Sing in</a>
+                <form method="post" th:if="${principal != null}" th:action="@{/logout}">
+                    <button class="header__below-row_link" type="submit">Logout</button>
+                </form>
+            </div>
+        </div>
+    </header>
     <main class="main">
-        <div class="main__container container auth-container">
-            <div class="main__content content auth-content">
-                <div class="auth">
-                    <h1 class="auth-title">Login</h1>
-                    <form class="auth-form" th:action="@{/login}" method="post">
-                        <input class="auth-field user-field" type="text" name="username" placeholder="Email">
-                        <input class="auth-field user-field" type="password" name="password" placeholder="Password">
-                        <button class="auth-button user-button" type="submit">Login</button>
-                    </form>
-                </div>
+        <div class="main__container container">
+            <div class="auth">
+                <h1 class="auth-title">Login</h1>
+                <form class="auth-form" th:action="@{/login}" method="post">
+                    <input class="auth-field user-field" type="text" name="username" placeholder="Email">
+                    <input class="auth-field user-field" type="password" name="password" placeholder="Password">
+                    <button class="auth-button user-button" type="submit">Login</button>
+                </form>
             </div>
         </div>
     </main>
+</div>
 </div>
 </body>
 </html>

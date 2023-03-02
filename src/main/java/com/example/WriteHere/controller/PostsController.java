@@ -9,7 +9,6 @@ import com.example.WriteHere.model.post.Post;
 import com.example.WriteHere.model.report.ReportByPost;
 import com.example.WriteHere.model.user.Role;
 import com.example.WriteHere.model.user.User;
-import com.example.WriteHere.service.CommentsService;
 import com.example.WriteHere.service.PostService;
 import com.example.WriteHere.service.report.ReportPostService;
 import com.example.WriteHere.service.user.UserService;
@@ -32,21 +31,18 @@ public class PostsController {
     private final UserService userService;
     private final ReportPostService reportPostService;
     private final ConvertMethods convertMethods;
-    private final CommentsService commentsService;
 
     @Autowired
     public PostsController(
             PostService postService,
             UserService userService,
             ReportPostService reportPostService,
-            ConvertMethods convertMethods,
-            CommentsService commentsService
+            ConvertMethods convertMethods
     ) {
         this.postService = postService;
         this.userService = userService;
         this.reportPostService = reportPostService;
         this.convertMethods = convertMethods;
-        this.commentsService = commentsService;
     }
 
     @GetMapping()
@@ -115,7 +111,9 @@ public class PostsController {
                 model.addAttribute("userIsOwner", post.getUser().equals(user));
             }
             model.addAttribute("createdReportIsExist", !user.getBlackListOfPosts().contains(post));
-            model.addAttribute("comments", findComments(principal, post));
+            model.addAttribute("comments", findComments(principal, post).stream().sorted(
+                    Comparator.comparing(Comment::getDateOfCreated).reversed()
+            ).toList());
         }
         return "/posts/selected_post";
     }
@@ -128,16 +126,6 @@ public class PostsController {
         model.addAttribute("nameOfPage", "New post");
         model.addAttribute("principal", principal);
         return "/posts/new_post";
-    }
-    @GetMapping("/{id}/edit")
-    public String pageOfEditedPost(
-            @PathVariable Long id,
-            @NonNull Model model,
-            Principal principal
-    ) {
-        model.addAttribute("post", postService.findById(id));
-        model.addAttribute("principal", principal);
-        return "/posts/edit_post";
     }
     @PostMapping()
     public String saveNewPost(
@@ -270,8 +258,6 @@ public class PostsController {
             }
             setTheSameFieldsForNotification(notification, post, TypeOfNotification.NewComment);
         }
-        commentsService.save(comment);
-        postService.save(post);
         return "redirect:/posts/{id}";
     }
     @PatchMapping("/{id}/like")
@@ -279,9 +265,8 @@ public class PostsController {
         Post post = postService.findById(id);
         if (principal != null) {
             User user = userService.findByEmail(principal.getName());
-            User userOfTheSession = userService.findByEmail(principal.getName());
             if (user.getLikedPosts().contains(post) && post.getUser() != null
-                    && !userOfTheSession.getId().equals(user.getId())
+                    && !user.getId().equals(post.getUser().getId())
             ) {
                 Notification notification = new Notification();
                 notification.setTitle("Your posts is liked");
@@ -313,9 +298,8 @@ public class PostsController {
         Post post = postService.findById(id);
         if (principal != null) {
             User user = userService.findByEmail(principal.getName());
-            User userOfTheSession = userService.findByEmail(principal.getName());
             if (!user.getDislikedPosts().contains(post) && post.getUser() != null
-                    && !userOfTheSession.getId().equals(user.getId())
+                    && !user.getId().equals(post.getUser().getId())
             ) {
                Notification notification = new Notification();
                 notification.setTitle("Your posts is disliked");

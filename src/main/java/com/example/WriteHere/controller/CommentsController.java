@@ -57,7 +57,7 @@ public class CommentsController {
             user.getDislikedComments().remove(comment);
             comment.setNumberOfDislikes(comment.getNumberOfDislikes() - 1);
         }
-        if (comment.getUser() != null) {
+        if (comment.getUser() != null && !comment.getUser().getId().equals(user.getId())) {
             Notification notification = new Notification();
             notification.setTitle("Your comment is liked");
             notification.setText(
@@ -89,7 +89,7 @@ public class CommentsController {
             user.getLikedComments().remove(comment);
             comment.setNumberOfLikes(comment.getNumberOfLikes() - 1);
         }
-        if (comment.getUser() != null) {
+        if (comment.getUser() != null && !comment.getUser().getId().equals(user.getId())) {
             Notification notification = new Notification();
             notification.setTitle("Your comment is disliked");
             notification.setText(

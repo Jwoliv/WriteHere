@@ -9,23 +9,23 @@
 </head>
 <body>
 <div class="wrapper wrapper-background">
-    <main class="main">
-        <div class="main__container container auth-container">
-            <div class="main__content content auth-content">
-                <div class="auth">
-                    <h1 class="auth-title">Sing in</h1>
-                    <form class="auth-form"  th:action="@{/sing-in}" method="post" th:object="${user}">
-                        <input class="sing-in-field user-field" type="text" th:field="*{firstname}" placeholder="Firstname">
-                        <input class="sing-in-field user-field" type="text" th:field="*{lastname}" placeholder="Lastname">
-                        <input class="sing-in-field user-field" type="email" th:field="*{email}" placeholder="Email">
-                        <input class="sing-in-field user-field" type="password" th:field="*{password}" placeholder="Password">
-                        <input class="sing-in-field user-field" type="password" th:field="*{repeatPassword}" placeholder="Repeat password">
-                        <button class="auth-button user-button" type="submit">Sing in</button>
-                    </form>
+        <main class="main">
+            <div class="main__container container auth-container">
+                <div class="main__content content auth-content">
+                    <div class="auth">
+                        <h1 class="auth-title">Sing in</h1>
+                        <form class="auth-form"  th:action="@{/sing-in}" method="post" th:object="${user}">
+                            <input class="auth-field user-field" type="text" th:field="*{firstname}" placeholder="Firstname">
+                            <input class="auth-field user-field" type="text" th:field="*{lastname}" placeholder="Lastname">
+                            <input class="auth-field user-field" type="email" th:field="*{email}" placeholder="Email">
+                            <input class="auth-field user-field" type="password" th:field="*{password}" placeholder="Password">
+                            <input class="auth-field user-field" type="password" th:field="*{repeatPassword}" placeholder="Repeat password">
+                            <button class="auth-button user-button" type="submit">Sing in</button>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-    </main>
+        </main>
 </div>
 </body>
 </html>

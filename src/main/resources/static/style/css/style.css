@@ -405,6 +405,10 @@ h1, h2, h3, h4, h5, h6 {
   color: #ff0000;
   outline: 5px solid #ff0000;
 }
+.header__below-row_link {
+  color: #ffffff;
+  background-color: #000000;
+}
 .header__icon {
   display: flex;
   align-items: center;
@@ -708,6 +712,63 @@ h1, h2, h3, h4, h5, h6 {
 .dislike-info {
   font-size: 20px;
   color: #ffffff;
+}
+
+.theme__list {
+  margin-top: -100px;
+}
+.theme__link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 60px;
+  margin-bottom: 10px;
+  width: 100%;
+  font-size: 30px;
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  transition-duration: 0.3s;
+}
+.theme__link:hover {
+  transition-duration: 0.3s;
+  background-color: #ffffff;
+  color: #000000;
+  border-radius: 20px;
+}
+
+.auth {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-title {
+  font-size: 30px;
+  color: #ffffff;
+  margin-bottom: 20px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-field {
+  margin-bottom: 10px;
+  border-radius: 10px;
+}
+
+.user-field {
+  height: 40px;
+  font-size: 20px;
+  padding: 10px;
+}
+
+.auth-button {
+  height: 40px;
+  font-size: 20px;
+  background-color: #ff0000;
+  color: #ffffff;
+  border-radius: 10px;
 }
 
 body {
