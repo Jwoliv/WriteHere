@@ -11,78 +11,80 @@
         <div class="wrapper">
             <header class="header">
                 <div class="header__container container">
-                    <div class="header__row">
-                        <form class="header__form" method="get" th:action="@{/posts/search}">
-                            <label>
-                                <input placeholder="Search..." class="header__field" th:value="${name}" name="name" type="text">
-                            </label>
-                            <div class="header__form-button">
-                                <label for="search" class="header__button-label">
-                                    <svg width="53" height="50" viewBox="0 0 53 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <g clip-path="url(#clip0_4_13)">
-                                            <path d="M52.2189 47.4501L39.4266 35.2993C42.8581 31.5521 44.9357 26.663 44.9357 21.3193C44.9357 9.55654 34.8629 0 22.4908 0C10.107 0 0.0458984 9.56763 0.0458984 21.3193C0.0458984 33.071 10.1187 42.6386 22.4908 42.6386C28.1166 42.6386 33.2639 40.6652 37.209 37.4058L50.0013 49.5565C50.3048 49.8448 50.7133 50 51.1101 50C51.507 50 51.9155 49.8559 52.2189 49.5565C52.8259 48.98 52.8259 48.0266 52.2189 47.4501ZM3.18562 21.3193C3.18562 11.2084 11.8461 2.99335 22.4791 2.99335C33.1238 2.99335 41.7727 11.2195 41.7727 21.3193C41.7727 31.4191 33.1238 39.6563 22.4791 39.6563C11.8461 39.6563 3.18562 31.4302 3.18562 21.3193Z" fill="white"/>
-                                        </g>
-                                        <defs>
-                                            <clipPath id="clip0_4_13">
-                                                <rect width="52.6399" height="50" fill="white" transform="translate(0.0400391)"/>
-                                            </clipPath>
-                                        </defs>
-                                    </svg>
-                                </label>
-                                <button id="search" class="header__button">Search</button>
-                            </div>
-                        </form>
-                        <a th:href="@{/posts/new}" class="header__create">Create</a>
-                        <div class="header__icon header__notification-wrapper">
-                            <a th:href="@{/profile/notifications}" class="header__notification">
-                                <svg width="39" height="43" viewBox="0 0 39 43" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M38.0567 35.1486C33.4871 33.085 33.3133 24.2271 33.3099 24.0036V18.061C33.3099 12.3416 29.8149 7.42349 24.8485 5.32941C24.8378 2.38889 22.4429 0 19.5002 0C16.5574 0 14.1626 2.38903 14.1518 5.32927C9.18557 7.42334 5.69055 12.3414 5.69055 18.0609V24.0035C5.68732 24.227 5.51335 33.0848 0.943611 35.1485C0.423043 35.3837 0.136938 35.9503 0.257296 36.5088C0.377514 37.0673 0.871382 37.4661 1.44268 37.4661H13.0274C13.2649 38.7726 13.8826 39.988 14.8274 40.9724C16.0823 42.2798 17.7418 42.9999 19.5 42.9999C21.2583 42.9999 22.9178 42.2798 24.1725 40.9724C25.1175 39.9879 25.7352 38.7724 25.9725 37.4661H37.5573C38.1286 37.4661 38.6224 37.0673 38.7427 36.5088C38.8632 35.9503 38.5772 35.3837 38.0567 35.1486ZM32.0372 30.9052C32.5175 32.3616 33.1977 33.8241 34.1623 35.0412H4.83793C5.80234 33.8243 6.48254 32.3618 6.96292 30.9052H32.0372ZM19.5002 2.42508C20.8313 2.42508 21.9567 3.31951 22.3089 4.53869C21.4017 4.35053 20.4623 4.25132 19.5002 4.25132C18.5381 4.25132 17.5987 4.35046 16.6915 4.53869C17.0437 3.31958 18.1691 2.42508 19.5002 2.42508ZM8.11563 24.0109V18.0608C8.11563 11.7834 13.2227 6.67639 19.5002 6.67639C25.7777 6.67639 30.8847 11.7834 30.8847 18.0608V24.0208C30.8864 24.2032 30.9147 26.1202 31.3979 28.48H7.60223C8.08563 26.1179 8.11415 24.1976 8.11563 24.0109ZM19.5002 40.575C17.6494 40.575 16.0342 39.2406 15.5157 37.4662H23.4845C22.966 39.2406 21.3511 40.575 19.5002 40.575Z" fill="white"/>
-                                </svg>
-                                <h4 th:if="${user != null && countOfNotifications != 0}" th:text="${countOfNotifications}" class="header__notification-count"></h4>
-                            </a>
-                        </div>
-                        <div class="header__icon">
-                            <a th:href="@{/profile}" class="header__account">
-                                <svg width="40" height="46" viewBox="0 0 40 46" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M30.3237 22.834C27.681 25.1655 24.1725 26.5965 20.306 26.5965C16.382 26.5965 12.8158 25.119 10.1612 22.7185C3.98682 24.3342 0.166504 29.851 0.166504 36.4413V39.7998C0.166504 47.6595 39.834 47.6595 39.834 39.7998V36.4413C39.8337 30.0245 36.21 24.6 30.3237 22.834ZM20.306 24.2075C27.15 24.2075 32.713 18.8638 32.713 12.2622C32.713 5.66064 27.1615 0.305565 20.306 0.305565C13.4735 0.305565 7.91074 5.66079 7.91074 12.2623C7.91074 18.8641 13.4735 24.2076 20.306 24.2076V24.2075Z" fill="white"/>
-                                </svg>
-                            </a>
+                    <div class="header__first-row">
+                        <a href="#" class="header__logo">WH</a>
+                        <ul class="header__first-list">
+                            <li th:if="${principal == null}" class="header__first-item">
+                                <a th:href="@{/login}" class="header__first-link">Login</a>
+                            </li>
+                            <li th:if="${principal == null}" class="header__first-item">
+                                <a href="@{/sing-in}" class="header__first-link">Sing in</a>
+                            </li>
+                            <li class="header__first-item">
+                                <form th:if="${principal != null}" th:method="patch" th:action="@{/logout}">
+                                    <button class="header__first-link">Logout</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="header__second-row">
+                        <div class="header__main-search main-search">
+                            <form method="get" th:action="@{/posts/search}" class="main-search__form">
+                                <input placeholder="Search" th:value="${name}" name="name" class="main-search__field" type="text">
+                                <button id="button-search" class="main-search__button">Search</button>
+                            </form>
                         </div>
                     </div>
-                    <div class="header__below-row">
-                        <a th:href="@{/posts}" class="header__below-row_link">Posts</a>
-                        <a th:href="@{/theme}" class="header__below-row_link">Themes</a>
-                        <a th:if="${principal == null}" th:href="@{/login}" class="header__below-row_link">Login</a>
-                        <a th:if="${principal == null}" th:href="@{/sing-in}" class="header__below-row_link">Sing in</a>
-                        <form method="post" th:if="${principal != null}" th:action="@{/logout}">
-                            <button class="header__below-row_link" type="submit">Logout</button>
-                        </form>
+                    <div class="header__third-row">
+                        <nav class="header__navbar">
+                            <ul class="header__third-list">
+                                <li class="header__third-item">
+                                    <a th:href="@{/posts}" class="header__third-link">Posts</a>
+                                </li>
+                                <li class="header__third-item">
+                                    <a th:href="@{/themes}" class="header__third-link">Themes</a>
+                                </li>
+                                <li class="header__third-item">
+                                    <a th:href="@{/profile}" class="header__third-link">Profile</a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </header>
-
-            <main class="main">
+            <div class="main">
                 <div class="main__container container">
-                    <ul class="posts">
-                        <li class="posts__post" th:each="post: ${all_posts}">
-                            <h3 class="post__title" th:text="${post.title}"></h3>
+                    <div class="posts">
+                        <div class="posts__post" th:each="post: ${all_posts}">
+                            <a th:href="@{/posts/{id}(id=${post.id})}" class="post__title" th:text="${post.title}"></a>
                             <div class="post__row">
                                 <div class="post__text" th:if="${post.text.length > 300}" th:utext="${#strings.substring(post.text, 0, 300) + '...'}"></div>
                                 <div class="post__text" th:if="${post.text.length <= 300}" th:utext="${post.text}"></div>
-                                <div th:if="${post.images.size() != 0}" class="post__wrapper-img">
-                                    <img th:src="@{/posts/images/{id}(id=${post.previousId})}"
-                                         class="post__img" alt="">
+                                <div class="post__image-wrapper">
+                                    <img class="post__image" th:src="@{/posts/images/{id}(id=${post.previousId})}" alt="">
                                 </div>
                             </div>
-                            <div class="post__low-row">
-                                <a th:href="@{/posts/{id}(id=${post.id})}" class="post__read-more">READ MORE</a>
-                                <a class="post__author" th:if="${post.isByAnonymous == false}" th:href="@{/users/{id}(id=${post.user.id})}" th:text="${post.user.getFullName()}"></a>
-                                <h5 class="post__author" th:if="${post.isByAnonymous == true}">Anonymous</h5>
+                            <div class="post__rating-row">
+                                <h3 class="post__list-link post__rating" th:text="${post.numberOfLikes} + ' likes'"></h3>
+                                <h3 class="post__list-link post__rating" th:text="${post.numberOfDislikes} + ' dislikes'"></h3>
                             </div>
-                        </li>
-                    </ul>
+                            <div class="post__links">
+                                <ul class="post__list-properties">
+                                    <li class="post__list-item">
+                                        <a th:href="@{/posts/{id}(id=${post.id})}" class="post__list-link">READ MORE</a>
+                                    </li>
+                                    <li class="post__list-item">
+                                        <a th:href="@{/users/{id}(id=${post.user.id})}" class="post__list-link" th:if="${post.isByAnonymous == false}" th:text="${post.user.getFullName()}"></a>
+                                    </li>
+                                    <li class="post__list-item">
+                                        <h5 class="post__list-link" th:if="${post.isByAnonymous == true}">Anonymous</h5>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </main>
+            </div>
         </div>
     </body>
 </html>
