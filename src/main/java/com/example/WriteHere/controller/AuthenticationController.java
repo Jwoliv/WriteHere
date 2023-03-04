@@ -24,14 +24,9 @@ public class AuthenticationController {
     }
 
     @GetMapping("/login")
-    public String login() {
-        return "/login";
-    }
-
-    @GetMapping("/sing-in")
-    public String registration(@NonNull Model model) {
+    public String login(Model model) {
         model.addAttribute("user", new User());
-        return "/sing-in";
+        return "/login";
     }
 
     @PostMapping("/sing-in")

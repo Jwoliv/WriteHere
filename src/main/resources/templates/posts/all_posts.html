@@ -18,7 +18,7 @@
                                 <a th:href="@{/login}" class="header__first-link">Login</a>
                             </li>
                             <li th:if="${principal == null}" class="header__first-item">
-                                <a href="@{/sing-in}" class="header__first-link">Sing in</a>
+                                <a th:href="@{/login}" class="header__first-link">Sing in</a>
                             </li>
                             <li class="header__first-item">
                                 <form th:if="${principal != null}" th:method="patch" th:action="@{/logout}">

@@ -114,7 +114,7 @@ public class PostsController {
             if (post.getUser() != null) {
                 model.addAttribute("userIsOwner", post.getUser().equals(user));
             }
-            model.addAttribute("createdReportIsExist", !user.getBlackListOfPosts().contains(post));
+            model.addAttribute("createdReportIsExist", user.getBlackListOfPosts().contains(post));
             model.addAttribute("comments", findComments(principal, post).stream().sorted(
                     Comparator.comparing(Comment::getDateOfCreated).reversed()
             ).toList());

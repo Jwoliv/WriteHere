@@ -16,7 +16,7 @@
                             <a th:href="@{/login}" class="header__first-link">Login</a>
                         </li>
                         <li class="header__first-item" th:if="${principal == null}">
-                            <a th:href="@{/sing-in}" class="header__first-link">Sing in</a>
+                            <a th:href="@{/login}" class="header__first-link">Sing in</a>
                         </li>
                         <li class="header__first-item">
                             <form th:method="patch" th:if="${principal != null}" th:action="@{/logout}">
@@ -104,8 +104,8 @@
                     </div>
                     <button class="selected-post__button" type="submit">New comment</button>
                 </form>
-                <div class="selected-post__show-report" th:if="${principal != null}">Show form a new report</div>
-                <form class="post__form-report" th:if="${principal != null}" method="post" th:action="@{/posts/{id}/report(id=${post.id})}" th:object="${report}">
+                <div class="selected-post__show-report" th:if="${principal != null && !createdReportIsExist}">Show form a new report</div>
+                <form class="post__form-report" th:if="${principal != null && !createdReportIsExist}" method="post" th:action="@{/posts/{id}/report(id=${post.id})}" th:object="${report}">
                     <label>
                         <textarea placeholder="Text of the report" class="comment__form-report-field" th:field="${report.message}"></textarea>
                     </label>
@@ -123,7 +123,7 @@
                 </form>
 
                 <div class="comments">
-                    <h3 class="comments__title">Comments</h3>
+                    <h3 class="comments__title" th:if="${comments.size() != 0}">Comments</h3>
                     <div class="comments__comment" th:each="comment: ${comments}">
                         <div class="comment__text" th:utext="${comment.text}"></div>
                         <div th:if="${comment.images.size() != 0}" class="comment__row">

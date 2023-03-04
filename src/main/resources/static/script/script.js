@@ -43,7 +43,7 @@ const comments = Array.from(document.querySelectorAll(".comments__comment"));
 const buttonShowMoreComments = document.querySelector(".show-more-comments");
 
 const showComments = () => {
-    if (comments != null) {
+    if (comments != null && buttonShowMoreComments != null) {
         let length;
         if (comments.length <= 3) {
             buttonShowMoreComments.classList.add("_hidden");
@@ -101,3 +101,26 @@ const showFormsOfPost = () => {
     }
 };
 showFormsOfPost();
+
+const loginShowButton = document.querySelector(".login-show-button");
+const singInShowButton = document.querySelector(".sing-in-show-button");
+const loginForm = document.querySelector(".login-form");
+const singInForm = document.querySelector(".sing-in-form");
+
+const showFormOnTheLoginPage = () => {
+    if (loginShowButton != null && loginForm != null && singInShowButton != null && singInForm != null) {
+        loginShowButton.addEventListener("click", () => {
+            loginForm.classList.add("_show");
+            loginShowButton.classList.add("_active");
+            singInShowButton.classList.remove("_active");
+            singInForm.classList.remove("_show");
+        });
+        singInShowButton.addEventListener("click", () => {
+            singInForm.classList.add("_show");
+            singInShowButton.classList.add("_active");
+            loginShowButton.classList.remove("_active");
+            loginForm.classList.remove("_show");
+        });
+    }
+};
+showFormOnTheLoginPage();

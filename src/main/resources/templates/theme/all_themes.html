@@ -13,7 +13,7 @@
                   <a th:href="@{/posts}" class="header__below-row_link">Posts</a>
                   <a th:href="@{/theme}" class="header__below-row_link">Themes</a>
                   <a th:if="${principal == null}" th:href="@{/login}" class="header__below-row_link">Login</a>
-                  <a th:if="${principal == null}" th:href="@{/sing-in}" class="header__below-row_link">Sing in</a>
+                  <a th:if="${principal == null}" th:href="@{/login}" class="header__below-row_link">Sing in</a>
                   <form method="post" th:if="${principal != null}" th:action="@{/logout}">
                       <button class="header__below-row_link" type="submit">Logout</button>
                   </form>

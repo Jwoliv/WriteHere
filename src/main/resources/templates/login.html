@@ -11,30 +11,66 @@
 <div class="wrapper">
     <header class="header">
         <div class="header__container container">
-            <div class="header__below-row">
-                <a th:href="@{/posts}" class="header__below-row_link">Posts</a>
-                <a th:href="@{/theme}" class="header__below-row_link">Themes</a>
-                <a th:if="${principal == null}" th:href="@{/login}" class="header__below-row_link">Login</a>
-                <a th:if="${principal == null}" th:href="@{/sing-in}" class="header__below-row_link">Sing in</a>
-                <form method="post" th:if="${principal != null}" th:action="@{/logout}">
-                    <button class="header__below-row_link" type="submit">Logout</button>
-                </form>
+            <div class="header__first-row">
+                <a th:href="@{/posts}" class="header__logo">WH</a>
+            </div>
+            <div class="header__third-row">
+                <nav class="header__navbar">
+                    <ul class="header__third-list">
+                        <li class="header__third-item">
+                            <a th:href="@{/posts}" class="header__third-link">Posts</a>
+                        </li>
+                        <li class="header__third-item">
+                            <a th:href="@{/login}" class="header__third-link">Themes</a>
+                        </li>
+                        <li class="header__third-item">
+                            <a th:href="@{/login}" class="header__third-link">Profile</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </header>
-    <main class="main">
+    <div class="main">
         <div class="main__container container">
             <div class="auth">
-                <h1 class="auth-title">Login</h1>
-                <form class="auth-form" th:action="@{/login}" method="post">
-                    <input class="auth-field user-field" type="text" name="username" placeholder="Email">
-                    <input class="auth-field user-field" type="password" name="password" placeholder="Password">
-                    <button class="auth-button user-button" type="submit">Login</button>
-                </form>
+                <div class="auth__wrapper">
+                    <ul class="auth__first-row first-row-auth">
+                        <li>
+                            <h3 class="first-row-auth__title login-show-button _active">Login</h3>
+                        </li>
+                        <li>
+                            <h3 class="first-row-auth__title sing-in-show-button">Sing in</h3>
+                        </li>
+                    </ul>
+                    <ul class="auth__forms">
+                        <li class="auth__form login-form _show">
+                            <form th:action="@{/login}" method="post">
+                                <label>
+                                    <input class="auth__field" type="text" name="username" placeholder="Email">
+                                </label>
+                                <label>
+                                    <input class="auth__field" type="password" name="password" placeholder="Password">
+                                </label>
+                                <button class="auth__button" type="submit">Login</button>
+                            </form>
+                        </li>
+                        <li class="auth__form sing-in-form">
+                            <form th:action="@{/sing-in}" method="post" th:object="${user}">
+                                <label><input class="auth__field" type="text" th:field="*{firstname}" placeholder="Firstname"></label>
+                                <label><input class="auth__field" type="text" th:field="*{lastname}" placeholder="Lastname"></label>
+                                <label><input class="auth__field" type="email" th:field="*{email}" placeholder="Email"></label>
+                                <label><input class="auth__field" type="password" th:field="*{password}" placeholder="Password"></label>
+                                <label><input class="auth__field" type="password" th:field="*{repeatPassword}" placeholder="Repeat password"></label>
+                                <button class="auth__button" type="submit">Sing in</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
-    </main>
-</div>
+    </div>
 </div>
 </body>
+<script th:src="@{/script/script.js}"></script>
 </html>
