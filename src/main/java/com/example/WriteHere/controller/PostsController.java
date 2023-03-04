@@ -9,6 +9,7 @@ import com.example.WriteHere.model.post.Post;
 import com.example.WriteHere.model.report.ReportByPost;
 import com.example.WriteHere.model.user.Role;
 import com.example.WriteHere.model.user.User;
+import com.example.WriteHere.service.CommentsService;
 import com.example.WriteHere.service.PostService;
 import com.example.WriteHere.service.report.ReportPostService;
 import com.example.WriteHere.service.user.UserService;
@@ -31,18 +32,21 @@ public class PostsController {
     private final UserService userService;
     private final ReportPostService reportPostService;
     private final ConvertMethods convertMethods;
+    private final CommentsService commentsService;
 
     @Autowired
     public PostsController(
             PostService postService,
             UserService userService,
             ReportPostService reportPostService,
-            ConvertMethods convertMethods
+            ConvertMethods convertMethods,
+            CommentsService commentsService
     ) {
         this.postService = postService;
         this.userService = userService;
         this.reportPostService = reportPostService;
         this.convertMethods = convertMethods;
+        this.commentsService = commentsService;
     }
 
     @GetMapping()
@@ -258,6 +262,7 @@ public class PostsController {
             }
             setTheSameFieldsForNotification(notification, post, TypeOfNotification.NewComment);
         }
+        commentsService.save(comment);
         return "redirect:/posts/{id}";
     }
     @PatchMapping("/{id}/like")

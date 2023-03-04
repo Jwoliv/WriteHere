@@ -1,0 +1,453 @@
+.selected-post {
+  margin-top: 20px;
+  &__title {
+    color: #ffffff;
+    font-size: 50px;
+    margin-bottom: 20px;
+    line-height: 60px;
+    position: relative;
+    &::after {
+      content: "";
+      width: 100%;
+      height: 5px;
+      background-color: #ffffff;
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+    }
+    @media (max-width: 767px) {
+      font-size: 25px;
+      line-height: 30px;
+    }
+  }
+
+  &__text {
+    color: #ffffff;
+    font-size: 30px;
+    line-height: 50px;
+    margin-bottom: 50px;
+    @media (max-width: 767px) {
+      font-size: 15px;
+      line-height: 20px;
+    }
+  }
+
+  &__row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 30px;
+    gap: 20px;
+  }
+
+  &__item {
+    color: #ffffff;
+  }
+
+  &__form {
+    display: flex;
+    gap: 50px;
+    justify-content: center;
+    margin-bottom: 30px;
+  }
+
+  &__form-like-label {
+    cursor: pointer;
+  }
+
+  &__form-like-button {
+    display: none;
+  }
+
+  &__form-dislike-label {
+    cursor: pointer;
+  }
+
+  &__form-dislike-button {
+    display: none;
+  }
+
+  &__small-images {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin-bottom: 20px;
+    @media (max-width: 1480px) {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 767px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  &__wrapper-small-image {
+    margin-bottom: 10px;
+    max-height: 200px;
+    min-height: 200px;
+    object-fit: cover;
+    overflow: hidden;
+    @media (max-width: 1480px) {
+      margin-bottom: 0;
+    }
+  }
+
+  &__small-image {
+    max-height: 200px;
+    transition-duration: .3s;
+    &:hover {
+      transition-duration: .3s;
+      transform: scale(1.05);
+    }
+  }
+
+  &__new-comment {
+    display: none;
+  }
+
+  &__label-text {
+  }
+
+  &__field-text {
+    min-width: 100%;
+    max-width: 100%;
+    background-color: #000000;
+    outline: 1px solid #ffffff;
+    color: #ffffff;
+    height: 150px;
+    font-size: 30px;
+    padding: 10px;
+    resize: none;
+    border-radius: 20px;
+  }
+
+  &__images {
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    @media (max-width: 500px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  &__image {
+    display: flex;
+    margin-bottom: 10px;
+  }
+
+  &__button {
+    width: 100%;
+    margin-top: 10px;
+    background-color: #ff0000;
+    color: #ffffff;
+    padding: 15px;
+    font-size: 30px;
+    border-radius: 10px;
+    transition-duration: .3s;
+    &:hover {
+      transition-duration: .3s;
+      background-color: #ff5656;
+    }
+    @media (max-width: 767px) {
+      font-size: 20px;
+    }
+  }
+
+  &__large-images {
+  }
+  &__first-wrapper-large-image {
+  }
+
+  &__wrapper-large-image {
+    position: relative;
+  }
+
+  &__close-icon {
+    position: absolute;
+    z-index: 2;
+    top: 10px;
+    left: 10px;
+    cursor: pointer;
+  }
+
+  &__show-report {
+    cursor: pointer;
+  }
+
+  &__large-image {
+    position: absolute;
+    width: 100%;
+    border: 1px solid #000000;
+    z-index: 1;
+  }
+  &__show-comment {
+    background-color: #ff0000;
+    height: 60px;
+    font-size: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    margin: 10px 0;
+    border-radius: 10px;
+    transition-duration: .3s;
+    &:hover {
+      transition-duration: .3s;
+      background-color: #ff5656;
+    }
+  }
+  &__show-report {
+    background-color: #ff0000;
+    height: 60px;
+    font-size: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    margin: 10px 0;
+    border-radius: 10px;
+    transition-duration: .3s;
+    &:hover {
+      transition-duration: .3s;
+      background-color: #ff5656;
+    }
+  }
+}
+.selected-post__wrapper-large-image._hidden {
+  display: none;
+}
+.selected-post__new-comment._show {
+  display: block;
+}
+.selected-post__show-comment._hidden {
+  display: none;
+}
+.comments {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-top: 60px;
+  &::after {
+    content: "";
+    position: absolute;
+    background-color: #ffffff;
+    width: 10px;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+  &__title {
+    margin-bottom: 30px;
+    text-align: center;
+    color: #ffffff;
+    font-size: 60px;
+
+  }
+
+  &__comment {
+    margin-left: 30px;
+    margin-bottom: 100px;
+    display: none;
+  }
+}
+.comments__comment._show {
+  display: block;
+}
+.comment {
+  &__text {
+    font-size: 30px;
+    color: #ffffff;
+    line-height: 40px;
+    margin-bottom: 30px;
+  }
+
+  &__row {
+  }
+
+  &__small-images {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin-bottom: 20px;
+    @media (max-width: 1480px) {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 767px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  &__small-wrapper-image {
+    margin-bottom: 10px;
+    max-height: 200px;
+    min-height: 200px;
+    object-fit: cover;
+    overflow: hidden;
+    @media (max-width: 1480px) {
+      margin-bottom: 0;
+    }
+  }
+
+  &__small-image {
+    max-height: 200px;
+    transition-duration: .3s;
+    &:hover {
+      transition-duration: .3s;
+      transform: scale(1.05);
+    }
+  }
+
+  &__properties {
+  }
+
+  &__forms {
+    display: flex;
+    gap: 50px;
+  }
+
+  &__form {
+    margin: 30px 0 20px;
+  }
+
+  &__form-like-label {
+    cursor: pointer;
+  }
+
+  &__form-like-button {
+    display: none;
+  }
+
+  &__form-dislike-label {
+    cursor: pointer;
+  }
+
+  &__form-dislike-button {
+    display: none;
+  }
+
+  &__form-report {
+    display: none;
+  }
+
+  &__form-below-row {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    @media (max-width: 510px) {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+  }
+
+  &__form-report-field {
+    max-width: 100%;
+    height: 200px;
+    min-width: 100%;
+    background-color: #000000;
+    border-radius: 10px;
+    resize: none;
+    border: 1px solid #ffffff;
+    color: #ffffff;
+    padding: 20px;
+    font-size: 30px;
+  }
+
+  &__form-report-option {
+    background-color: #000000;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+    padding: 10px;
+    height: 60px;
+    font-size: 30px;
+    border-radius: 20px;
+  }
+
+  &__form-report-button {
+    background-color: #ff0000;
+    color: #ffffff;
+    width: 200px;
+    height: 60px;
+    border-radius: 20px;
+    transition-duration: .3s;
+    font-size: 25px;
+    &:hover {
+      transition-duration: .3s;
+      background-color: #ff5656;
+    }
+    @media (max-width: 510px) {
+      margin-top: 10px;
+      min-width: 100%;
+    }
+  }
+}
+.selected-comment {
+
+  &__row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__item {
+    color: #ffffff;
+    font-size: 30px;
+  }
+}
+.show-report-of-comment {
+  color: #ffffff;
+  font-size: 30px;
+  background-color: #ff0000;
+  padding: 20px;
+  text-align: center;
+  border-radius: 10px;
+  transition-duration: .3s;
+  cursor: pointer;
+  &:hover {
+    transition-duration: .3s;
+    background-color: #ff5656;
+  }
+}
+.show-report-of-comment._hidden {
+  display: none;
+}
+.comment__form-report._active {
+  display: block;
+}
+.show-more-comments {
+  cursor: pointer;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  height: 70px;
+  border-radius: 10px;
+  outline: 1px solid #ffffff;
+  margin-left: 30px;
+  margin-top: -70px;
+  transition-duration: .3s;
+  &:hover {
+    transition-duration: .3s;
+    background-color: #000000;
+    color: #ffffff;
+  }
+}
+.show-more-comments._hidden {
+  display: none;
+}
+.post__form-report {
+  display: none;
+  margin-top: 20px;
+}
+.post__form-report._show {
+  display: block;
+}
+.selected-post__show-report._hidden {
+  display: none;
+}

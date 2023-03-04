@@ -12,7 +12,7 @@
             <header class="header">
                 <div class="header__container container">
                     <div class="header__first-row">
-                        <a href="#" class="header__logo">WH</a>
+                        <a th:href="@{/posts}" class="header__logo">WH</a>
                         <ul class="header__first-list">
                             <li th:if="${principal == null}" class="header__first-item">
                                 <a th:href="@{/login}" class="header__first-link">Login</a>
@@ -42,7 +42,7 @@
                                     <a th:href="@{/posts}" class="header__third-link">Posts</a>
                                 </li>
                                 <li class="header__third-item">
-                                    <a th:href="@{/themes}" class="header__third-link">Themes</a>
+                                    <a th:href="@{/theme}" class="header__third-link">Themes</a>
                                 </li>
                                 <li class="header__third-item">
                                     <a th:href="@{/profile}" class="header__third-link">Profile</a>

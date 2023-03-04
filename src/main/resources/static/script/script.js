@@ -1,77 +1,103 @@
-const mainImages = Array.from(document.querySelectorAll(".selected-post-main-img"));
-const smallImages = Array.from(document.querySelectorAll(".selected-post-img"));
-const buttonShowImage = Array.from(document.querySelectorAll(".images__block-main-button"));
+const collectionOfSmallImages = Array.from(document.querySelectorAll(".selected-post__wrapper-small-image"));
+const collectionOfLargeImages = Array.from(document.querySelectorAll(".selected-post__wrapper-large-image"));
+const collectionOfTheButtonsOfImages = Array.from(document.querySelectorAll(".selected-post__close-icon"));
 
-const showImage = (button, index) => {
-    if (button != null) {
+const pressTheImage = (button, index) => {
+    if (collectionOfLargeImages != null) {
         button.addEventListener("click", () => {
-            for (let i = 0; i < mainImages.length; i++) {
-                mainImages[i].classList.remove("_active")
-                buttonShowImage[i].classList.remove("_active");
+            for (let i = 0; i < collectionOfLargeImages.length; i++) {
+                collectionOfLargeImages[i].classList.add("_hidden");
             }
-            mainImages[index].classList.add("_active")
-            buttonShowImage[index].classList.add("_active");
+            collectionOfLargeImages[index].classList.remove("_hidden");
         });
     }
 };
-const buttonOfHiddenImage = (button) => {
-    if (button != null) {
+collectionOfSmallImages.forEach(pressTheImage);
+
+
+const pressTheButton = (button, index) => {
+    if (collectionOfLargeImages != null) {
         button.addEventListener("click", () => {
-            for (let i = 0; i < mainImages.length; i++) {
-                mainImages[i].classList.remove("_active")
-            }
-            button.classList.remove("_active")
+            collectionOfLargeImages[index].classList.add("_hidden");
+        });
+    }
+}
+collectionOfTheButtonsOfImages.forEach(pressTheButton);
+
+
+
+const collectionsOfReportFormForComment = Array.from(document.querySelectorAll(".comment__form-report"));
+const buttonForShowReportsForComment = Array.from(document.querySelectorAll(".show-report-of-comment"));
+const showReportFormForComment = (button, index) => {
+    if (collectionsOfReportFormForComment != null && buttonForShowReportsForComment != null) {
+        button.addEventListener("click", () => {
+            collectionsOfReportFormForComment[index].classList.add("_active");
+            buttonForShowReportsForComment[index].classList.add("_hidden");
         });
     }
 };
-smallImages.forEach(showImage);
-buttonShowImage.forEach(buttonOfHiddenImage);
+buttonForShowReportsForComment.forEach(showReportFormForComment);
 
-const comments = Array.from(document.querySelectorAll(".comments__post"));
-const showMoreButtons = document.querySelector(".comments__button");
+
+const comments = Array.from(document.querySelectorAll(".comments__comment"));
+const buttonShowMoreComments = document.querySelector(".show-more-comments");
 
 const showComments = () => {
     if (comments != null) {
-        if (comments.length < 3) {
-            for (let i = 0; i < comments.length; i++) {
-                comments[i].classList.add("_active");
-            }
+        let length;
+        if (comments.length <= 3) {
+            buttonShowMoreComments.classList.add("_hidden");
+            length = comments.length;
         }
-        if (comments.length >= 3) {
-            for (let i = 0; i < 3; i++) {
-                comments[i].classList.add("_active");
-            }
+        else { length = 3 }
+        for (let i = 0; i < length; i++) {
+            comments[i].classList.add("_show");
         }
-    }
-}
-const showCommentsAfterPressButton = () => {
-    if (comments != null && showMoreButtons != null) {
-        showMoreButtons.addEventListener("click", () => {
-            let lengthOfActive = 0;
-            let lengthNewActiveList;
-            for (let i = 0; i < comments.length; i++) {
-                if (comments[i].classList.contains("_active")) {
-                    lengthOfActive++;
-                }
-            }
-            if (lengthOfActive + 5 > comments.length) {
-                lengthNewActiveList = comments.length;
-                showMoreButtons.classList.add("_hidden");
-            }
-            else {
-                lengthNewActiveList = lengthOfActive + 5;
-            }
-            for (let i = 0; i < lengthNewActiveList; i++) {
-                comments[i].classList.add("_active");
-            }
-        });
-    }
-}
-const checkLengthOfList = () => {
-    if (comments != null && showMoreButtons != null && comments.length <= 3) {
-        showMoreButtons.classList.add("_hidden");
     }
 };
 showComments();
-showCommentsAfterPressButton();
-checkLengthOfList();
+
+const showMoreCommentsUseButton = () => {
+    if (buttonShowMoreComments != null && comments != null) {
+        buttonShowMoreComments.addEventListener("click", () => {
+            let countOfActiveComment = 0;
+            let lengthOfNewActiveListOfComment;
+            for (let i = 0; i < comments.length; i++) {
+                if (comments[i].classList.contains("_show")) countOfActiveComment++;
+            }
+            if (countOfActiveComment + 5 >= comments.length) lengthOfNewActiveListOfComment = comments.length;
+            else lengthOfNewActiveListOfComment = countOfActiveComment + 5;
+
+            for (let i = countOfActiveComment; i < lengthOfNewActiveListOfComment; i++) {
+                comments[i].classList.add("_show");
+            }
+            if (lengthOfNewActiveListOfComment === comments.length) {
+                buttonShowMoreComments.classList.add("_hidden");
+            }
+        });
+    }
+};
+showMoreCommentsUseButton();
+
+
+const showButtonFormNewCommentOfPost = document.querySelector(".selected-post__show-comment");
+const showButtonFormNewReportOfPost = document.querySelector(".selected-post__show-report");
+
+const formNewCommentOfPost = document.querySelector(".selected-post__new-comment");
+const formNewReportOfPost = document.querySelector(".post__form-report");
+
+const showFormsOfPost = () => {
+    if (showButtonFormNewCommentOfPost != null && formNewCommentOfPost != null) {
+        showButtonFormNewCommentOfPost.addEventListener("click", () => {
+            formNewCommentOfPost.classList.add("_show");
+            showButtonFormNewCommentOfPost.classList.add("_hidden");
+        });
+    }
+    if (showButtonFormNewReportOfPost != null && formNewReportOfPost != null) {
+        showButtonFormNewReportOfPost.addEventListener("click", () => {
+            formNewReportOfPost.classList.add("_show");
+            showButtonFormNewReportOfPost.classList.add("_hidden");
+        });
+    }
+};
+showFormsOfPost();
