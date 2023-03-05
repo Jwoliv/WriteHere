@@ -2,14 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/style/css/style.css}">
     <title>Success report send</title>
 </head>
 <body>
-    <h1>Thanks for your help</h1>
-    <a th:if="${typeOfElement.equals('comment')}" th:href="@{/posts/{id}(id=${element.id})}">Return to the post</a>
-    <div th:if="${typeOfElement.equals('post')}">
-        <a th:href="@{/posts/{id}(id=${element.id})}">Return to the post</a>
-        <a th:href="@{/posts}">Return to the all posts</a>
-    </div>
+<div class="wrapper">
+    <header class="header">
+        <div class="header__container container">
+            <div class="header__first-row">
+                <a th:href="@{/posts}" class="header__logo">WH</a>
+            </div>
+        </div>
+    </header>
+    <main class="main">
+        <div class="main__container container">
+            <h1 class="success__title">Thanks for your help</h1>
+            <div class="success__main-block">
+                <a class="success__link" th:if="${typeOfElement.equals('comment')}" th:href="@{/posts/{id}(id=${element.id})}">Return to the post</a>
+                <div class="success__block" th:if="${typeOfElement.equals('post')}">
+                    <a class="success__link" th:href="@{/posts/{id}(id=${element.id})}">Return to the post</a>
+                    <a class="success__link" th:href="@{/posts}">Return to the all posts</a>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
 </body>
 </html>

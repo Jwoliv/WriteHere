@@ -2,33 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Themes</title>
     <link rel="stylesheet" th:href="@{/style/css/style.css}">
 </head>
-  <body>
-  <div class="wrapper">
-      <header class="header">
-          <div class="header__container container">
-              <div class="header__below-row">
-                  <a th:href="@{/posts}" class="header__below-row_link">Posts</a>
-                  <a th:href="@{/theme}" class="header__below-row_link">Themes</a>
-                  <a th:if="${principal == null}" th:href="@{/login}" class="header__below-row_link">Login</a>
-                  <a th:if="${principal == null}" th:href="@{/login}" class="header__below-row_link">Sing in</a>
-                  <form method="post" th:if="${principal != null}" th:action="@{/logout}">
-                      <button class="header__below-row_link" type="submit">Logout</button>
-                  </form>
-              </div>
-          </div>
-      </header>
-      <main class="main">
-          <div class="main__container container">
-              <ul class="theme__list">
-                  <li class="theme__item" th:each="theme: ${T(com.example.WriteHere.model.post.Theme).values()}">
-                      <a th:href="@{/theme/{url}(url=${theme})}" th:text="${theme.displayName}" class="theme__link"></a>
-                  </li>
-              </ul>
-          </div>
-      </main>
-  </div>
-  </body>
+<body>
+<div class="wrapper">
+    <header class="header">
+        <div class="header__container container">
+            <div class="header__first-row">
+                <a th:href="@{/posts}" class="header__logo">WH</a>
+                <ul class="header__first-list">
+                    <li th:if="${principal == null}" class="header__first-item">
+                        <a th:href="@{/login}" class="header__first-link">Login</a>
+                    </li>
+                    <li th:if="${principal == null}" class="header__first-item">
+                        <a th:href="@{/login}" class="header__first-link">Sing in</a>
+                    </li>
+                    <li class="header__first-item">
+                        <form th:if="${principal != null}" method="post" th:action="@{/logout}">
+                            <button class="header__first-link">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            <div class="header__third-row">
+                <nav class="header__navbar">
+                    <ul class="header__third-list">
+                        <li class="header__third-item">
+                            <a th:href="@{/posts}" class="header__third-link">Posts</a>
+                        </li>
+                        <li class="header__third-item">
+                            <a th:href="@{/theme}" class="header__third-link">Themes</a>
+                        </li>
+                        <li class="header__third-item">
+                            <a th:href="@{/profile}" class="header__third-link">Profile</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <div class="main">
+        <div class="main__container container">
+            <ul class="theme__list">
+                <li class="theme__item" th:each="theme: ${T(com.example.WriteHere.model.post.Theme).values()}">
+                    <a class="theme__link" th:href="@{/theme/{url}(url=${theme})}" th:text="${theme.displayName}"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
 </html>
