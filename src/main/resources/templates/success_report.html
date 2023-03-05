@@ -6,6 +6,10 @@
 </head>
 <body>
     <h1>Thanks for your help</h1>
-    <a th:href="@{/posts}">Return to the posts</a>
+    <a th:if="${typeOfElement.equals('comment')}" th:href="@{/posts/{id}(id=${element.id})}">Return to the post</a>
+    <div th:if="${typeOfElement.equals('post')}">
+        <a th:href="@{/posts/{id}(id=${element.id})}">Return to the post</a>
+        <a th:href="@{/posts}">Return to the all posts</a>
+    </div>
 </body>
 </html>

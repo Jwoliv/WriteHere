@@ -19,7 +19,7 @@
                             <a th:href="@{/login}" class="header__first-link">Sing in</a>
                         </li>
                         <li class="header__first-item">
-                            <form th:method="patch" th:if="${principal != null}" th:action="@{/logout}">
+                            <form method="post" th:if="${principal != null}" th:action="@{/logout}">
                                 <button class="header__first-link">Logout</button>
                             </form>
                         </li>
@@ -160,8 +160,8 @@
                                     <button class="comment__form-dislike-button" th:id="${'dislike' + comment.id}" type="submit">Dislike</button>
                                 </form>
                             </div>
-                            <div class="show-report-of-comment">Show form a new report</div>
-                            <form class="comment__form-report" th:if="${principal != null}" method="post" th:action="@{/comments/{id}/report(id=${comment.id})}" th:object="${report}">
+                            <div class="show-report-of-comment" th:if="${principal != null && !user.getBlackListOfComments().contains(comment)}">Show form a new report</div>
+                            <form class="comment__form-report" th:if="${principal != null && !user.getBlackListOfComments().contains(comment)}" method="post" th:action="@{/comments/{id}/report(id=${comment.id})}" th:object="${report}">
                                 <label>
                                     <textarea placeholder="Text of the report" class="comment__form-report-field" th:field="${report.message}"></textarea>
                                 </label>

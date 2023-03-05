@@ -1,29 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title th:text="${nameOfPage}"></title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" th:href="@{/style/css/style.css}">
+  <title th:text="${nameOfPage}"></title>
 </head>
-  <body>
-    <form method="POST" th:action="@{/posts}" th:object="${post}" enctype="multipart/form-data">
-      <label>
-        <input type="text" th:field="${post.title}">
-      </label>
-      <label>
-        <textarea th:field="${post.text}"></textarea>
-      </label>
-      <label>
-        <select th:field="${post.theme}">
+<body>
+<div class="wrapper">
+  <header class="header">
+    <div class="header__container container">
+      <div class="header__first-row">
+        <a th:href="@{/posts}" class="header__logo">WH</a>
+        <ul class="header__first-list">
+          <li class="header__first-item" th:if="${principal == null}">
+            <a th:href="@{/login}" class="header__first-link">Login</a>
+          </li>
+          <li class="header__first-item" th:if="${principal == null}">
+            <a th:href="@{/login}" class="header__first-link">Sing in</a>
+          </li>
+          <li class="header__first-item">
+            <form method="post" th:if="${principal != null}" th:action="@{/logout}">
+              <button class="header__first-link">Logout</button>
+            </form>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </header>
+  <main class="main">
+    <div class="main__container container">
+      <form class="new-post__form" method="POST" th:action="@{/posts}" th:object="${post}" enctype="multipart/form-data">
+        <label>
+          <input placeholder="Title of the post" class="new-post__field" type="text" th:field="${post.title}">
+        </label>
+        <label>
+          <textarea placeholder="Test of the post" class="new-post__textarea" th:field="${post.text}"></textarea>
+        </label>
+        <label>
+          <select class="new-post__select" th:field="${post.theme}">
             <option th:each="theme: ${T(com.example.WriteHere.model.post.Theme).values()}" th:value="${theme}" th:text="${theme.displayName}"></option>
-        </select>
-      </label>
-      <input type="file" name="images" multiple="multiple">
-      <input type="file" name="images" multiple="multiple">
-      <input type="file" name="images" multiple="multiple">
-      <input type="file" name="images" multiple="multiple">
-      <input type="file" name="images" multiple="multiple">
-      <input type="file" name="images" multiple="multiple">
-      <button type="submit">New post</button>
-    </form>
-  </body>
+          </select>
+        </label>
+        <div class="new-post__images">
+          <input type="file" name="images" multiple="multiple">
+          <input type="file" name="images" multiple="multiple">
+          <input type="file" name="images" multiple="multiple">
+          <input type="file" name="images" multiple="multiple">
+          <input type="file" name="images" multiple="multiple">
+          <input type="file" name="images" multiple="multiple">
+          <input type="file" name="images" multiple="multiple">
+          <input type="file" name="images" multiple="multiple">
+        </div>
+        <button class="new-post__button" type="submit">New post</button>
+      </form>
+    </div>
+  </main>
+</div>
+</body>
 </html>

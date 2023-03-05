@@ -10,6 +10,7 @@ import com.example.WriteHere.service.report.ReportCommentService;
 import com.example.WriteHere.service.user.UserService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -104,6 +105,7 @@ public class CommentsController {
     @PostMapping("{id}/report")
     public String createNewReportForComment(
             Principal principal,
+            Model model,
             @PathVariable Long id,
             @ModelAttribute("report") @Valid ReportByComment report,
             BindingResult bindingResult
@@ -123,6 +125,8 @@ public class CommentsController {
             user.getBlackListOfComments().add(commentsService.findById(id));
             userService.saveAfterChange(user);
         }
+        model.addAttribute("typeOfElement", "comment");
+        model.addAttribute("element", comment.getPost());
         return "/success_report";
     }
     public List<Comment> toggleCommentToTheSecondCollectionOfUser(List<Comment> collection, Comment comment, User user) {

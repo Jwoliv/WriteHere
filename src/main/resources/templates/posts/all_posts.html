@@ -21,7 +21,7 @@
                                 <a th:href="@{/login}" class="header__first-link">Sing in</a>
                             </li>
                             <li class="header__first-item">
-                                <form th:if="${principal != null}" th:method="patch" th:action="@{/logout}">
+                                <form th:if="${principal != null}" method="post" th:action="@{/logout}">
                                     <button class="header__first-link">Logout</button>
                                 </form>
                             </li>
@@ -60,7 +60,7 @@
                             <div class="post__row">
                                 <div class="post__text" th:if="${post.text.length > 300}" th:utext="${#strings.substring(post.text, 0, 300) + '...'}"></div>
                                 <div class="post__text" th:if="${post.text.length <= 300}" th:utext="${post.text}"></div>
-                                <div class="post__image-wrapper">
+                                <div th:if="${post.previousId != null}" class="post__image-wrapper">
                                     <img class="post__image" th:src="@{/posts/images/{id}(id=${post.previousId})}" alt="">
                                 </div>
                             </div>

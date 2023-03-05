@@ -118,6 +118,7 @@ public class PostsController {
             model.addAttribute("comments", findComments(principal, post).stream().sorted(
                     Comparator.comparing(Comment::getDateOfCreated).reversed()
             ).toList());
+            model.addAttribute("user", user);
         }
         return "/posts/selected_post";
     }
@@ -335,6 +336,7 @@ public class PostsController {
     @PostMapping("/{id}/report")
     public String createNewReportForPost(
             @PathVariable Long id,
+            Model model,
             Principal principal,
             @ModelAttribute("report") @Valid ReportByPost report,
             BindingResult bindingResult
@@ -354,7 +356,8 @@ public class PostsController {
             reportPostService.save(report);
             user.getBlackListOfPosts().add(post);
         }
-
+        model.addAttribute("typeOfElement", "post");
+        model.addAttribute("element", post);
         userService.saveAfterChange(user);
         return "/success_report";
     }
