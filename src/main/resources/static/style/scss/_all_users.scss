@@ -1,0 +1,34 @@
+.users {
+  &__list {
+    margin-top: 10px;
+  }
+
+  &__item {
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid #ffffff;
+    height: 70px;
+    align-items: center;
+    padding: 0 20px;
+    border-radius: 10px;
+    margin-top: 10px;
+    transition-duration: .3s;
+    &:hover {
+      height: 90px;
+      transition-duration: .3s;
+      background-color: #ffffff;
+      .users__link {
+        color: #000000;
+      }
+    }
+  }
+
+  &__link {
+    display: block;
+    font-size: 25px;
+    color: #ffffff;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

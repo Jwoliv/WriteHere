@@ -2,6 +2,8 @@
 <html lang="en"  xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" th:href="@{/style/css/style.css}">
     <title th:text="${nameOfPage}"></title>
 </head>
@@ -32,7 +34,13 @@
                                 <a th:href="@{/posts}" class="header__third-link">Posts</a>
                             </li>
                             <li class="header__third-item">
+                                <a th:href="@{/posts/new}" class="header__third-link">New post</a>
+                            </li>
+                            <li class="header__third-item">
                                 <a th:href="@{/theme}" class="header__third-link">Themes</a>
+                            </li>
+                            <li class="header__third-item">
+                                <a th:href="@{/users}" class="header__third-link">Users</a>
                             </li>
                             <li class="header__third-item">
                                 <a th:href="@{/profile}" class="header__third-link">Profile</a>
@@ -80,6 +88,8 @@
                     <div class="selected-post__row">
                         <h4 class="selected-post__item" th:text="${post.numberOfLikes} + ' likes'"></h4>
                         <h4 class="selected-post__item" th:text="${post.numberOfDislikes} + ' dislikes'"></h4>
+                        <a class="selected-post__item" th:href="@{/users/{id}(id=${post.user.id})}" th:if="${post.user != null}" th:text="${post.user.fullName}"></a>
+                        <h4 class="selected-post__item" th:if="${post.user == null}">Anonymous</h4>
                     </div>
                     <div class="selected-post__small-images">
                         <div class="selected-post__wrapper-small-image" th:each="image: ${images}">

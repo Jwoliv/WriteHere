@@ -30,7 +30,7 @@
                     <div class="header__second-row">
                         <div class="header__main-search main-search">
                             <form method="get" th:action="@{/posts/search}" class="main-search__form">
-                                <input placeholder="Search" th:value="${name}" name="name" class="main-search__field" type="text">
+                                <input placeholder="Post search" th:value="${name}" name="name" class="main-search__field" type="text">
                                 <button id="button-search" class="main-search__button">Search</button>
                             </form>
                         </div>
@@ -42,7 +42,13 @@
                                     <a th:href="@{/posts}" class="header__third-link">Posts</a>
                                 </li>
                                 <li class="header__third-item">
+                                    <a th:href="@{/posts/new}" class="header__third-link">New post</a>
+                                </li>
+                                <li class="header__third-item">
                                     <a th:href="@{/theme}" class="header__third-link">Themes</a>
+                                </li>
+                                <li class="header__third-item">
+                                    <a th:href="@{/users}" class="header__third-link">Users</a>
                                 </li>
                                 <li class="header__third-item">
                                     <a th:href="@{/profile}" class="header__third-link">Profile</a>
@@ -73,11 +79,11 @@
                                     <li class="post__list-item">
                                         <a th:href="@{/posts/{id}(id=${post.id})}" class="post__list-link">READ MORE</a>
                                     </li>
-                                    <li class="post__list-item">
-                                        <a th:href="@{/users/{id}(id=${post.user.id})}" class="post__list-link" th:if="${post.isByAnonymous == false}" th:text="${post.user.getFullName()}"></a>
+                                    <li class="post__list-item" th:if="${post.isByAnonymous == false}">
+                                        <a th:href="@{/users/{id}(id=${post.user.id})}" class="post__list-link" th:text="${post.user.getFullName()}"></a>
                                     </li>
-                                    <li class="post__list-item">
-                                        <h5 class="post__list-link" th:if="${post.isByAnonymous == true}">Anonymous</h5>
+                                    <li class="post__list-item"  th:if="${post.isByAnonymous == true}">
+                                        <h5 class="post__list-link">Anonymous</h5>
                                     </li>
                                 </ul>
                             </div>

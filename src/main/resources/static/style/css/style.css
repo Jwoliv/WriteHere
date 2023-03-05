@@ -198,7 +198,7 @@
   display: grid;
   -moz-column-gap: 10px;
   column-gap: 10px;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(5, 1fr);
 }
 .header__third-link {
   background-color: #ffffff;
@@ -1014,6 +1014,37 @@ h1, h2, h3, h4, h5, h6 {
   transition-duration: 0.3s;
   background-color: #000000;
   color: #ffffff;
+}
+
+.users__list {
+  margin-top: 10px;
+}
+.users__item {
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid #ffffff;
+  height: 70px;
+  align-items: center;
+  padding: 0 20px;
+  border-radius: 10px;
+  margin-top: 10px;
+  transition-duration: 0.3s;
+}
+.users__item:hover {
+  height: 90px;
+  transition-duration: 0.3s;
+  background-color: #ffffff;
+}
+.users__item:hover .users__link {
+  color: #000000;
+}
+.users__link {
+  display: block;
+  font-size: 25px;
+  color: #ffffff;
+}
+.users__link:hover {
+  text-decoration: underline;
 }
 
 body {

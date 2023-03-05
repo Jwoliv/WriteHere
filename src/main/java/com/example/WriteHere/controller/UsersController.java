@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.security.Principal;
 import java.util.Comparator;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(("/users"))
@@ -29,15 +31,21 @@ public class UsersController {
     }
 
     @GetMapping
-    public String index(Model model) {
-        model.addAttribute("all_users", userService.findAll());
+    public String index(Model model, Principal principal) {
+        model.addAttribute("all_users", userService.findAll()
+                .stream()
+                .sorted(Comparator.comparingInt((User x) -> x.getPosts().size()).reversed())
+                .collect(Collectors.toList())
+        );
         model.addAttribute("nameOfPage", "Users");
+        model.addAttribute("principal", principal);
         return "user/allUsers";
     }
     @GetMapping("/search")
     public String pageOfUsersWithSameName(@RequestParam("name") String name, Model model) {
         model.addAttribute("all_users", userService.findByName(name));
-        model.addAttribute("nameOfPage", name);
+        model.addAttribute("nameOfPage", "Search: " + name);
+        model.addAttribute("name", name);
         return "user/allUsers";
     }
     @GetMapping("/{id}")
