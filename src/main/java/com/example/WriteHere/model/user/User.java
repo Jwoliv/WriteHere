@@ -113,4 +113,19 @@ public class User {
     public String getFullName() {
         return firstname + " " + lastname;
     }
+    public Float getReputation() {
+        int likes = 0;
+        int dislike = 0;
+        likes += this.getPosts().parallelStream().mapToInt(Post::getNumberOfLikes).sum() +
+                this.getComments().parallelStream().mapToInt(Comment::getNumberOfLikes).sum();
+
+        dislike += this.getPosts().parallelStream().mapToInt(Post::getNumberOfDislikes).sum() +
+                this.getComments().parallelStream().mapToInt(Comment::getNumberOfDislikes).sum();
+        if (dislike != 0) {
+            return (float) (likes / dislike);
+        }
+        else {
+            return (float) likes;
+        }
+    }
 }

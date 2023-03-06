@@ -1,53 +1,86 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${user.fullName}"></title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
     <link rel="stylesheet" th:href="@{/style/css/style.css}">
 </head>
-  <body>
-      <div class="wrapper">
-          <header class="header">
-              <div class="header__container container">
-                  <div class="header__below-row">
-                      <a th:href="@{/posts}" class="header__below-row_link">Posts</a>
-                      <a th:href="@{/theme}" class="header__below-row_link">Themes</a>
-                      <a th:if="${principal == null}" th:href="@{/login}" class="header__below-row_link">Login</a>
-                      <a th:if="${principal == null}" th:href="@{/login}" class="header__below-row_link">Sing in</a>
-                      <form method="post" th:if="${principal != null}" th:action="@{/logout}">
-                          <button class="header__below-row_link" type="submit">Logout</button>
-                      </form>
-                  </div>
-              </div>
-          </header>
-          <main class="main">
-              <div class="main__container container">
-                  <div class="profile">
-                      <ul>
-                          <li class="profile__name" th:text="${user.fullName}"></li>
-                          <li class="profile__name" th:text="${user.email}"></li>
-                      </ul>
-                  </div>
-                  <ul class="posts">
-                      <li class="posts__post" th:each="post: ${user.posts}">
-                          <h3 class="post__title" th:text="${post.title}"></h3>
-                          <div class="post__row">
-                              <div class="post__text" th:if="${post.text.length > 300}" th:utext="${#strings.substring(post.text, 0, 300)}"></div>
-                              <div class="post__text" th:if="${post.text.length <= 300}" th:utext="${post.text}"></div>
-                              <div th:if="${post.images.size() != 0}" class="post__wrapper-img">
-                                  <img th:src="@{/posts/images/{id}(id=${post.previousId})}"
-                                       class="post__img" alt="">
-                              </div>
-                          </div>
-                          <div class="post__low-row">
-                              <a th:href="@{/posts/{id}(id=${post.id})}" class="post__read-more">READ MORE</a>
-                              <a class="post__author" th:if="${post.isByAnonymous == false}" th:href="@{/users/{id}(id=${post.user.id})}" th:text="${post.user.getFullName()}"></a>
-                              <h5 class="post__author" th:if="${post.isByAnonymous == true}">Anonymous</h5>
-                          </div>
-                      </li>
-                   </ul>
-              </div>
-          </main>
-      </div>
-  </body>
+<body>
+<div class="wrapper">
+    <header class="header">
+        <div class="header__container container">
+            <div class="header__first-row">
+                <a th:href="@{/posts}" class="header__logo">WH</a>
+                <ul class="header__first-list">
+                    <li th:if="${principal == null}" class="header__first-item">
+                        <a th:href="@{/login}" class="header__first-link">Login</a>
+                    </li>
+                    <li th:if="${principal == null}" class="header__first-item">
+                        <a th:href="@{/login}" class="header__first-link">Sing in</a>
+                    </li>
+                    <li class="header__first-item">
+                        <form th:if="${principal != null}" method="post" th:action="@{/logout}">
+                            <button class="header__first-link">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            <div class="header__third-row">
+                <nav class="header__navbar">
+                    <ul class="header__third-list">
+                        <li class="header__third-item">
+                            <a th:href="@{/posts}" class="header__third-link">Posts</a>
+                        </li>
+                        <li class="header__third-item">
+                            <a th:href="@{/posts/new}" class="header__third-link">New post</a>
+                        </li>
+                        <li class="header__third-item">
+                            <a th:href="@{/theme}" class="header__third-link">Themes</a>
+                        </li>
+                        <li class="header__third-item">
+                            <a th:href="@{/users}" class="header__third-link">Users</a>
+                        </li>
+                        <li class="header__third-item">
+                            <a th:href="@{/profile}" class="header__third-link">Profile</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <main class="main">
+        <div class="main__container container">
+            <div class="user__properties">
+                <h1 class="user__name" th:text="${user.fullName}"></h1>
+                <h2 class="user__title" th:text="${user.email}"></h2>
+                <h2 class="user__title" th:text="${'Reputation: ' + user.getReputation()}"></h2>
+                <ul class="user__buttons">
+                    <li class="user__buttons-item">
+                        <a th:href="@{/profile/notifications}" class="user__buttons-link">Notifications</a>
+                    </li>
+                    <li class="user__buttons-item">
+                        <a th:href="@{/profile/settings}" class="user__buttons-link">Settings</a>
+                    </li>
+                </ul>
+                <ul class="user__links">
+                    <li class="user__links-item">
+                        <a class="user__links-link" th:href="@{/profile/posts}">Posts</a>
+                    </li>
+                    <li class="user__links-item">
+                        <a class="user__links-link" th:href="@{/profile/comments}">Comments</a>
+                    </li>
+                    <li class="user__links-item">
+                        <a class="user__links-link" th:href="@{/profile/liked-posts}">Liked posts</a>
+                    </li>
+                    <li class="user__links-item">
+                        <a class="user__links-link" th:href="@{/profile/liked-comments}">Liked comments</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
 </html>

@@ -43,6 +43,7 @@ public class ProfileController {
                 notifications.stream().anyMatch(notification -> !notification.getCheckedStatus())
         );
         model.addAttribute("user", user);
+        model.addAttribute("url", "profile");
         return "/profile/notifications";
     }
 }

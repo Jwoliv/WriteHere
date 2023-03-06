@@ -87,7 +87,7 @@ public class PostsController {
                         .sorted(Comparator.comparing(Post::getDateOfCreated).reversed())
                         .toList()
         );
-        model.addAttribute("nameOfPage", name);
+        model.addAttribute("nameOfPage", "Search: " + name);
         model.addAttribute("name", name);
         return "/posts/all_posts";
     }

@@ -49,13 +49,14 @@ public class UsersController {
         return "user/allUsers";
     }
     @GetMapping("/{id}")
-    public String selectedUser(@PathVariable Long id, Model model) {
+    public String selectedUser(@PathVariable Long id, Model model, Principal principal) {
         User user = userService.findById(id);
         model.addAttribute("user", user);
         model.addAttribute("all_posts",
                 user.getPosts().stream()
                         .sorted(Comparator.comparing(Post::getDateOfCreated).reversed()).toList()
         );
+        model.addAttribute("principal", principal);
         return "user/selectedUser";
     }
     @GetMapping("/{id}/search")

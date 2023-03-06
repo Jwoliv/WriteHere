@@ -1047,6 +1047,74 @@ h1, h2, h3, h4, h5, h6 {
   text-decoration: underline;
 }
 
+.user__properties {
+  margin-top: 20px;
+}
+.user__name {
+  font-size: 50px;
+  text-align: center;
+  color: #ffffff;
+  margin-bottom: 30px;
+}
+.user__title {
+  font-size: 30px;
+  text-align: center;
+  color: #ffffff;
+  margin-bottom: 20px;
+}
+.user__buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+.user__buttons-link {
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  height: 70px;
+  width: 300px;
+  font-size: 25px;
+  max-width: 300px;
+  background-color: #ff0000;
+  transition-duration: 0.3s;
+}
+.user__buttons-link:hover {
+  transition-duration: 0.3s;
+  background-color: #ff5656;
+}
+.user__links {
+  margin-top: 50px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+.user__links-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 25px;
+  color: #ffffff;
+  position: relative;
+  cursor: pointer;
+}
+.user__links-link::after {
+  content: "";
+  width: 100%;
+  height: 2px;
+  background-color: #ffffff;
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease-in-out;
+}
+.user__links-link:hover::after {
+  transform-origin: left;
+  transform: scaleX(1);
+}
+
 body {
   background-color: #000000;
   font-family: "PT Sans", sans-serif;
