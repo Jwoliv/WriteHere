@@ -37,14 +37,15 @@ public class AuthenticationController {
     ) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("user", new User());
-            return "/sing-in";
+            return "/login";
         }
         else if (!Objects.equals(user.getPassword(), user.getRepeatPassword()) || userService.findByEmail(user.getEmail()) != null) {
             model.addAttribute("user", new User());
             model.addAttribute("error-email", "User with so email has already exist");
             model.addAttribute("error-password", "Passwords aren't equals");
-            return "/sing-in";
+            return "/login";
         }
+        user.setIsPrivate(false);
         userService.save(user);
         return "redirect:/login";
     }

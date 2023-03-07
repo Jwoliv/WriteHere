@@ -11,7 +11,43 @@
 <div class="wrapper">
   <header class="header">
     <div class="header__container container">
-      <a th:href="@{/profile}" class="header__return-to-profile">Return to profile</a>
+      <div class="header__first-row">
+        <a th:href="@{/posts}" class="header__logo">WH</a>
+        <ul class="header__first-list">
+          <li th:if="${principal == null}" class="header__first-item">
+            <a th:href="@{/login}" class="header__first-link">Login</a>
+          </li>
+          <li th:if="${principal == null}" class="header__first-item">
+            <a th:href="@{/login}" class="header__first-link">Sing in</a>
+          </li>
+          <li class="header__first-item">
+            <form th:if="${principal != null}" method="post" th:action="@{/logout}">
+              <button class="header__first-link">Logout</button>
+            </form>
+          </li>
+        </ul>
+      </div>
+      <div class="header__third-row">
+        <nav class="header__navbar">
+          <ul class="header__third-list">
+            <li class="header__third-item">
+              <a th:href="@{/posts}" class="header__third-link">Posts</a>
+            </li>
+            <li class="header__third-item">
+              <a th:href="@{/posts/new}" class="header__third-link">New post</a>
+            </li>
+            <li class="header__third-item">
+              <a th:href="@{/theme}" class="header__third-link">Themes</a>
+            </li>
+            <li class="header__third-item">
+              <a th:href="@{/users}" class="header__third-link">Users</a>
+            </li>
+            <li class="header__third-item">
+              <a th:href="@{/profile}" class="header__third-link">Profile</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
     </div>
   </header>
   <main class="main">
@@ -24,10 +60,9 @@
           <button class="notifications__button" type="submit">Check all</button>
         </form>
       </div>
-
       <ul class="notifications__list">
         <li class="notifications__item"  th:each="notification: ${notifications}">
-          <h3 class="notifications__title" th:text-="${notification.title}">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</h3>
+          <h3 class="notifications__title" th:text-="${notification.title}"></h3>
           <p class="notifications__text" th:text="${notification.text}"></p>
           <h4 class="notifications__date" th:text="${notification.dateOfCreated}"></h4>
           <div class="notifications__row">
@@ -41,7 +76,7 @@
         </li>
       </ul>
     </div>
-</main>
+  </main>
 </div>
 </body>
 </html>

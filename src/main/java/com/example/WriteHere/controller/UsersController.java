@@ -4,9 +4,7 @@ import com.example.WriteHere.model.post.Comment;
 import com.example.WriteHere.model.post.Post;
 import com.example.WriteHere.model.report.ReportByComment;
 import com.example.WriteHere.model.user.User;
-import com.example.WriteHere.service.PostService;
 import com.example.WriteHere.service.user.UserService;
-import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,19 +15,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.util.Comparator;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(("/users"))
 public class UsersController {
     private final UserService userService;
-    private final PostService postService;
 
     @Autowired
-    public UsersController(UserService userService, PostService postService) {
+    public UsersController(UserService userService) {
         this.userService = userService;
-        this.postService = postService;
     }
 
     @GetMapping
@@ -61,21 +56,12 @@ public class UsersController {
         model.addAttribute("principal", principal);
         return "user/selectedUser";
     }
-    @GetMapping("/{id}/search")
-    public String searchPostsOfUserByTitleOrText(@PathVariable Long id, @RequestParam("name") String name, @NonNull Model model) {
-        User user = userService.findById(id);
-        model.addAttribute("user", user);
-        model.addAttribute("all_posts",
-                postService.findByTitleOrTextAndUserId(name.toUpperCase(Locale.ROOT), user.getId())
-                        .stream()
-                        .sorted(Comparator.comparing(Post::getDateOfCreated).reversed()).toList()
-        );
-        model.addAttribute("name", name);
-        return "/user/selectedUser";
-    }
     @GetMapping("/{id}/posts")
     public String pageOfPostOfSelectedUsers(@PathVariable Long id, Model model, Principal principal) {
         User user = userService.findById(id);
+        if (user.getIsPrivate()) {
+            return "redirect:/users/{id}";
+        }
         model.addAttribute("nameOfPage", "Posts by " + user.getFullName());
         model.addAttribute("principal", principal);
         model.addAttribute("all_posts", user.getPosts()
@@ -89,6 +75,9 @@ public class UsersController {
     @GetMapping("/{id}/liked-posts")
     public String pageOfLikedPostOfSelectedUsers(@PathVariable Long id, Model model, Principal principal) {
         User user = userService.findById(id);
+        if (user.getIsPrivate()) {
+            return "redirect:/users/{id}";
+        }
         model.addAttribute("nameOfPage", "Liked posts by " + user.getFullName());
         model.addAttribute("principal", principal);
         model.addAttribute("all_posts", user.getLikedPosts()
@@ -102,6 +91,9 @@ public class UsersController {
     @GetMapping("/{id}/comments")
     public String pageOfCommentsOfSelectedUsers(@PathVariable Long id, Model model, Principal principal) {
         User user = userService.findById(id);
+        if (user.getIsPrivate()) {
+            return "redirect:/users/{id}";
+        }
         model.addAttribute("nameOfPage", "Comments by " + user.getFullName());
         model.addAttribute("principal", principal);
         model.addAttribute("all_comments", user.getComments()
@@ -116,6 +108,9 @@ public class UsersController {
     @GetMapping("/{id}/liked-comments")
     public String pageOfLikedCommentsOfSelectedUsers(@PathVariable Long id, Model model, Principal principal) {
         User user = userService.findById(id);
+        if (user.getIsPrivate()) {
+            return "redirect:/users/{id}";
+        }
         model.addAttribute("nameOfPage", "Liked comments by " + user.getFullName());
         model.addAttribute("principal", principal);
         model.addAttribute("all_comments", user.getLikedComments()

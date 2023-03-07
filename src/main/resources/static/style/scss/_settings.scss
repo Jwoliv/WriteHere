@@ -1,0 +1,38 @@
+.settings {
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    color: #ffffff;
+  }
+
+  &__item {
+    color: #ffffff;
+  }
+
+  &__button {
+    height: 50px;
+    color: #ffffff;
+    background-color: #ff0000;
+    border-radius: 10px;
+    font-size: 20px;
+    &:hover {
+      background-color: #f15252;
+    }
+  }
+
+  &__field {
+    height: 40px;
+    border-radius: 10px;
+    background-color: #000000;
+    padding: 20px;
+    font-size: 20px;
+    color: #ffffff;
+    margin-bottom: 10px;
+    outline: 1px solid #ffffff;
+    &:focus {
+      box-shadow: 0 0 10px 1px #ffffff;
+    }
+  }
+}

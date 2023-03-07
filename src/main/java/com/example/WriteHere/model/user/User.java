@@ -110,6 +110,7 @@ public class User {
     )
     @ToString.Exclude
     private List<Notification> notifications = new ArrayList<>();
+    private Boolean isPrivate;
     public String getFullName() {
         return firstname + " " + lastname;
     }

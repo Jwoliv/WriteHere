@@ -45,12 +45,12 @@ public class SecurityConfig {
                         ).permitAll()
                         .requestMatchers("/admin", "/admin/*/**").hasRole(Role.ADMIN.name())
                         .requestMatchers(
-                                "/profile",
+                                "/profile/**",
+                                "/settings/*",
                                 "/posts/*/like",
                                 "/posts/*/dislike",
                                 "/comments/*/like",
                                 "/comments/*/dislike",
-                                "/profile",
                                 "/users/**",
                                 "/comments/*/report",
                                 "/posts/*/report",

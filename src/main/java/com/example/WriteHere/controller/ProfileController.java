@@ -10,8 +10,7 @@ import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Comparator;
@@ -90,7 +89,7 @@ public class ProfileController {
         return "user/commentsByUser";
     }
     @GetMapping("/liked-comments")
-    public String pageOfLikedCommentsOfSelectedUsers( Model model, Principal principal) {
+    public String pageOfLikedCommentsOfSelectedUsers(Model model, Principal principal) {
         User user = userService.findByEmail(principal.getName());
         model.addAttribute("nameOfPage", "Liked comments");
         model.addAttribute("principal", principal);

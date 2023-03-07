@@ -1115,6 +1115,132 @@ h1, h2, h3, h4, h5, h6 {
   transform: scaleX(1);
 }
 
+.notifications__list {
+  margin-top: 120px;
+}
+.notifications__item {
+  margin-top: 30px;
+}
+.notifications__title {
+  font-size: 30px;
+  color: #ffffff;
+  margin-bottom: 20px;
+}
+@media (max-width: 1480px) {
+  .notifications__title {
+    font-size: 25px;
+  }
+}
+.notifications__text {
+  font-size: 20px;
+  line-height: 30px;
+  color: #ffffff;
+  margin-bottom: 40px;
+}
+@media (max-width: 1480px) {
+  .notifications__text {
+    font-size: 18px;
+  }
+}
+.notifications__date {
+  font-size: 20px;
+  color: #ffffff;
+  margin-bottom: 30px;
+}
+.notifications__row {
+  display: flex;
+  justify-content: space-between;
+}
+@media (max-width: 430px) {
+  .notifications__row {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: -20px;
+  }
+  .notifications__row button {
+    margin-bottom: 10px;
+    width: 100%;
+  }
+}
+.notifications__row-high {
+  margin-top: -100px;
+}
+@media (max-width: 767px) {
+  .notifications__row-high {
+    margin-top: -50px;
+  }
+}
+.notifications__button {
+  width: 200px;
+  height: 40px;
+  background-color: #000000;
+  color: #ffffff;
+  display: flex;
+  font-size: 20px;
+  align-items: center;
+  justify-content: center;
+  outline: 1px solid #ffffff;
+  border-radius: 20px;
+  transition-duration: 0.3s;
+}
+.notifications__button:hover {
+  transition-duration: 0.3s;
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.header__return-to-profile {
+  color: #ffffff;
+  margin-top: 20px;
+  width: 200px;
+  height: 40px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: 1px solid #ffffff;
+  border-radius: 20px;
+  transition-duration: 0.3s;
+}
+.header__return-to-profile:hover {
+  transition-duration: 0.3s;
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.settings__form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  color: #ffffff;
+}
+.settings__item {
+  color: #ffffff;
+}
+.settings__button {
+  height: 50px;
+  color: #ffffff;
+  background-color: #ff0000;
+  border-radius: 10px;
+  font-size: 20px;
+}
+.settings__button:hover {
+  background-color: #f15252;
+}
+.settings__field {
+  height: 40px;
+  border-radius: 10px;
+  background-color: #000000;
+  padding: 20px;
+  font-size: 20px;
+  color: #ffffff;
+  margin-bottom: 10px;
+  outline: 1px solid #ffffff;
+}
+.settings__field:focus {
+  box-shadow: 0 0 10px 1px #ffffff;
+}
+
 body {
   background-color: #000000;
   font-family: "PT Sans", sans-serif;

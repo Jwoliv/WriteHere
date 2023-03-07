@@ -34,11 +34,7 @@ public class NotificationsController {
             Principal principal
     ) {
         if (principal != null) {
-            User user = userService.findByEmail(principal.getName());
-            if (user.getNotifications().contains(notificationService.findById(id))) {
-                notificationService.deleteById(id);
-                userService.saveAfterChange(user);
-            }
+            notificationService.deleteById(id);
         }
         return "redirect:/profile/notifications";
     }

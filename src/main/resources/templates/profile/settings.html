@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
     <link rel="stylesheet" th:href="@{/style/css/style.css}">
+    <title>Document</title>
 </head>
 <body>
 <div class="wrapper">
@@ -52,32 +52,22 @@
     </header>
     <main class="main">
         <div class="main__container container">
-            <div class="user__properties">
-                <h1 class="user__name" th:text="${user.fullName}"></h1>
-                <h2 class="user__title" th:text="${user.email}"></h2>
-                <h2 class="user__title" th:text="${'Reputation: ' + user.getReputation()}"></h2>
-                <ul class="user__buttons">
-                    <li class="user__buttons-item">
-                        <a th:href="@{/profile/notifications}" class="user__buttons-link">Notifications</a>
-                    </li>
-                    <li class="user__buttons-item">
-                        <a th:href="@{/settings}" class="user__buttons-link">Settings</a>
-                    </li>
-                </ul>
-                <ul class="user__links">
-                    <li class="user__links-item">
-                        <a class="user__links-link" th:href="@{/profile/posts}">Posts</a>
-                    </li>
-                    <li class="user__links-item">
-                        <a class="user__links-link" th:href="@{/profile/comments}">Comments</a>
-                    </li>
-                    <li class="user__links-item">
-                        <a class="user__links-link" th:href="@{/profile/liked-posts}">Liked posts</a>
-                    </li>
-                    <li class="user__links-item">
-                        <a class="user__links-link" th:href="@{/profile/liked-comments}">Liked comments</a>
-                    </li>
-                </ul>
+            <div class="settings">
+                <form class="settings__form" th:method="patch" th:href="@{/settings/set-private}">
+                    <select class="settings__field">
+                        <option class="settings__item" name="isPrivate" th:value="${true}">Profile is private</option>
+                        <option class="settings__item" name="isPrivate" th:value="${false}">Profile is not private</option>
+                    </select>
+                    <button type="submit" class="settings__button">Change private status</button>
+                </form>
+                <form class="settings__form" th:method="patch" th:action="@{/settings/change-names}">
+                    <input placeholder="Firstname" name="firstname" th:value="${user.firstname}" class="settings__field" type="text">
+                    <input placeholder="Lastname" name="lastname" th:value="${user.lastname}" class="settings__field" type="text">
+                    <button type="submit" class="settings__button">Change names</button>
+                </form>
+                <form class="settings__form" th:method="delete" th:action="@{/settings/delete-account}">
+                    <button type="submit" class="settings__button">Delete account</button>
+                </form>
             </div>
         </div>
     </main>
