@@ -54,4 +54,7 @@ public class PostService {
     public List<Post> findByTitleOrTextAndUserId(String name, Long id) {
         return postRepository.findByTitleOrTextAndUserId(name, id);
     }
+    public List<Post> findByUserId(Long id) {
+        return postRepository.findByUserId(id);
+    }
 }

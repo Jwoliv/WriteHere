@@ -69,6 +69,7 @@ public class PostsController {
             model.addAttribute("user", userService.findByEmail(principal.getName()));
             model.addAttribute("countOfNotifications", (int) user.getNotifications().stream().filter(notification -> !notification.getCheckedStatus()).count());
         }
+        model.addAttribute("IsNotPageOfAllPosts", false);
         model.addAttribute("principal", principal);
         model.addAttribute("nameOfPage", "Posts");
         return "/posts/all_posts";
@@ -263,7 +264,9 @@ public class PostsController {
             }
             setTheSameFieldsForNotification(notification, post, TypeOfNotification.NewComment);
         }
-        commentsService.save(comment);
+        if (principal == null) {
+            commentsService.save(comment);
+        }
         return "redirect:/posts/{id}";
     }
     @PatchMapping("/{id}/like")

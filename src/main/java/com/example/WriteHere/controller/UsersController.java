@@ -1,6 +1,8 @@
 package com.example.WriteHere.controller;
 
+import com.example.WriteHere.model.post.Comment;
 import com.example.WriteHere.model.post.Post;
+import com.example.WriteHere.model.report.ReportByComment;
 import com.example.WriteHere.model.user.User;
 import com.example.WriteHere.service.PostService;
 import com.example.WriteHere.service.user.UserService;
@@ -70,5 +72,59 @@ public class UsersController {
         );
         model.addAttribute("name", name);
         return "/user/selectedUser";
+    }
+    @GetMapping("/{id}/posts")
+    public String pageOfPostOfSelectedUsers(@PathVariable Long id, Model model, Principal principal) {
+        User user = userService.findById(id);
+        model.addAttribute("nameOfPage", "Posts by " + user.getFullName());
+        model.addAttribute("principal", principal);
+        model.addAttribute("all_posts", user.getPosts()
+                .stream()
+                .sorted(Comparator.comparing(Post::getDateOfCreated).reversed())
+                .toList()
+        );
+        model.addAttribute("IsNotPageOfAllPosts", true);
+        return "posts/all_posts";
+    }
+    @GetMapping("/{id}/liked-posts")
+    public String pageOfLikedPostOfSelectedUsers(@PathVariable Long id, Model model, Principal principal) {
+        User user = userService.findById(id);
+        model.addAttribute("nameOfPage", "Liked posts by " + user.getFullName());
+        model.addAttribute("principal", principal);
+        model.addAttribute("all_posts", user.getLikedPosts()
+                .stream()
+                .sorted(Comparator.comparing(Post::getDateOfCreated).reversed())
+                .toList()
+        );
+        model.addAttribute("IsNotPageOfAllPosts", true);
+        return "posts/all_posts";
+    }
+    @GetMapping("/{id}/comments")
+    public String pageOfCommentsOfSelectedUsers(@PathVariable Long id, Model model, Principal principal) {
+        User user = userService.findById(id);
+        model.addAttribute("nameOfPage", "Comments by " + user.getFullName());
+        model.addAttribute("principal", principal);
+        model.addAttribute("all_comments", user.getComments()
+                .stream()
+                .sorted(Comparator.comparing(Comment::getDateOfCreated).reversed())
+                .toList()
+        );
+        model.addAttribute("user", userService.findByEmail(principal.getName()));
+        model.addAttribute("report", new ReportByComment());
+        return "user/commentsByUser";
+    }
+    @GetMapping("/{id}/liked-comments")
+    public String pageOfLikedCommentsOfSelectedUsers(@PathVariable Long id, Model model, Principal principal) {
+        User user = userService.findById(id);
+        model.addAttribute("nameOfPage", "Liked comments by " + user.getFullName());
+        model.addAttribute("principal", principal);
+        model.addAttribute("all_comments", user.getLikedComments()
+                .stream()
+                .sorted(Comparator.comparing(Comment::getDateOfCreated).reversed())
+                .toList()
+        );
+        model.addAttribute("user", userService.findByEmail(principal.getName()));
+        model.addAttribute("report", new ReportByComment());
+        return "user/commentsByUser";
     }
 }

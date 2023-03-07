@@ -16,4 +16,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByTitleOrText(@Param("name") String name);
     @Query("SELECT P FROM Post AS P WHERE P.user.id = :id AND UPPER(P.title) LIKE %:name% OR P.user.id = :id AND UPPER(P.text) LIKE %:name%")
     List<Post> findByTitleOrTextAndUserId(@Param("name") String name, @Param("id") Long id);
+    List<Post> findByUserId(Long id);
 }

@@ -27,7 +27,7 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="header__second-row">
+                    <div th:if="${!IsNotPageOfAllPosts}" class="header__second-row">
                         <div class="header__main-search main-search">
                             <form method="get" th:action="@{/posts/search}" class="main-search__form">
                                 <input placeholder="Post search" th:value="${name}" name="name" class="main-search__field" type="text">
