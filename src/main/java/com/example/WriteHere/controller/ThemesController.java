@@ -40,6 +40,7 @@ public class ThemesController {
     ) {
         model.addAttribute("nameOfPage", theme.getDisplayName());
         model.addAttribute("principal", principal);
+        model.addAttribute("IsNotPageOfAllPosts", false);
         model.addAttribute("all_posts", postService.findByTheme(theme).stream().sorted(
                 Comparator.comparing(Post::getDateOfCreated).reversed()
         ).toList());

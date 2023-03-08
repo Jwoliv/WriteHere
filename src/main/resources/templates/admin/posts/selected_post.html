@@ -2,26 +2,76 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Selected post for admin</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/style/css/style.css}">
+    <title th:text="${post.title}"></title>
 </head>
-    <body>
-    <div>
-        <h2 th:text="${post.title}"></h2>
-        <a th:if="${post.user != null}" th:href="@{/user/{id}(id=${post.user.id})}" th:text="${post.user.getFullName()}"></a>
-        <h5 th:if="${post.user == null}">Anonymous</h5>
-        <p th:utext="${post.text}"></p>
-        <ul>
-            <li th:each="image: ${post.images}">
-                <img th:src="@{/posts/images/{id}(id=${image.id})}" alt="">
-            </li>
-        </ul>
-        <h5 th:text="${post.dateOfCreated}"></h5>
-        <h5 th:text="${post.getNumberOfLikes()} + ' likes'"></h5>
-        <h5 th:text="${post.getNumberOfDislikes()} + ' dislikes'"></h5>
-        <hr>
-        <form th:method="delete" th:action="@{/posts/{id}(id=${post.id})}">
-            <button type="submit">Delete post</button>
-        </form>
-    </div>
-    </body>
+<body>
+<div class="wrapper">
+    <header class="header">
+        <div class="header__container container">
+            <div class="header__first-row">
+                <a th:href="@{/posts}" class="header__logo">WH</a>
+                <ul class="header__first-list">
+                    <li th:if="${principal == null}" class="header__first-item">
+                        <a th:href="@{/login}" class="header__first-link">Login</a>
+                    </li>
+                    <li th:if="${principal == null}" class="header__first-item">
+                        <a th:href="@{/login}" class="header__first-link">Sing in</a>
+                    </li>
+                    <li class="header__first-item">
+                        <form th:if="${principal != null}" th:method="delete" th:action="@{/logout}">
+                            <button class="header__first-link">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            <div class="header__third-row">
+                <nav class="header__navbar">
+                    <ul class="header__third-list">
+                        <li class="header__third-item">
+                            <a th:href="@{/posts}" class="header__third-link">admin-posts</a>
+                        </li>
+                        <li class="header__third-item">
+                            <a th:href="@{/posts/new}" class="header__third-link">New post</a>
+                        </li>
+                        <li class="header__third-item">
+                            <a th:href="@{/theme}" class="header__third-link">Themes</a>
+                        </li>
+                        <li class="header__third-item">
+                            <a th:href="@{/users}" class="header__third-link">Users</a>
+                        </li>
+                        <li class="header__third-item">
+                            <a th:href="@{/profile}" class="header__third-link">Profile</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <main class="main">
+        <div class="main__container container">
+            <div class="admin-post">
+                <h1 class="admin-post__title" th:text="${post.title}"></h1>
+                <div class="admin-post__text" th:utext="${post.text}"></div>
+                <form class="admin-post__form" th:method="delete" th:action="@{/posts/{id}(id=${post.id})}">
+                    <button class="admin-post__button" type="submit">Delete post</button>
+                </form>
+                <div class="admin-post__row-images">
+                    <a th:href="@{/posts/images/{id}(id=${post.id})}" class="admin-post__row-wrapper-image" th:each="image: ${post.images}">
+                        <img class="admin-post__row-image" th:href="@{/posts/images/{id}(id=${image.id})}" alt="">
+                    </a>
+                </div>
+                <div class="admin-post__reports">
+                    <div class="admin-post__report report" th:each="report: ${post.reports}">
+                        <div class="report__text" th:text="${report.message}"></div>
+                        <h4 class="report__type" th:text="${report.complaintType}"></h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
 </html>

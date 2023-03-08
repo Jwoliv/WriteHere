@@ -3,6 +3,7 @@ package com.example.WriteHere.controller;
 import com.example.WriteHere.model.post.Comment;
 import com.example.WriteHere.model.post.Post;
 import com.example.WriteHere.model.report.ReportByComment;
+import com.example.WriteHere.model.user.Role;
 import com.example.WriteHere.model.user.User;
 import com.example.WriteHere.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +60,8 @@ public class UsersController {
     @GetMapping("/{id}/posts")
     public String pageOfPostOfSelectedUsers(@PathVariable Long id, Model model, Principal principal) {
         User user = userService.findById(id);
-        if (user.getIsPrivate()) {
+        User userOfSession = userService.findByEmail(principal.getName());
+        if (user.getIsPrivate() && !userOfSession.getRole().equals(Role.ADMIN)) {
             return "redirect:/users/{id}";
         }
         model.addAttribute("nameOfPage", "Posts by " + user.getFullName());
@@ -75,7 +77,8 @@ public class UsersController {
     @GetMapping("/{id}/liked-posts")
     public String pageOfLikedPostOfSelectedUsers(@PathVariable Long id, Model model, Principal principal) {
         User user = userService.findById(id);
-        if (user.getIsPrivate()) {
+        User userOfSession = userService.findByEmail(principal.getName());
+        if (user.getIsPrivate() && !userOfSession.getRole().equals(Role.ADMIN)) {
             return "redirect:/users/{id}";
         }
         model.addAttribute("nameOfPage", "Liked posts by " + user.getFullName());
@@ -91,7 +94,8 @@ public class UsersController {
     @GetMapping("/{id}/comments")
     public String pageOfCommentsOfSelectedUsers(@PathVariable Long id, Model model, Principal principal) {
         User user = userService.findById(id);
-        if (user.getIsPrivate()) {
+        User userOfSession = userService.findByEmail(principal.getName());
+        if (user.getIsPrivate() && !userOfSession.getRole().equals(Role.ADMIN)) {
             return "redirect:/users/{id}";
         }
         model.addAttribute("nameOfPage", "Comments by " + user.getFullName());
@@ -108,7 +112,8 @@ public class UsersController {
     @GetMapping("/{id}/liked-comments")
     public String pageOfLikedCommentsOfSelectedUsers(@PathVariable Long id, Model model, Principal principal) {
         User user = userService.findById(id);
-        if (user.getIsPrivate()) {
+        User userOfSession = userService.findByEmail(principal.getName());
+        if (user.getIsPrivate() && !userOfSession.getRole().equals(Role.ADMIN)) {
             return "redirect:/users/{id}";
         }
         model.addAttribute("nameOfPage", "Liked comments by " + user.getFullName());

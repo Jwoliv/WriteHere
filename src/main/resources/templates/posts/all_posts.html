@@ -79,10 +79,10 @@
                                     <li class="post__list-item">
                                         <a th:href="@{/posts/{id}(id=${post.id})}" class="post__list-link">READ MORE</a>
                                     </li>
-                                    <li class="post__list-item" th:if="${post.isByAnonymous == false}">
+                                    <li class="post__list-item" th:if="${!post.isByAnonymous}">
                                         <a th:href="@{/users/{id}(id=${post.user.id})}" class="post__list-link" th:text="${post.user.getFullName()}"></a>
                                     </li>
-                                    <li class="post__list-item"  th:if="${post.isByAnonymous == true}">
+                                    <li class="post__list-item"  th:if="${post.isByAnonymous}">
                                         <h5 class="post__list-link">Anonymous</h5>
                                     </li>
                                 </ul>

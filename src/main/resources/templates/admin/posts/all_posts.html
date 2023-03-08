@@ -2,31 +2,96 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/style/css/style.css}">
     <title>All posts for admin</title>
 </head>
 <body>
-    <table>
-        <tr>
-            <td>Title of post</td>
-            <td>Number of comments</td>
-            <td>Number of like</td>
-            <td>Number of dislike</td>
-            <td>Number of report</td>
-            <td>Author</td>
-        </tr>
-        <tr th:each="post: ${all_posts}">
-            <td>
-                <a th:href="@{/admin/posts/{id}(id=${post.id})}" th:text="${post.title}"></a>
-            </td>
-            <td th:text="${post.comments.size()}"></td>
-            <td th:text="${post.numberOfLikes}"></td>
-            <td th:text="${post.numberOfDislikes}"></td>
-            <td th:text="${post.reports.size()}"></td>
-            <td th:if="${post.user == null}">Anonymous</td>
-            <td th:if="${post.user != null}">
-                <a th:href="@{/users/{id}(id=${post.user.id})}" th:text="${post.user.fullName}"></a>
-            </td>
-        </tr>
-    </table>
+<div class="wrapper">
+    <header class="header">
+        <div class="header__container container">
+            <div class="header__first-row">
+                <a th:href="@{/posts}" class="header__logo">WH</a>
+                <ul class="header__first-list">
+                    <li th:if="${principal == null}" class="header__first-item">
+                        <a th:href="@{/login}" class="header__first-link">Login</a>
+                    </li>
+                    <li th:if="${principal == null}" class="header__first-item">
+                        <a th:href="@{/login}" class="header__first-link">Sing in</a>
+                    </li>
+                    <li class="header__first-item">
+                        <form th:if="${principal != null}" method="post" th:action="@{/logout}">
+                            <button class="header__first-link">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            <div th:if="${!IsNotPageOfAllPosts}" class="header__second-row">
+                <div class="header__main-search main-search">
+                    <form method="get" th:action="@{/posts/search}" class="main-search__form">
+                        <input placeholder="Post search" th:value="${name}" name="name" class="main-search__field" type="text">
+                        <button id="button-search" class="main-search__button">Search</button>
+                    </form>
+                </div>
+            </div>
+            <div class="header__third-row">
+                <nav class="header__navbar">
+                    <ul class="header__third-list">
+                        <li class="header__third-item">
+                            <a th:href="@{/posts}" class="header__third-link">Posts</a>
+                        </li>
+                        <li class="header__third-item">
+                            <a th:href="@{/posts/new}" class="header__third-link">New post</a>
+                        </li>
+                        <li class="header__third-item">
+                            <a th:href="@{/theme}" class="header__third-link">Themes</a>
+                        </li>
+                        <li class="header__third-item">
+                            <a th:href="@{/users}" class="header__third-link">Users</a>
+                        </li>
+                        <li class="header__third-item">
+                            <a th:href="@{/profile}" class="header__third-link">Profile</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <div class="main">
+        <div class="main__container container">
+            <table class="posts-for-admin">
+                <tr  class="posts-for-admin__row" >
+                    <td class="posts-for-admin__element">Title of post</td>
+                    <td class="posts-for-admin__element">Comments</td>
+                    <td class="posts-for-admin__element">Likes</td>
+                    <td class="posts-for-admin__element">Dislikes</td>
+                    <td class="posts-for-admin__element">Reports</td>
+                    <td class="posts-for-admin__element">Author</td>
+                    <td class="posts-for-admin__element">Delete</td>
+                </tr>
+                 <tr class="posts-for-admin__row" th:each="post: ${all_posts}">
+                    <td class="posts-for-admin__element">
+                        <a th:href="@{/admin/posts/{id}(id=${post.id})}" th:if="${post.title.length() <= 10}" th:utext="${post.title}"></a>
+                        <a th:href="@{/admin/posts/{id}(id=${post.id})}" th:if="${post.title.length() > 10}" th:utext="${#strings.substring(post.title, 0, 10) + '...'}"></a>
+                    </td>
+                    <td class="posts-for-admin__element" th:text="${post.comments.size()}"></td>
+                    <td class="posts-for-admin__element" th:text="${post.numberOfLikes}"></td>
+                    <td class="posts-for-admin__element" th:text="${post.numberOfDislikes}"></td>
+                    <td class="posts-for-admin__element" th:text="${post.reports.size()}"></td>
+                    <td class="posts-for-admin__element" th:if="${post.user == null}">Anonymous</td>
+                    <td class="posts-for-admin__element" th:if="${post.user != null}">
+                            <a th:href="@{/users/{id}(id=${post.user.id})}" th:text="${post.user.fullName}"></a>
+                    </td>
+                    <td class="posts-for-admin__element">
+                        <form th:action="@{/posts/{id}(id=${post.id})}" th:method="delete">
+                            <button class="posts-for-admin__button" type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
 </body>
 </html>

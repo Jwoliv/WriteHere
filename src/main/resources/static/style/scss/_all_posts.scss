@@ -105,7 +105,27 @@
 	}
 
 	&__list-item {
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		margin-top: 6px;
+	}
+
+	&__list-button {
+		border-radius: 10px;
+		background-color: #ff0000;
+		width: 100px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 40px;
+		color: #ffffff;
+		font-size: 25px;
+		transition-duration: .3s;
+		&:hover {
+			transition-duration: .3s;
+			background-color: #f05252;
+		}
 	}
 
 	&__list-link {
