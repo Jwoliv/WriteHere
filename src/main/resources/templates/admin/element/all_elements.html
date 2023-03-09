@@ -62,7 +62,7 @@
         <div class="main__container container">
             <table class="posts-for-admin">
                 <tr  class="posts-for-admin__row" >
-                    <td class="posts-for-admin__element">Title of post</td>
+                    <td class="posts-for-admin__element">Text of element</td>
                     <td class="posts-for-admin__element">Comments</td>
                     <td class="posts-for-admin__element">Likes</td>
                     <td class="posts-for-admin__element">Dislikes</td>
@@ -70,21 +70,22 @@
                     <td class="posts-for-admin__element">Author</td>
                     <td class="posts-for-admin__element">Delete</td>
                 </tr>
-                 <tr class="posts-for-admin__row" th:each="post: ${all_posts}">
-                    <td class="posts-for-admin__element">
-                        <a th:href="@{/admin/posts/{id}(id=${post.id})}" th:if="${post.title.length() <= 10}" th:utext="${post.title}"></a>
-                        <a th:href="@{/admin/posts/{id}(id=${post.id})}" th:if="${post.title.length() > 10}" th:utext="${#strings.substring(post.title, 0, 10) + '...'}"></a>
+                 <tr class="posts-for-admin__row" th:each="element: ${all_elements}">
+                     <td class="posts-for-admin__element">
+                         <a th:href="@{/admin/{url}/{id}(url=${url}, id=${element.id})}" th:if="${element.text.length() <= 10}" th:utext="${element.text}"></a>
+                         <a th:href="@{/admin/{url}/{id}(url=${url}, id=${element.id})}" th:if="${element.text.length() > 10}" th:utext="${#strings.substring(element.text, 0, 10) + '...'}"></a>
+                     </td>
+                    <td class="posts-for-admin__element" th:if="${url.equals('posts')}" th:text="${element.comments.size()}"></td>
+                    <td class="posts-for-admin__element" th:if="${url.equals('comments')}">---</td>
+                    <td class="posts-for-admin__element" th:text="${element.numberOfLikes}"></td>
+                    <td class="posts-for-admin__element" th:text="${element.numberOfDislikes}"></td>
+                    <td class="posts-for-admin__element" th:text="${element.reports.size()}"></td>
+                    <td class="posts-for-admin__element" th:if="${element.user == null}">Anonymous</td>
+                    <td class="posts-for-admin__element" th:if="${element.user != null}">
+                        <a th:href="@{/users/{id}(id=${element.user.id})}" th:text="${element.user.fullName}"></a>
                     </td>
-                    <td class="posts-for-admin__element" th:text="${post.comments.size()}"></td>
-                    <td class="posts-for-admin__element" th:text="${post.numberOfLikes}"></td>
-                    <td class="posts-for-admin__element" th:text="${post.numberOfDislikes}"></td>
-                    <td class="posts-for-admin__element" th:text="${post.reports.size()}"></td>
-                    <td class="posts-for-admin__element" th:if="${post.user == null}">Anonymous</td>
-                    <td class="posts-for-admin__element" th:if="${post.user != null}">
-                            <a th:href="@{/users/{id}(id=${post.user.id})}" th:text="${post.user.fullName}"></a>
-                    </td>
                     <td class="posts-for-admin__element">
-                        <form th:action="@{/posts/{id}(id=${post.id})}" th:method="delete">
+                        <form th:action="@{/{url}/{id}(url=${url}, id=${element.id})}" th:method="delete">
                             <button class="posts-for-admin__button" type="submit">Delete</button>
                         </form>
                     </td>

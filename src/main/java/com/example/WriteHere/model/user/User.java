@@ -129,4 +129,10 @@ public class User {
             return (float) likes;
         }
     }
+    public int getNumberOfReports() {
+        int count = 0;
+        count += this.getPosts().stream().mapToInt(post -> post.getReports().size()).sum();
+        count += this.getComments().stream().mapToInt(comment -> comment.getReports().size()).sum();
+        return count;
+    }
 }

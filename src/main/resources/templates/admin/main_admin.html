@@ -2,9 +2,53 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Main admin</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin main</title>
+    <link rel="stylesheet" th:href="@{/style/css/style.css}">
 </head>
 <body>
-
+<div class="wrapper">
+    <header class="header">
+        <div class="header__container container">
+            <div class="header__first-row">
+                <a th:href="@{/posts}" class="header__logo">WH</a>
+            </div>
+            <div class="header__third-row">
+                <nav class="header__navbar">
+                    <ul class="header__third-list">
+                        <li class="header__third-item">
+                            <a th:href="@{/posts}" class="header__third-link">Posts</a>
+                        </li>
+                        <li class="header__third-item">
+                            <a th:href="@{/posts/new}" class="header__third-link">New post</a>
+                        </li>
+                        <li class="header__third-item">
+                            <a th:href="@{/login}" class="header__third-link">Themes</a>
+                        </li>
+                        <li class="header__third-item">
+                            <a th:href="@{/templates/admin/user}" class="header__third-link">Users</a>
+                        </li>
+                        <li class="header__third-item">
+                            <a th:href="@{/login}" class="header__third-link">Profile</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <div class="main">
+        <div class="main__container container">
+            <div class="admin__buttons">
+                <div class="admin__wrapper-button">
+                    <a th:href="@{/admin/posts}" class="admin__button">Posts</a>
+                </div>
+                <div class="admin__wrapper-button">
+                    <a th:href="@{/admin/users}" class="admin__button">Users</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

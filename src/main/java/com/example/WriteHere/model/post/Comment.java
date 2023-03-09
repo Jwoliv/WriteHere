@@ -61,4 +61,10 @@ public class Comment {
     )
     @ToString.Exclude
     private List<User> usersWhoBlock = new ArrayList<>();
+
+    public void removeFields() {
+        this.getUsersWhoDislike().forEach(user -> user.getDislikedComments().remove(this));
+        this.getUsersWhoLike().forEach(user -> user.getLikedComments().remove(this));
+        this.getUsersWhoBlock().forEach(user -> user.getBlackListOfComments().remove(this));
+    }
 }

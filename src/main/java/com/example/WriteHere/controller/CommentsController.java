@@ -4,6 +4,7 @@ import com.example.WriteHere.model.notification.Notification;
 import com.example.WriteHere.model.notification.TypeOfNotification;
 import com.example.WriteHere.model.post.Comment;
 import com.example.WriteHere.model.report.ReportByComment;
+import com.example.WriteHere.model.user.Role;
 import com.example.WriteHere.model.user.User;
 import com.example.WriteHere.service.CommentsService;
 import com.example.WriteHere.service.report.ReportCommentService;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/comments")
@@ -37,7 +39,24 @@ public class CommentsController {
         this.reportCommentService = reportCommentService;
         this.convertMethods = convertMethods;
     }
+    @DeleteMapping("/{id}")
+    public String pageOfDeleteComment(@PathVariable Long id, Principal principal) {
+        Comment comment = commentsService.findById(id);
+        Long postId = comment.getPost().getId();
+        User userOfSession = userService.findByEmail(principal.getName());
+        if (comment.getUser() != null && Objects.equals(comment.getUser().getId(), userOfSession.getId())
+                || userOfSession.getRole().equals(Role.ADMIN)) {
+                commentsService.deleteById(id);
 
+        }
+        if (comment.getUser() == null && userOfSession.getRole().equals(Role.ADMIN)) {
+            commentsService.deleteById(id);
+        }
+        if (userOfSession.getRole().equals(Role.ADMIN)) {
+            return "redirect:/admin/posts/" + postId + "/comments";
+        }
+        return "redirect:/posts/" + postId;
+    }
     @PatchMapping("{id}/like")
     public String pageOfLikedComment(
             @PathVariable Long id,

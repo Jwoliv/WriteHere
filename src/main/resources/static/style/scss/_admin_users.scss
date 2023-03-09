@@ -1,0 +1,28 @@
+.posts-for-admin {
+
+  &__users {
+  }
+
+  &__user {
+    border: 1px solid #ffffff;
+    height: 60px;
+    text-align: center;
+    font-size: 30px;
+    color: #ffffff;
+  }
+
+  &__user-link {
+    color: #ffffff;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  &__user-button {
+    color: #ffffff;
+    background-color: #000000;
+    font-size: 30px;
+    &:hover {
+      color: #ff0000;
+    }
+  }
+}

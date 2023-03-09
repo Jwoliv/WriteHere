@@ -1353,6 +1353,55 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 25px;
   margin-bottom: 20px;
 }
+.admin__buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+}
+.admin__wrapper-button {
+  min-width: 100%;
+}
+.admin__button {
+  min-width: 100%;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  color: #ffffff;
+  font-size: 20px;
+  height: 50px;
+  background-color: #ff0000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition-duration: 0.3s;
+}
+.admin__button:hover {
+  transition-duration: 0.3s;
+  background-color: #f15252;
+}
+
+.posts-for-admin__user {
+  border: 1px solid #ffffff;
+  height: 60px;
+  text-align: center;
+  font-size: 30px;
+  color: #ffffff;
+}
+.posts-for-admin__user-link {
+  color: #ffffff;
+}
+.posts-for-admin__user-link:hover {
+  text-decoration: underline;
+}
+.posts-for-admin__user-button {
+  color: #ffffff;
+  background-color: #000000;
+  font-size: 30px;
+}
+.posts-for-admin__user-button:hover {
+  color: #ff0000;
+}
+
 body {
   background-color: #000000;
   font-family: "PT Sans", sans-serif;

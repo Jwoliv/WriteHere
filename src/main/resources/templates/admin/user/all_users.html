@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/style/css/style.css}">
+    <title>All users</title>
+</head>
+<body>
+<div class="wrapper">
+    <header class="header">
+        <div class="header__container container">
+            <div class="header__first-row">
+                <a th:href="@{/posts}" class="header__logo">WH</a>
+                <ul class="header__first-list">
+                    <li th:if="${principal == null}" class="header__first-item">
+                        <a th:href="@{/login}" class="header__first-link">Login</a>
+                    </li>
+                    <li th:if="${principal == null}" class="header__first-item">
+                        <a th:href="@{/login}" class="header__first-link">Sing in</a>
+                    </li>
+                    <li class="header__first-item">
+                        <form th:if="${principal != null}" method="post" th:action="@{/logout}">
+                            <button class="header__first-link">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            <div class="header__third-row">
+                <nav class="header__navbar">
+                    <ul class="header__third-list">
+                        <li class="header__third-item">
+                            <a th:href="@{/posts}" class="header__third-link">Posts</a>
+                        </li>
+                        <li class="header__third-item">
+                            <a th:href="@{/posts/new}" class="header__third-link">New post</a>
+                        </li>
+                        <li class="header__third-item">
+                            <a th:href="@{/theme}" class="header__third-link">Themes</a>
+                        </li>
+                        <li class="header__third-item">
+                            <a th:href="@{/users}" class="header__third-link">Users</a>
+                        </li>
+                        <li class="header__third-item">
+                            <a th:href="@{/profile}" class="header__third-link">Profile</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <div class="main">
+        <div class="main__container container">
+            <table class="posts-for-admin">
+                <tr  class="posts-for-admin__users" >
+                    <td class="posts-for-admin__user">Firstname</td>
+                    <td class="posts-for-admin__user">Lastname</td>
+                    <td class="posts-for-admin__user">Posts</td>
+                    <td class="posts-for-admin__user">Comments</td>
+                    <td class="posts-for-admin__user">Reports</td>
+                    <td class="posts-for-admin__user">Role</td>
+                    <td class="posts-for-admin__user">Delete</td>
+                </tr>
+                <tr  class="posts-for-admin__users" th:each="user: ${users}">
+                    <td class="posts-for-admin__user">
+                        <a class="posts-for-admin__user-link" th:href="@{/users/{id}(id=${user.id})}" th:text="${user.firstname}"></a>
+                    </td>
+                    <td class="posts-for-admin__user">
+                        <a class="posts-for-admin__user-link" th:href="@{/users/{id}(id=${user.id})}" th:text="${user.lastname}"></a>
+                    </td>
+                    <td class="posts-for-admin__user" th:text="${user.posts.size()}"></td>
+                    <td class="posts-for-admin__user" th:text="${user.comments.size()}"></td>
+                    <td class="posts-for-admin__user" th:text="${user.numberOfReports}"></td>
+                    <td class="posts-for-admin__user" th:text="${user.role}"></td>
+                    <td class="posts-for-admin__user">
+                        <form th:action="@{/users/{id}(id=${user.id})}" th:method="delete">
+                            <button class="posts-for-admin__user-button" type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

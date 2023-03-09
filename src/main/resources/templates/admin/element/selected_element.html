@@ -55,13 +55,18 @@
             <div class="admin-post">
                 <h1 class="admin-post__title" th:text="${post.title}"></h1>
                 <div class="admin-post__text" th:utext="${post.text}"></div>
-                <form class="admin-post__form" th:method="delete" th:action="@{/posts/{id}(id=${post.id})}">
+                <form class="admin-post__form" th:method="delete" th:action="@{/{url}/{id}(url=${url},id=${post.id})}">
                     <button class="admin-post__button" type="submit">Delete post</button>
                 </form>
+                <div class="admin-post__form">
+                    <a th:href="@{/admin/{url}/{id}/comments(url=${url}, id=${post.id})}" class="admin-post__button">Comments</a>
+                </div>
                 <div class="admin-post__row-images">
-                    <a th:href="@{/posts/images/{id}(id=${post.id})}" class="admin-post__row-wrapper-image" th:each="image: ${post.images}">
-                        <img class="admin-post__row-image" th:href="@{/posts/images/{id}(id=${image.id})}" alt="">
-                    </a>
+                    <div class="admin-post__row-wrapper-image" th:each="image: ${post.images}">
+                        <a th:href="@{/{url}/images/{id}(url=${url}, id=${image.id})}">
+                            <img class="admin-post__row-image" th:src="@{/posts/images/{id}(id=${image.id})}" alt="">
+                        </a>
+                    </div>
                 </div>
                 <div class="admin-post__reports">
                     <div class="admin-post__report report" th:each="report: ${post.reports}">

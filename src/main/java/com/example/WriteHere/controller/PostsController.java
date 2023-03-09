@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/posts")
@@ -105,7 +106,7 @@ public class PostsController {
         if (principal == null) {
             model.addAttribute("comments", post.getComments().stream().sorted(
                     Comparator.comparing(Comment::getDateOfCreated).reversed()
-            ).toList());
+            ).collect(Collectors.toList()));
         }
         model.addAttribute("principal", principal);
         model.addAttribute("comment", new Comment());

@@ -9,10 +9,7 @@ import com.example.WriteHere.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Comparator;
@@ -56,6 +53,15 @@ public class UsersController {
         );
         model.addAttribute("principal", principal);
         return "user/selectedUser";
+    }
+    @DeleteMapping("/{id}")
+    public String pageOfDeletedUser(@PathVariable Long id, Principal principal) {
+        User user = userService.findById(id);
+        User userOfSession = userService.findByEmail(principal.getName());
+        if (userOfSession.getRole().equals(Role.ADMIN) && !user.getRole().equals(Role.ADMIN)) {
+            userService.deleteById(id);
+        }
+        return "redirect:/admin/users";
     }
     @GetMapping("/{id}/posts")
     public String pageOfPostOfSelectedUsers(@PathVariable Long id, Model model, Principal principal) {

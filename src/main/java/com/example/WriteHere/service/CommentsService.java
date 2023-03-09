@@ -33,7 +33,9 @@ public class CommentsService {
     }
     @Transactional
     public void deleteById(Long id) {
-        commentRepository.findById(id);
+        Comment comment = findById(id);
+        comment.removeFields();
+        commentRepository.deleteById(id);
     }
     @Transactional
     public void deleteAllByPost(Post post) {
