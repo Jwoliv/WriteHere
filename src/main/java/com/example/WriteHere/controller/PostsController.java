@@ -264,9 +264,7 @@ public class PostsController {
             }
             setTheSameFieldsForNotification(notification, post, TypeOfNotification.NewComment);
         }
-        if (principal == null) {
-            commentsService.save(comment);
-        }
+        commentsService.save(comment);
         return "redirect:/posts/{id}";
     }
     @PatchMapping("/{id}/like")

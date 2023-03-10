@@ -131,6 +131,9 @@
                         <button  class="comment__form-report-button" type="submit">New report</button>
                     </div>
                 </form>
+                <form th:if="${post.getUser() != null && principal != null && post.getUser().getId() == user.getId()}" th:method="delete" th:action="@{/posts/{id}(id=${post.id})}">
+                    <button class="selected-post__button" type="submit">Delete post</button>
+                </form>
 
                 <div class="comments">
                     <h3 class="comments__title" th:if="${comments.size() != 0}">Comments</h3>
@@ -171,6 +174,9 @@
                                 </form>
                             </div>
                             <div class="show-report-of-comment" th:if="${principal != null && !user.getBlackListOfComments().contains(comment)}">Show form a new report</div>
+                            <form th:if="${comment.getUser() != null && principal != null && comment.getUser().getId() == user.getId()}" th:method="delete" th:action="@{/comments/{id}(id=${comment.id})}">
+                                <button class="selected-post__button" type="submit">Delete comment</button>
+                            </form>
                             <form class="comment__form-report" th:if="${principal != null && !user.getBlackListOfComments().contains(comment)}" method="post" th:action="@{/comments/{id}/report(id=${comment.id})}" th:object="${report}">
                                 <label>
                                     <textarea placeholder="Text of the report" class="comment__form-report-field" th:field="${report.message}"></textarea>

@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.util.Comparator;
@@ -41,6 +42,21 @@ public class AdminController {
         );
         model.addAttribute("IsNotPageOfAllPosts", false);
         model.addAttribute("url", "posts");
+        return "/admin/element/all_elements";
+    }
+    @GetMapping("/posts/search")
+    public String pageOfSearchPosts(
+            @RequestParam("name") String name,
+            Model model,
+            Principal principal
+    ) {
+        model.addAttribute("all_elements",
+                comparatorsTypes.getSortedPostsByDateOfCreated(postService.findByTitleOrText(name))
+        );
+        model.addAttribute("principal", principal);
+        model.addAttribute("IsNotPageOfAllPosts", false);
+        model.addAttribute("url", "posts");
+        model.addAttribute("name", name);
         return "/admin/element/all_elements";
     }
     @GetMapping("/posts/{id}")

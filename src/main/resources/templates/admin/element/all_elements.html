@@ -29,7 +29,7 @@
             </div>
             <div th:if="${!IsNotPageOfAllPosts}" class="header__second-row">
                 <div class="header__main-search main-search">
-                    <form method="get" th:action="@{/posts/search}" class="main-search__form">
+                    <form method="get" th:action="@{/admin/posts/search}" class="main-search__form">
                         <input placeholder="Post search" th:value="${name}" name="name" class="main-search__field" type="text">
                         <button id="button-search" class="main-search__button">Search</button>
                     </form>
