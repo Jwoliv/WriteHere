@@ -10,6 +10,8 @@ import com.example.WriteHere.model.report.ReportByPost;
 import com.example.WriteHere.model.user.Role;
 import com.example.WriteHere.model.user.User;
 import com.example.WriteHere.service.CommentsService;
+import com.example.WriteHere.service.ComparatorsTypes;
+import com.example.WriteHere.service.ConvertMethods;
 import com.example.WriteHere.service.PostService;
 import com.example.WriteHere.service.report.ReportPostService;
 import com.example.WriteHere.service.user.UserService;
@@ -24,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/posts")
@@ -34,20 +35,22 @@ public class PostsController {
     private final ReportPostService reportPostService;
     private final ConvertMethods convertMethods;
     private final CommentsService commentsService;
-
+    private final ComparatorsTypes comparatorsTypes;
     @Autowired
     public PostsController(
             PostService postService,
             UserService userService,
             ReportPostService reportPostService,
             ConvertMethods convertMethods,
-            CommentsService commentsService
+            CommentsService commentsService,
+            ComparatorsTypes comparatorsTypes
     ) {
         this.postService = postService;
         this.userService = userService;
         this.reportPostService = reportPostService;
         this.convertMethods = convertMethods;
         this.commentsService = commentsService;
+        this.comparatorsTypes = comparatorsTypes;
     }
 
     @GetMapping()
@@ -56,15 +59,11 @@ public class PostsController {
             Principal principal
     ) {
         if (principal == null) {
-            model.addAttribute("all_posts", postService.findAll().stream().sorted(
-                    Comparator.comparing(Post::getDateOfCreated).reversed()
-            ));
+            model.addAttribute("all_posts", comparatorsTypes.getSortedPostsByDateOfCreated(postService.findAll()));
         }
         else {
             User user = userService.findByEmail(principal.getName());
-            List<Post> allPosts = new ArrayList<>(postService.findAll().stream().sorted(
-                    Comparator.comparing(Post::getDateOfCreated).reversed()
-            ).toList());
+            List<Post> allPosts = new ArrayList<>(comparatorsTypes.getSortedPostsByDateOfCreated(postService.findAll()));
             allPosts.removeAll(user.getBlackListOfPosts());
             model.addAttribute("all_posts", allPosts);
             model.addAttribute("user", userService.findByEmail(principal.getName()));
@@ -86,7 +85,7 @@ public class PostsController {
                 "all_posts",
                 postService.findByTitleOrText(name)
                         .stream()
-                        .sorted(Comparator.comparing(Post::getDateOfCreated).reversed())
+                        .sorted(comparatorsTypes.getComparatorPostsByDateOfCreated())
                         .toList()
         );
         model.addAttribute("nameOfPage", "Search: " + name);
@@ -104,9 +103,7 @@ public class PostsController {
         model.addAttribute("images", post.getImages());
         model.addAttribute("nameOfPage", post.getTitle());
         if (principal == null) {
-            model.addAttribute("comments", post.getComments().stream().sorted(
-                    Comparator.comparing(Comment::getDateOfCreated).reversed()
-            ).collect(Collectors.toList()));
+            model.addAttribute("comments", comparatorsTypes.getSortedCommentsByDateOfCreated(post.getComments()));
         }
         model.addAttribute("principal", principal);
         model.addAttribute("comment", new Comment());
@@ -117,9 +114,11 @@ public class PostsController {
                 model.addAttribute("userIsOwner", post.getUser().equals(user));
             }
             model.addAttribute("createdReportIsExist", user.getBlackListOfPosts().contains(post));
-            model.addAttribute("comments", findComments(principal, post).stream().sorted(
-                    Comparator.comparing(Comment::getDateOfCreated).reversed()
-            ).toList());
+            model.addAttribute("comments", findComments(principal, post)
+                    .stream()
+                    .sorted(comparatorsTypes.getComparatorCommentsByDateOfCreated())
+                    .toList()
+            );
             model.addAttribute("user", user);
         }
         return "/posts/selected_post";
@@ -379,15 +378,11 @@ public class PostsController {
     public List<Comment> findComments(Principal principal, Post post) {
         List<Comment> comments;
         if (principal == null) {
-            comments = post.getComments().stream().sorted(
-                    Comparator.comparing(Comment::getDateOfCreated).reversed()
-            ).toList();
+            comments = comparatorsTypes.getSortedCommentsByDateOfCreated(post.getComments());
         }
         else {
             User user = userService.findByEmail(principal.getName());
-            comments = new ArrayList<>(post.getComments().stream().sorted(
-                    Comparator.comparing(Comment::getDateOfCreated).reversed()
-            ).toList());
+            comments = new ArrayList<>(comparatorsTypes.getSortedCommentsByDateOfCreated(post.getComments()));
             comments.removeAll(user.getBlackListOfComments());
             return comments;
         }

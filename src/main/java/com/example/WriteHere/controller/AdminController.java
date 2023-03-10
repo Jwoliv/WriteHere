@@ -1,8 +1,7 @@
 package com.example.WriteHere.controller;
 
-import com.example.WriteHere.model.post.Comment;
-import com.example.WriteHere.model.post.Post;
 import com.example.WriteHere.model.user.User;
+import com.example.WriteHere.service.ComparatorsTypes;
 import com.example.WriteHere.service.PostService;
 import com.example.WriteHere.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +20,12 @@ import java.util.stream.Collectors;
 public class AdminController {
     private final PostService postService;
     private final UserService userService;
+    private final ComparatorsTypes comparatorsTypes;
     @Autowired
-    public AdminController(PostService postService, UserService userService) {
+    public AdminController(PostService postService, UserService userService, ComparatorsTypes comparatorsTypes) {
         this.postService = postService;
         this.userService = userService;
+        this.comparatorsTypes = comparatorsTypes;
     }
 
     @GetMapping
@@ -35,10 +36,8 @@ public class AdminController {
     @GetMapping("/posts")
     public String pageOfPosts(Model model, Principal principal) {
         model.addAttribute("principal", principal);
-        model.addAttribute("all_elements", postService.findAll()
-                .stream()
-                .sorted(Comparator.comparing(Post::getNumberOfLikes))
-                .collect(Collectors.toList())
+        model.addAttribute("all_elements",
+                comparatorsTypes.getSortedPostsByDateOfCreated(postService.findAll())
         );
         model.addAttribute("IsNotPageOfAllPosts", false);
         model.addAttribute("url", "posts");
@@ -53,12 +52,11 @@ public class AdminController {
     }
     @GetMapping("/posts/{id}/comments")
     public String pageOfCommentsByPost(@PathVariable Long id, Model model, Principal principal) {
-        model.addAttribute("all_elements", postService.findById(id).getComments()
-                .stream()
-                .sorted(Comparator
-                        .comparing(Comment::getNumberOfDislikes)
-                        .reversed())
-                .collect(Collectors.toList()));
+        model.addAttribute("all_elements",
+                comparatorsTypes.getSortedCommentsByDateOfCreated(
+                        postService.findById(id).getComments()
+                )
+        );
         model.addAttribute("principal", principal);
         model.addAttribute("url", "comments");
         model.addAttribute("IsNotPageOfAllPosts", false);

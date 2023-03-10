@@ -5,6 +5,7 @@ import com.example.WriteHere.model.post.Post;
 import com.example.WriteHere.model.report.ReportByComment;
 import com.example.WriteHere.model.user.Role;
 import com.example.WriteHere.model.user.User;
+import com.example.WriteHere.service.ComparatorsTypes;
 import com.example.WriteHere.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,10 +20,12 @@ import java.util.stream.Collectors;
 @RequestMapping(("/users"))
 public class UsersController {
     private final UserService userService;
+    private final ComparatorsTypes comparatorsTypes;
 
     @Autowired
-    public UsersController(UserService userService) {
+    public UsersController(UserService userService, ComparatorsTypes comparatorsTypes) {
         this.userService = userService;
+        this.comparatorsTypes = comparatorsTypes;
     }
 
     @GetMapping
@@ -72,10 +75,8 @@ public class UsersController {
         }
         model.addAttribute("nameOfPage", "Posts by " + user.getFullName());
         model.addAttribute("principal", principal);
-        model.addAttribute("all_posts", user.getPosts()
-                .stream()
-                .sorted(Comparator.comparing(Post::getDateOfCreated).reversed())
-                .toList()
+        model.addAttribute("all_posts",
+                comparatorsTypes.getSortedPostsByDateOfCreated(user.getPosts())
         );
         model.addAttribute("IsNotPageOfAllPosts", true);
         return "posts/all_posts";
@@ -89,10 +90,8 @@ public class UsersController {
         }
         model.addAttribute("nameOfPage", "Liked posts by " + user.getFullName());
         model.addAttribute("principal", principal);
-        model.addAttribute("all_posts", user.getLikedPosts()
-                .stream()
-                .sorted(Comparator.comparing(Post::getDateOfCreated).reversed())
-                .toList()
+        model.addAttribute("all_posts",
+                comparatorsTypes.getSortedPostsByDateOfCreated(user.getLikedPosts())
         );
         model.addAttribute("IsNotPageOfAllPosts", true);
         return "posts/all_posts";
@@ -106,10 +105,8 @@ public class UsersController {
         }
         model.addAttribute("nameOfPage", "Comments by " + user.getFullName());
         model.addAttribute("principal", principal);
-        model.addAttribute("all_comments", user.getComments()
-                .stream()
-                .sorted(Comparator.comparing(Comment::getDateOfCreated).reversed())
-                .toList()
+        model.addAttribute("all_comments",
+                comparatorsTypes.getSortedCommentsByDateOfCreated(user.getComments())
         );
         model.addAttribute("user", userService.findByEmail(principal.getName()));
         model.addAttribute("report", new ReportByComment());

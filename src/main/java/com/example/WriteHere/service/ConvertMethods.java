@@ -1,4 +1,4 @@
-package com.example.WriteHere.controller;
+package com.example.WriteHere.service;
 
 import com.example.WriteHere.model.image.AbstractImage;
 import com.vladsch.flexmark.html.HtmlRenderer;
