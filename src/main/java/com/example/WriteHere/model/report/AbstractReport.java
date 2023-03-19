@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Setter
 @Getter
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)

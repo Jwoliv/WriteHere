@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @Component
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 public class ImagePost extends AbstractImage {

@@ -13,6 +13,7 @@ import java.util.Date;
 @Setter
 @Getter
 @ToString
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 public class Notification {
