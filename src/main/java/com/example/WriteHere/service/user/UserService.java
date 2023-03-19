@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Locale;
 
@@ -53,5 +54,13 @@ public class UserService {
     @Transactional
     public void deleteByEmail(String email) {
         userRepository.deleteUserByEmail(email);
+    }
+    @Transactional
+    public void markAllNotificationsAsCheckedOfUser(Principal principal) {
+        if (principal != null) {
+            User user = findByEmail(principal.getName());
+            user.getNotifications().forEach(x -> x.setCheckedStatus(true));
+            saveAfterChange(user);
+        }
     }
 }

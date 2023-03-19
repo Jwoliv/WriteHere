@@ -55,19 +55,12 @@ public class NotificationsController {
     }
     @PatchMapping("/check-all")
     public String checkAllNotification(Principal principal) {
-        if (principal != null) {
-            User user = userService.findByEmail(principal.getName());
-            user.getNotifications().forEach(x -> x.setCheckedStatus(true));
-            userService.saveAfterChange(user);
-        }
+        userService.markAllNotificationsAsCheckedOfUser(principal);
         return "redirect:/profile/notifications";
     }
     @DeleteMapping("/delete-all")
     public String deleteAllNotification(Principal principal) {
-        if (principal != null) {
-            User user = userService.findByEmail(principal.getName());
-            notificationService.deleteAllByUser(user);
-        }
+        notificationService.deleteAllByUser(principal);
         return "redirect:/profile/notifications";
     }
 }
