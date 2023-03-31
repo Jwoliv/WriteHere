@@ -44,22 +44,13 @@ public class Comment {
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<ReportByComment> reports = new ArrayList<>();
-    @ManyToMany(
-            mappedBy = "likedComments",
-            cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.MERGE}
-    )
+    @ManyToMany(mappedBy = "likedComments", cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.MERGE})
     @ToString.Exclude
     private List<User> usersWhoLike = new ArrayList<>();
-    @ManyToMany(
-            mappedBy = "dislikedComments",
-            cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.MERGE}
-    )
+    @ManyToMany(mappedBy = "dislikedComments", cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.MERGE})
     @ToString.Exclude
     private List<User> usersWhoDislike = new ArrayList<>();
-    @ManyToMany(
-            mappedBy = "blackListOfComments",
-            cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST}
-    )
+    @ManyToMany(mappedBy = "blackListOfComments", cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
     @ToString.Exclude
     private List<User> usersWhoBlock = new ArrayList<>();
 

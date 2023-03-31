@@ -120,11 +120,7 @@ public class CommentsService {
         userService.saveAfterChange(user);
         save(comment);
     }
-    public List<Comment> toggleCommentToTheSecondCollectionOfUser(
-            List<Comment> collection,
-            Comment comment,
-            User user
-    ) {
+    public List<Comment> toggleCommentToTheSecondCollectionOfUser(List<Comment> collection, Comment comment, User user) {
         if (collection.contains(comment)) {
             collection.remove(comment);
             comment.getUsersWhoDislike().remove(user);

@@ -50,22 +50,13 @@ public class Post {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    @ManyToMany(
-            mappedBy = "likedPosts",
-            cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST}
-    )
+    @ManyToMany(mappedBy = "likedPosts", cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
     @ToString.Exclude
     private List<User> usersWhoLike = new ArrayList<>();
-    @ManyToMany(
-            mappedBy = "dislikedPosts",
-            cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST}
-    )
+    @ManyToMany(mappedBy = "dislikedPosts", cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
     @ToString.Exclude
     private List<User> usersWhoDislike = new ArrayList<>();
-    @ManyToMany(
-            mappedBy = "blackListOfPosts",
-            cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST}
-    )
+    @ManyToMany(mappedBy = "blackListOfPosts", cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
     @ToString.Exclude
     private List<User> usersWhoBlock = new ArrayList<>();
     public void removeUserRelationships() {

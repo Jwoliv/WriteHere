@@ -42,18 +42,10 @@ public class User {
     private String password;
     @Transient
     private String repeatPassword;
-    @OneToMany(
-            mappedBy = "user",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY
-    )
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<Post> posts = new ArrayList<>();
-    @OneToMany(
-            mappedBy = "user",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY
-    )
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<Comment> comments = new ArrayList<>();
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
@@ -104,25 +96,18 @@ public class User {
     )
     @ToString.Exclude
     private List<Comment> blackListOfComments = new ArrayList<>();
-    @OneToMany(
-            mappedBy = "user",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY
-    )
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<Notification> notifications = new ArrayList<>();
     private Boolean isPrivate;
+
+
     public String getFullName() {
         return firstname + " " + lastname;
     }
     public Float getReputation() {
-        int likes = 0;
-        int dislike = 0;
-        likes += this.getPosts().parallelStream().mapToInt(Post::getNumberOfLikes).sum() +
-                this.getComments().parallelStream().mapToInt(Comment::getNumberOfLikes).sum();
-
-        dislike += this.getPosts().parallelStream().mapToInt(Post::getNumberOfDislikes).sum() +
-                this.getComments().parallelStream().mapToInt(Comment::getNumberOfDislikes).sum();
+        int likes = countLikes(this.posts, this.comments);
+        int dislike = countDislikes(this.posts, this.comments);
         if (dislike != 0) {
             return (float) (likes / dislike);
         }
@@ -135,5 +120,20 @@ public class User {
         count += this.getPosts().stream().mapToInt(post -> post.getReports().size()).sum();
         count += this.getComments().stream().mapToInt(comment -> comment.getReports().size()).sum();
         return count;
+    }
+
+
+    private int countLikes(List<Post> posts, List<Comment> comments) {
+        int likes = 0;
+        likes += posts.parallelStream().mapToInt(Post::getNumberOfLikes).sum();
+        likes += comments.parallelStream().mapToInt(Comment::getNumberOfLikes).sum();
+        return likes;
+    }
+
+    private int countDislikes(List<Post> posts, List<Comment> comments) {
+        int dislikes = 0;
+        dislikes += posts.parallelStream().mapToInt(Post::getNumberOfDislikes).sum();
+        dislikes += comments.parallelStream().mapToInt(Comment::getNumberOfDislikes).sum();
+        return dislikes;
     }
 }

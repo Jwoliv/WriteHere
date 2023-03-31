@@ -61,11 +61,7 @@ public class NotificationService {
         }
     }
     @Transactional
-    public void setTheSameFieldsForNotificationOfComment(
-            Notification notification,
-            Comment comment,
-            TypeOfNotification typeOfNotification
-    ) {
+    public void setTheSameFieldsForNotificationOfComment(Notification notification, Comment comment, TypeOfNotification typeOfNotification) {
         notification.setTypeOfNotification(typeOfNotification);
         notification.setDateOfCreated(new Date());
         notification.setUser(comment.getUser());

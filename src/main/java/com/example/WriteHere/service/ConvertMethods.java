@@ -15,21 +15,12 @@ public class ConvertMethods {
         if (elementsByUser.contains(element)) return --value;
         return ++value;
     }
-    public <T extends AbstractImage> void setImagesToList(
-            MultipartFile multipartFile,
-            List<T> images,
-            T imageEmpty,
-            Boolean isPrevious
-    ) {
+    public <T extends AbstractImage> void setImagesToList(MultipartFile multipartFile, List<T> images, T imageEmpty, Boolean isPrevious) {
         T image = convertToImage(multipartFile, isPrevious, imageEmpty);
         images.add(image);
     }
 
-    public <T extends AbstractImage> T convertToImage(
-            MultipartFile file,
-            Boolean isPreviews,
-            T image
-    ) {
+    public <T extends AbstractImage> T convertToImage(MultipartFile file, Boolean isPreviews, T image) {
         image.setName(file.getOriginalFilename());
         image.setOriginalName(file.getOriginalFilename());
         image.setSize(file.getSize());

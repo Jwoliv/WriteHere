@@ -8,10 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
-public abstract class ImageService<
-        TI extends AbstractImage,
-        R extends ImageRepository<TI>
-    > {
+public abstract class ImageService<TI extends AbstractImage, R extends ImageRepository<TI>> {
     public final R repository;
 
 
