@@ -42,11 +42,16 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
     @Transactional
-    public void deleteById(Long id) {
-        Notification notification = findById(id);
-        notification.setUser(null);
-        save(notification);
-        notificationRepository.deleteById(id);
+    public void deleteById(Long id, Principal principal) {
+        if (principal != null) {
+            User user = userService.findByEmail(principal.getName());
+            Notification notification = findById(id);
+            if (user.getNotifications().contains(notification) || user.getRole().equals(Role.ADMIN)) {
+                notification.setUser(null);
+                save(notification);
+                notificationRepository.deleteById(id);
+            }
+        }
     }
     @Transactional
     public void deleteAllByUser(Principal principal) {
@@ -169,6 +174,17 @@ public class NotificationService {
             }
             postService.deleteById(id);
             userService.saveAfterChange(user);
+        }
+    }
+    @Transactional
+    public void checkNotificationById(Long id, Principal principal) {
+        if (principal != null) {
+            User user = userService.findByEmail(principal.getName());
+            Notification notification = findById(id);
+            if (user.getNotifications().contains(notification)) {
+                notification.setCheckedStatus(true);
+                save(notification);
+            }
         }
     }
 }

@@ -24,20 +24,13 @@ public class ThemesController {
         this.postService = postService;
     }
     @GetMapping
-    public String pageOfAllThemes(
-            Model model,
-            Principal principal
-    ) {
+    public String pageOfAllThemes(Model model, Principal principal) {
         model.addAttribute("nameOfPage", "Themes");
         model.addAttribute("principal", principal);
         return "/theme/all_themes";
     }
     @GetMapping("/{theme}")
-    public String pageOfPostsByTheme(
-            @PathVariable Theme theme,
-            Model model,
-            Principal principal
-    ) {
+    public String pageOfPostsByTheme(@PathVariable Theme theme, Model model, Principal principal) {
         model.addAttribute("nameOfPage", theme.getDisplayName());
         model.addAttribute("principal", principal);
         model.addAttribute("IsNotPageOfAllPosts", false);

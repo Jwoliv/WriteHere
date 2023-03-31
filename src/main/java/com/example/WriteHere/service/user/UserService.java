@@ -63,4 +63,23 @@ public class UserService {
             saveAfterChange(user);
         }
     }
+    @Transactional
+    public void deleteByIdIfAuthorizedAdmin(Long id, Principal principal) {
+        if (principal != null) {
+            User user = findById(id);
+            User userOfSession = findByEmail(principal.getName());
+            if (userOfSession.getRole().equals(Role.ADMIN) && !user.getRole().equals(Role.ADMIN)) {
+                deleteById(id);
+            }
+        }
+    }
+    @Transactional
+    public void changeNameOfUser(String firstname, String lastname, Principal principal) {
+        User user = findByEmail(principal.getName());
+        if (firstname != null && lastname != null) {
+            user.setFirstname(firstname);
+            user.setLastname(lastname);
+            saveAfterChange(user);
+        }
+    }
 }

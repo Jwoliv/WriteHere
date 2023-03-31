@@ -40,6 +40,7 @@ public class CommentsController {
         Long postId = comment.getPost().getId();
         User userOfSession = userService.findByEmail(principal.getName());
         commentsService.validationOfDeleteComment(comment, id, userOfSession);
+
         if (userOfSession.getRole().equals(Role.ADMIN)) {
             return "redirect:/admin/posts/" + postId + "/comments";
         }
@@ -63,10 +64,7 @@ public class CommentsController {
         return "redirect:/posts/" + comment.getPost().getId();
 }
     @PatchMapping("{id}/dislike")
-    public String pageOfDislikedComment(
-            @PathVariable Long id,
-            Principal principal
-    ) {
+    public String pageOfDislikedComment(@PathVariable Long id, Principal principal) {
         if (principal == null) {
             return "redirect:/posts/" + commentsService.findById(id).getPost().getId() ;
         }

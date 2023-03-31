@@ -26,10 +26,7 @@ public class SettingsController {
         return "profile/settings";
     }
     @PatchMapping("/set-private")
-    public String pageOfSetPrivate(
-            @RequestParam("isPrivate") Boolean isPrivate,
-            Principal principal
-    ) {
+    public String pageOfSetPrivate(@RequestParam("isPrivate") Boolean isPrivate, Principal principal) {
         User user = userService.findByEmail(principal.getName());
         if (isPrivate != null) {
             user.setIsPrivate(isPrivate);
@@ -38,17 +35,8 @@ public class SettingsController {
         return "redirect:/profile";
     }
     @PatchMapping("/change-names")
-    public String pageOfChangeNames(
-            @RequestParam("firstname") String firstname,
-            @RequestParam("lastname") String lastname,
-            Principal principal
-    ) {
-        User user = userService.findByEmail(principal.getName());
-        if (firstname != null && lastname != null) {
-            user.setFirstname(firstname);
-            user.setLastname(lastname);
-            userService.saveAfterChange(user);
-        }
+    public String pageOfChangeNames(@RequestParam("firstname") String firstname, @RequestParam("lastname") String lastname, Principal principal) {
+        userService.changeNameOfUser(firstname, lastname, principal);
         return "redirect:/profile";
     }
     @DeleteMapping("/delete-account")

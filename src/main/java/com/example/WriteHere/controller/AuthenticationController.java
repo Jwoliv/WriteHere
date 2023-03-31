@@ -30,11 +30,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/sing-in")
-    public String registerProcessing(
-            @ModelAttribute @Valid User user,
-            BindingResult bindingResult,
-            @NonNull Model model
-    ) {
+    public String registerProcessing(@ModelAttribute @Valid User user, BindingResult bindingResult, @NonNull Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("user", new User());
             return "/login";

@@ -45,11 +45,7 @@ public class AdminController {
         return "/admin/element/all_elements";
     }
     @GetMapping("/posts/search")
-    public String pageOfSearchPosts(
-            @RequestParam("name") String name,
-            Model model,
-            Principal principal
-    ) {
+    public String pageOfSearchPosts(@RequestParam("name") String name, Model model, Principal principal) {
         model.addAttribute("all_elements",
                 comparatorsTypes.getSortedPostsByDateOfCreated(postService.findByTitleOrText(name))
         );

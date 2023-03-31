@@ -64,7 +64,8 @@ public class PostService {
         return postRepository.findByUserId(id);
     }
     @Transactional
-    public void renewFieldsOfPost(Post postFromDB, Post post) {
+    public void renewFieldsOfPost(Long id, Post post) {
+        Post postFromDB = findById(id);
         if (postFromDB != null && post != null) {
             postFromDB.setTitle(post.getTitle());
             postFromDB.setText(post.getText());

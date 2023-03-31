@@ -38,8 +38,8 @@ public class ProfileController {
     public String pageOfNotificationOfUser(Model model, Principal principal) {
         User user = userService.findByEmail(principal.getName());
         List<Notification> notifications = user.getNotifications().stream().sorted(
-                Comparator.comparing(Notification::getDateOfCreated
-                ).reversed()).toList();
+                Comparator.comparing(Notification::getDateOfCreated).reversed()
+        ).toList();
 
         model.addAttribute("principal", principal);
         model.addAttribute("notifications", notifications);

@@ -1,7 +1,5 @@
 package com.example.WriteHere.controller;
 
-import com.example.WriteHere.model.notification.Notification;
-import com.example.WriteHere.model.user.User;
 import com.example.WriteHere.service.NotificationService;
 import com.example.WriteHere.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,37 +18,19 @@ public class NotificationsController {
     private final NotificationService notificationService;
 
     @Autowired
-    public NotificationsController(
-            UserService userService,
-            NotificationService notificationService
-    ) {
+    public NotificationsController(UserService userService, NotificationService notificationService) {
         this.userService = userService;
         this.notificationService = notificationService;
     }
 
     @DeleteMapping("/{id}")
-    public String pageOfDeleteNotification(
-            @PathVariable Long id,
-            Principal principal
-    ) {
-        if (principal != null) {
-            notificationService.deleteById(id);
-        }
+    public String pageOfDeleteNotification(@PathVariable Long id, Principal principal) {
+        notificationService.deleteById(id, principal);
         return "redirect:/profile/notifications";
     }
     @PatchMapping("/{id}/check")
-    public String checkNotification(
-            @PathVariable Long id,
-            Principal principal
-    ) {
-        if (principal != null) {
-            User user = userService.findByEmail(principal.getName());
-            Notification notification = notificationService.findById(id);
-            if (user.getNotifications().contains(notification)) {
-                notification.setCheckedStatus(true);
-                notificationService.save(notification);
-            }
-        }
+    public String checkNotification(@PathVariable Long id, Principal principal) {
+        notificationService.checkNotificationById(id, principal);
         return "redirect:/profile/notifications";
     }
     @PatchMapping("/check-all")

@@ -59,11 +59,7 @@ public class UsersController {
     }
     @DeleteMapping("/{id}")
     public String pageOfDeletedUser(@PathVariable Long id, Principal principal) {
-        User user = userService.findById(id);
-        User userOfSession = userService.findByEmail(principal.getName());
-        if (userOfSession.getRole().equals(Role.ADMIN) && !user.getRole().equals(Role.ADMIN)) {
-            userService.deleteById(id);
-        }
+        userService.deleteByIdIfAuthorizedAdmin(id, principal);
         return "redirect:/admin/users";
     }
     @GetMapping("/{id}/posts")

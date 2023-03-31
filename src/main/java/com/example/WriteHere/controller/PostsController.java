@@ -50,10 +50,7 @@ public class PostsController {
     }
 
     @GetMapping()
-    public String pageOfAllPosts(
-            @NonNull Model model,
-            Principal principal
-    ) {
+    public String pageOfAllPosts(@NonNull Model model, Principal principal) {
         if (principal == null) {
             model.addAttribute("all_posts", comparatorsTypes.getSortedPostsByDateOfCreated(postService.findAll()));
         }
@@ -71,11 +68,7 @@ public class PostsController {
         return "/posts/all_posts";
     }
     @GetMapping("/search")
-    public String pageOfSearchPosts(
-            @RequestParam("name") String name,
-            Model model,
-            Principal principal
-    ) {
+    public String pageOfSearchPosts(@RequestParam("name") String name, Model model, Principal principal) {
         model.addAttribute("principal", principal);
         model.addAttribute(
                 "all_posts",
@@ -89,11 +82,7 @@ public class PostsController {
         return "/posts/all_posts";
     }
     @GetMapping("/{id}")
-    public String pageOfSelectedPost(
-            @PathVariable Long id,
-            @NonNull Model model,
-            Principal principal
-    ) {
+    public String pageOfSelectedPost(@PathVariable Long id, @NonNull Model model, Principal principal) {
         Post post = postService.findById(id);
         model.addAttribute("post", post);
         model.addAttribute("images", post.getImages());
@@ -120,10 +109,7 @@ public class PostsController {
         return "/posts/selected_post";
     }
     @GetMapping("/new")
-    public String pageOfNewPost(
-            @NonNull Model model,
-            Principal principal
-    ) {
+    public String pageOfNewPost(@NonNull Model model, Principal principal) {
         model.addAttribute("post", new Post());
         model.addAttribute("nameOfPage", "New post");
         model.addAttribute("principal", principal);
@@ -142,16 +128,11 @@ public class PostsController {
         return "redirect:/posts";
     }
     @PatchMapping("/{id}")
-    public String editPost(
-            @PathVariable Long id,
-            @ModelAttribute Post post,
-            BindingResult bindingResult
-    ) {
-        Post postFromDB = postService.findById(id);
+    public String editPost(@PathVariable Long id, @ModelAttribute Post post, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "redirect:/posts/{id}/edit";
         }
-        postService.renewFieldsOfPost(postFromDB, post);
+        postService.renewFieldsOfPost(id, post);
         return "redirect:/posts/{id}";
     }
     @DeleteMapping("/{id}")
